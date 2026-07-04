@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette */
+  --color-cream: #faf7f2;
+  --color-cream-200: #f1eae0;
+  --color-coffee: #3b2314;
+  --color-coffee-700: #4d3020;
+  --color-coffee-600: #5f3f2b;
+  --color-blush: #c9a99a;
+  --color-blush-300: #d9c1b6;
+  --color-blush-100: #ede0d9;
+  --color-charcoal: #1c1c1c;
+  --color-charcoal-600: #4a4a4a;
+
+  /* Typography */
+  --font-heading: var(--font-playfair);
+  --font-body: var(--font-inter);
+
+  /* Easing */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  min-width: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-heading {
+  font-family: var(--font-heading), Georgia, "Times New Roman", serif;
+}
+
+::selection {
+  background-color: var(--color-blush);
+  color: #fff;
+}
+
+/* Hide scrollbars on horizontal carousels while keeping scroll */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
