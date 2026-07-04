@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ButtonLink } from "@/components/ui/Button";
 import { fadeUpContainer as container, fadeUpItem as item } from "@/lib/motion";
+import { SITE } from "@/lib/constants";
 
 export function Hero() {
   return (
@@ -28,7 +29,7 @@ export function Hero() {
           variants={item}
           className="text-xs font-medium uppercase tracking-[0.3em] text-blush-300"
         >
-          New Collection
+          {SITE.tagline}
         </motion.p>
         <motion.h1
           variants={item}
@@ -40,7 +41,7 @@ export function Hero() {
           variants={item}
           className="mt-5 max-w-md text-base leading-relaxed text-cream/80 sm:text-lg"
         >
-          Modest fashion for real everyday women.
+          {SITE.promise}
         </motion.p>
         <motion.div variants={item} className="mt-9">
           <ButtonLink href="/shop" variant="light" className="min-h-12 px-9">

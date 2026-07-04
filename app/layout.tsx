@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/constants";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
-import { SmoothScroll } from "@/components/layout/SmoothScroll";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -27,12 +23,21 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   keywords: [
-    "modest fashion",
-    "abaya",
-    "daily abaya",
-    "Malaysia",
-    "cotton nida",
-    "Torexia",
+    "Abaya Malaysia",
+    "Premium Abaya",
+    "Muslimah Fashion",
+    "Modest Wear Malaysia",
+    "Elegant Abaya",
+    "Abaya Premium Malaysia",
+    "Plus Size Abaya",
+    "Kaftan Malaysia",
+    "Muslimah Clothing",
+    "Modest Fashion Malaysia",
+    "Abaya Kuala Lumpur",
+    "Luxury Abaya Malaysia",
+    "Daily Abaya",
+    "Tudung Bawal",
+    "Scrunchies",
   ],
   openGraph: {
     type: "website",
@@ -60,13 +65,7 @@ export default function RootLayout({
       {/* Google Analytics — GA_MEASUREMENT_ID to be added */}
       {/* Meta Pixel — PIXEL_ID to be added */}
       {/* TikTok Pixel — TIKTOK_PIXEL_ID to be added */}
-      <body className="flex min-h-full flex-col bg-cream">
-        <SmoothScroll />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <WhatsAppButton />
-      </body>
+      <body className="bg-cream">{children}</body>
     </html>
   );
 }

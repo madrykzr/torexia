@@ -1,9 +1,9 @@
-import { getRelatedProducts } from "@/data/products";
+import { getRelatedProducts } from "@/lib/sanity-content";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProductCard } from "./ProductCard";
 
-export function RelatedProducts({ slug }: { slug: string }) {
-  const related = getRelatedProducts(slug, 3);
+export async function RelatedProducts({ slug }: { slug: string }) {
+  const related = await getRelatedProducts(slug, 3);
   if (related.length === 0) return null;
 
   return (

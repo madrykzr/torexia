@@ -22,17 +22,11 @@ export function ProductDetailClient({ product }: { product: Product }) {
   const [colour, setColour] = useState<Colour>(product.colours[0]);
   const [size, setSize] = useState<Size>("M");
 
-  const images = product.images[colour.slug];
   const message = `Hi Torexia! I'm interested in the ${product.name} (${colour.name}, size ${size}). Is it available?`;
 
   return (
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
-      {/* Gallery — remounts on colour change to reset the active image */}
-      <ProductGallery
-        key={colour.slug}
-        images={images}
-        alt={`${product.name} in ${colour.name}`}
-      />
+      <ProductGallery images={product.images} alt={product.name} />
 
       <div className="lg:pt-4">
         <h1 className="font-heading text-3xl text-charcoal sm:text-4xl">

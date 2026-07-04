@@ -1,3 +1,5 @@
+import type { PortableTextBlock } from "@portabletext/types";
+
 export type Size = "S" | "M" | "L" | "XL";
 
 export type Colour = {
@@ -17,25 +19,30 @@ export type Product = {
   description: string;
   colours: Colour[];
   sizes: Size[];
-  /** Image paths keyed by colour slug (relative to /public) */
-  images: Record<string, string[]>;
+  /** Resolved image URLs (Sanity CDN), ordered */
+  images: string[];
   featured: boolean;
 };
 
 export type BlogPost = {
+  id: string;
   slug: string;
   title: string;
-  /** ISO date string */
+  /** ISO date string (publishedAt) */
   date: string;
   excerpt: string;
+  /** Resolved cover image URL */
   cover: string;
-  /** Read time label, e.g. "4 min read" */
+  /** Estimated read time label, e.g. "4 min read" */
   readTime: string;
-  /** Array of paragraph/heading blocks */
-  content: BlogBlock[];
+  /** Portable Text body (only populated on the single-post query) */
+  body: PortableTextBlock[];
 };
 
-export type BlogBlock =
-  | { type: "p"; text: string }
-  | { type: "h2"; text: string }
-  | { type: "quote"; text: string };
+export type SiteSettings = {
+  whatsapp: string;
+  instagram: string;
+  tiktok: string;
+  email: string;
+  phone: string;
+};

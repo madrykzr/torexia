@@ -13,6 +13,14 @@ export function ProductGallery({
 }) {
   const [active, setActive] = useState(0);
 
+  if (images.length === 0) {
+    return (
+      <div className="flex aspect-[3/4] items-center justify-center rounded-2xl bg-cream-200 text-sm text-charcoal-600">
+        No images yet
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* Mobile: swipeable carousel with dots */}

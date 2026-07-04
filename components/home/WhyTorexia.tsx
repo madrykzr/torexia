@@ -1,24 +1,31 @@
-import { Feather, Sparkles, Scissors } from "lucide-react";
+import {
+  Sparkles,
+  Award,
+  Scissors,
+  Layers,
+  Feather,
+  Sun,
+  Users,
+} from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 
 const features = [
+  { icon: Sparkles, title: "Exclusive & timeless designs" },
+  { icon: Award, title: "Quality fabrics & craftsmanship" },
+  { icon: Scissors, title: "Local tailoring, made with care" },
   {
-    icon: Feather,
-    title: "Lightweight Comfort",
-    text: "Soft cotton nida that breathes with you — made for long, easy everyday wear.",
+    icon: Layers,
+    title:
+      "Practical designs with functional details — pockets, nursing friendly, comfort fit",
   },
+  { icon: Feather, title: "Lightweight, breathable & flowy materials" },
   {
-    icon: Sparkles,
-    title: "Modest Everyday Elegance",
-    text: "Quietly refined silhouettes and detailing that feel elevated, never fussy.",
+    icon: Sun,
+    title: "Easy to wear for daily life, work, travel & special occasions",
   },
-  {
-    icon: Scissors,
-    title: "Thoughtfully Designed",
-    text: "Considered fit, flared sleeves and delicate lace — designed down to the last stitch.",
-  },
+  { icon: Users, title: "Trusted by our community" },
 ];
 
 export function WhyTorexia() {
@@ -27,17 +34,22 @@ export function WhyTorexia() {
       <SectionHeading
         tone="light"
         eyebrow="Why Torexia"
-        title="Everyday pieces, thoughtfully made"
+        title="Why choose Torexia"
       />
 
-      <div className="mt-12 grid gap-10 sm:mt-16 sm:grid-cols-3 sm:gap-8">
+      <div className="mt-12 grid gap-6 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((f, i) => (
-          <Reveal key={f.title} delay={i * 0.1} className="text-center sm:text-left">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-blush/20 text-blush-300 sm:mx-0">
-              <f.icon className="h-6 w-6" strokeWidth={1.6} />
+          <Reveal
+            key={f.title}
+            delay={i * 0.06}
+            className="flex items-start gap-4 rounded-2xl border border-cream/10 bg-cream/5 p-5"
+          >
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blush/20 text-blush-300">
+              <f.icon className="h-5 w-5" strokeWidth={1.6} />
             </div>
-            <h3 className="mt-6 font-heading text-xl text-cream">{f.title}</h3>
-            <p className="mt-3 text-sm leading-relaxed text-cream/70">{f.text}</p>
+            <p className="pt-1.5 text-sm leading-relaxed text-cream/90">
+              {f.title}
+            </p>
           </Reveal>
         ))}
       </div>

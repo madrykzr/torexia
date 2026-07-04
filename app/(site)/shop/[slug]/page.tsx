@@ -4,10 +4,12 @@ import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { ProductDetailClient } from "@/components/shop/ProductDetailClient";
 import { RelatedProducts } from "@/components/shop/RelatedProducts";
-import { products, getProduct, primaryImage } from "@/data/products";
+import { primaryImage } from "@/data/products";
+import { getProductBySlug, getProductSlugs } from "@/lib/sanity-content";
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  const slugs = await getProductSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -16,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return { title: "Product Not Found" };
 
   return {
@@ -36,7 +38,7 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProduct(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
   return (

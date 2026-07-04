@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { Heart, Sparkles, Leaf, Scissors } from "lucide-react";
+import { Check } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
@@ -15,28 +15,17 @@ export const metadata: Metadata = {
     "Who is Torexia? A Malaysian modest fashion brand crafting daily abayas designed for comfort, confidence and effortless everyday elegance.",
 };
 
-const values = [
-  {
-    icon: Heart,
-    title: "Comfort First",
-    text: "If it isn't comfortable enough to wear all day, it never leaves our studio.",
-  },
-  {
-    icon: Sparkles,
-    title: "Modest by Design",
-    text: "Elegant coverage that feels intentional and quietly beautiful.",
-  },
-  {
-    icon: Leaf,
-    title: "Made for Real Life",
-    text: "Designed for busy, everyday women — not just special occasions.",
-  },
-  {
-    icon: Scissors,
-    title: "Considered Craft",
-    text: "Thoughtful fits, fine fabrics and details finished with care.",
-  },
+const vision =
+  "To become a trusted modest fashion brand from Malaysia, inspiring Muslim women with elegant, comfortable and thoughtfully designed collections.";
+
+const mission = [
+  "Design modest fashion that balances elegance and functionality",
+  "Deliver premium quality with exceptional craftsmanship",
+  "Create versatile collections for every stage of a Muslimah's lifestyle",
+  "Build a brand rooted in trust, authenticity and lasting value",
 ];
+
+const coreValues = ["Quality", "Comfort", "Modesty", "Elegance", "Trust"];
 
 export default function AboutPage() {
   return (
@@ -67,19 +56,20 @@ export default function AboutPage() {
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
           <Reveal className="max-w-xl space-y-5 text-charcoal-600">
             <p className="text-base leading-relaxed">
-              Torexia began with a simple frustration: modest wear that asked you
-              to choose between looking put-together and actually feeling
-              comfortable. We didn&apos;t think that was a fair trade.
+              Torexia is a Malaysian modest fashion brand dedicated to creating
+              timeless, elegant and practical apparel for the modern Muslimah.
+              Our journey began with daily abayas — designed for comfort, modesty
+              and effortless elegance.
             </p>
             <p className="text-base leading-relaxed">
-              So we set out to make the daily abaya we always wanted — cut from
-              soft cotton nida, finished with delicate lace, and designed to move
-              gracefully from morning errands to evening gatherings.
+              Every piece is thoughtfully designed with quality craftsmanship,
+              comfortable fabrics and refined details, empowering women to feel
+              confident whether at work, travelling, attending events, or in
+              their daily lives.
             </p>
             <p className="text-base leading-relaxed">
-              Today, Torexia is a Malaysian modest fashion brand built around one
-              belief: everyday elegance should feel effortless. Every piece we
-              make is designed for real women, living real, full days.
+              At Torexia, we believe modest fashion should be beautiful,
+              practical and meaningful.
             </p>
           </Reveal>
           <Reveal delay={0.1} className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-cream-200">
@@ -94,27 +84,62 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* Mission & Values */}
+      {/* Brand Foundations */}
       <Section tone="dark">
         <SectionHeading
           tone="light"
-          eyebrow="Mission & Values"
+          eyebrow="Brand Foundations"
           title="What we stand for"
-          description="A few principles that shape every Torexia piece."
+          description="The vision, mission and values that guide everything we make."
         />
-        <div className="mt-12 grid gap-8 sm:mt-16 sm:grid-cols-2 lg:grid-cols-4">
-          {values.map((v, i) => (
-            <Reveal key={v.title} delay={i * 0.08}>
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blush/20 text-blush-300">
-                <v.icon className="h-5 w-5" strokeWidth={1.6} />
-              </div>
-              <h3 className="mt-5 font-heading text-lg text-cream">{v.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-cream/70">
-                {v.text}
-              </p>
-            </Reveal>
-          ))}
+
+        <div className="mt-12 grid gap-10 sm:mt-16 lg:grid-cols-2 lg:gap-16">
+          {/* Vision */}
+          <Reveal>
+            <p className="text-xs font-medium uppercase tracking-[0.28em] text-blush-300">
+              Our Vision
+            </p>
+            <p className="mt-4 font-heading text-2xl leading-snug text-cream sm:text-3xl">
+              {vision}
+            </p>
+          </Reveal>
+
+          {/* Mission */}
+          <Reveal delay={0.1}>
+            <p className="text-xs font-medium uppercase tracking-[0.28em] text-blush-300">
+              Our Mission
+            </p>
+            <ul className="mt-5 space-y-4">
+              {mission.map((m) => (
+                <li key={m} className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blush/20 text-blush-300">
+                    <Check className="h-3.5 w-3.5" strokeWidth={2.2} />
+                  </span>
+                  <span className="text-sm leading-relaxed text-cream/80">
+                    {m}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
+
+        {/* Core Values */}
+        <Reveal delay={0.15} className="mt-14 border-t border-cream/10 pt-10">
+          <p className="text-center text-xs font-medium uppercase tracking-[0.28em] text-blush-300">
+            Core Values
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            {coreValues.map((v) => (
+              <span
+                key={v}
+                className="rounded-full border border-cream/20 px-5 py-2 font-heading text-base text-cream"
+              >
+                {v}
+              </span>
+            ))}
+          </div>
+        </Reveal>
       </Section>
 
       {/* Collaboration */}
@@ -172,6 +197,14 @@ export default function AboutPage() {
             className="text-lg transition-colors hover:text-coffee"
           >
             {CONTACT.phone}
+          </a>
+          <a
+            href={CONTACT.website.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-lg transition-colors hover:text-coffee"
+          >
+            {CONTACT.website.label}
           </a>
           <div className="mt-3 flex items-center gap-5">
             <a

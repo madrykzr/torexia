@@ -5,11 +5,17 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { BlogCard } from "@/components/blog/BlogCard";
-import { posts, getPost } from "@/data/posts";
+import { PortableBody } from "@/components/blog/PortableBody";
+import {
+  getAllPosts,
+  getPostBySlug,
+  getPostSlugs,
+} from "@/lib/sanity-content";
 import { formatDate } from "@/lib/constants";
 
-export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams() {
+  const slugs = await getPostSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -18,7 +24,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: "Post Not Found" };
 
   return {
@@ -39,10 +45,12 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getPost(slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  const more = posts.filter((p) => p.slug !== slug).slice(0, 3);
+  const more = (await getAllPosts())
+    .filter((p) => p.slug !== slug)
+    .slice(0, 3);
 
   return (
     <>
@@ -72,36 +80,7 @@ export default async function BlogPostPage({
       {/* Article body */}
       <Section tone="cream">
         <article className="mx-auto max-w-2xl">
-          {post.content.map((block, i) => {
-            if (block.type === "h2") {
-              return (
-                <h2
-                  key={i}
-                  className="mt-10 font-heading text-2xl text-charcoal first:mt-0"
-                >
-                  {block.text}
-                </h2>
-              );
-            }
-            if (block.type === "quote") {
-              return (
-                <blockquote
-                  key={i}
-                  className="my-8 border-l-2 border-blush pl-6 font-heading text-xl leading-snug text-coffee"
-                >
-                  {block.text}
-                </blockquote>
-              );
-            }
-            return (
-              <p
-                key={i}
-                className="mt-5 text-base leading-relaxed text-charcoal-600 first:mt-0"
-              >
-                {block.text}
-              </p>
-            );
-          })}
+          <PortableBody value={post.body} />
 
           <div className="mt-12 border-t border-charcoal/10 pt-8">
             <Link

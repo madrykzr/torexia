@@ -1,8 +1,12 @@
 export const SITE = {
   name: "Torexia",
-  tagline: "Modest fashion for real everyday women",
+  /** Brand tagline */
+  tagline: "Simple • Meaningful • Elevated",
+  /** Brand promise */
+  promise: "Designed with Purpose. Worn with Confidence.",
+  subtitle: "Modest fashion for real everyday women",
   description:
-    "Torexia is a Malaysian modest fashion brand crafting daily abayas designed for comfort, confidence and effortless everyday elegance.",
+    "Torexia is a Malaysian modest fashion brand crafting timeless, elegant and practical apparel for the modern Muslimah — designed for comfort, modesty and effortless elegance.",
   url: "https://torexiacom.biz",
 } as const;
 
@@ -18,6 +22,10 @@ export const CONTACT = {
   tiktok: {
     handle: "@ladytorexia",
     url: "https://www.tiktok.com/@ladytorexia",
+  },
+  website: {
+    label: "torexiacom.biz",
+    url: "https://torexiacom.biz",
   },
 } as const;
 
