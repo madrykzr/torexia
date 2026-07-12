@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Mail, Phone, Globe } from "lucide-react";
 import { NAV_LINKS, CONTACT, SITE } from "@/lib/constants";
@@ -8,10 +9,13 @@ export function Footer() {
     <footer className="bg-coffee text-cream">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:gap-8">
         <div className="lg:col-span-2">
-          <span className="font-heading text-2xl tracking-[0.25em]">TOREXIA</span>
-          <p className="mt-2 text-xs font-medium uppercase tracking-[0.25em] text-blush-300">
-            {SITE.tagline}
-          </p>
+          <Image
+            src="/images/logo-white-full.svg"
+            alt={`Torexia — ${SITE.tagline}`}
+            width={220}
+            height={54}
+            className="h-12 w-auto"
+          />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-cream/70">
             {SITE.description}
           </p>

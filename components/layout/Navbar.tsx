@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -42,15 +43,15 @@ export function Navbar() {
         )}
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
-          <Link
-            href="/"
-            className={cn(
-              "font-heading text-lg tracking-[0.25em] transition-colors sm:text-xl",
-              overlay ? "text-cream" : "text-coffee",
-            )}
-            aria-label="Torexia home"
-          >
-            TOREXIA
+          <Link href="/" aria-label="Torexia home" className="flex items-center">
+            <Image
+              src={overlay ? "/images/logo-white.svg" : "/images/logo.svg"}
+              alt="Torexia"
+              width={177}
+              height={32}
+              priority
+              className="h-7 w-auto sm:h-8"
+            />
           </Link>
 
           <nav className="hidden items-center gap-9 md:flex">

@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SITE } from "@/lib/constants";
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
+// Brand display face (client-supplied). Used for headings + the .font-heading utility.
+const borniarte = localFont({
+  src: "./fonts/Borniarte.ttf",
+  variable: "--font-borniarte",
   display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+// Brand body face. Poppins ships only Regular in the brand kit, so load the full
+// weight range from Google for proper body/UI typography.
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -60,7 +65,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable} h-full antialiased`}
+      className={`${borniarte.variable} ${poppins.variable} h-full antialiased`}
     >
       {/* Google Analytics — GA_MEASUREMENT_ID to be added */}
       {/* Meta Pixel — PIXEL_ID to be added */}

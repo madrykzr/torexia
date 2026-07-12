@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
@@ -38,9 +39,13 @@ export function MobileDrawer({
             aria-label="Menu"
           >
             <div className="flex items-center justify-between">
-              <span className="font-heading text-xl tracking-[0.2em] text-coffee">
-                TOREXIA
-              </span>
+              <Image
+                src="/images/logo.svg"
+                alt="Torexia"
+                width={150}
+                height={27}
+                className="h-6 w-auto"
+              />
               <button
                 onClick={onClose}
                 aria-label="Close menu"

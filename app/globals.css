@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand palette */
-  --color-cream: #faf7f2;
-  --color-cream-200: #f1eae0;
-  --color-coffee: #3b2314;
-  --color-coffee-700: #4d3020;
-  --color-coffee-600: #5f3f2b;
-  --color-blush: #c9a99a;
-  --color-blush-300: #d9c1b6;
-  --color-blush-100: #ede0d9;
-  --color-charcoal: #1c1c1c;
-  --color-charcoal-600: #4a4a4a;
+  /* Brand palette — Torexia: Burgundy Bloom #8E0045 + Pearl Beige #EFE9DD.
+     Token names are kept from the previous system so utilities recolour globally;
+     values are remapped to the brand. "cream" = pearl tones, "coffee" = burgundy. */
+  --color-cream: #f4efe6; /* soft pearl — page base */
+  --color-cream-200: #efe9dd; /* Pearl Beige (exact) — section contrast */
+  --color-coffee: #8e0045; /* Burgundy Bloom (exact) — headings, footer, buttons */
+  --color-coffee-700: #75003a; /* deeper burgundy */
+  --color-coffee-600: #a81a5c; /* lighter burgundy — hover */
+  --color-blush: #b75e86; /* burgundy tint — accents / hover */
+  --color-blush-300: #ce93ae;
+  --color-blush-100: #ebd3de;
+  --color-charcoal: #2a1a22; /* warm near-black — body text */
+  --color-charcoal-600: #6b5560;
 
-  /* Typography */
-  --font-heading: var(--font-playfair);
-  --font-body: var(--font-inter);
+  /* Typography — brand fonts: Borniarte (display) + Poppins (body) */
+  --font-heading: var(--font-borniarte);
+  --font-body: var(--font-poppins);
 
   /* Easing */
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -53,6 +55,13 @@ h4,
 ::selection {
   background-color: var(--color-blush);
   color: #fff;
+}
+
+/* Logomania: top-level pearl sections share the body's pearl, so drop their
+   opaque fill to let the fixed monogram watermark read through. Cards, inputs,
+   the mobile drawer (divs/aside) and burgundy bands keep their own background. */
+section.bg-cream {
+  background-color: transparent;
 }
 
 /* Hide scrollbars on horizontal carousels while keeping scroll */
