@@ -1,5 +1,5 @@
 import type {StructureResolver} from 'sanity/structure'
-import {CogIcon, TagIcon, DocumentTextIcon} from '@sanity/icons'
+import {CogIcon, TagIcon, DocumentTextIcon, CalendarIcon} from '@sanity/icons'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S) =>
@@ -7,6 +7,10 @@ export const structure: StructureResolver = (S) =>
     .title('Content')
     .items([
       S.documentTypeListItem('product').title('Products').icon(TagIcon),
+      // Rental Products are managed independently from Products (for /rent).
+      S.documentTypeListItem('rentalProduct')
+        .title('Rental Products')
+        .icon(CalendarIcon),
       S.documentTypeListItem('blogPost').title('Blog Posts').icon(DocumentTextIcon),
       S.divider(),
       // Site Settings as a singleton (one editable document)
