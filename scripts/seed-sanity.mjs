@@ -8,7 +8,8 @@
  *   2. Add it to .env.local:   SANITY_API_WRITE_TOKEN="sk..."
  *   3. Run:                    npm run seed
  *
- * Re-running replaces the same documents (idempotent), but re-uploads images.
+ * Safe to re-run: existing documents (by _id) are skipped, never overwritten,
+ * so Studio edits are preserved. Only missing content is created.
  */
 import {createClient} from '@sanity/client'
 import {createReadStream} from 'node:fs'
@@ -36,6 +37,13 @@ const client = createClient({
 
 let k = 0
 const key = () => `seed${k++}`
+
+// Safe seeding: never overwrite content that already exists (e.g. edits made
+// in the Studio). Returns true when a document with this _id is already present.
+async function existsDoc(id) {
+  const doc = await client.getDocument(id)
+  return Boolean(doc)
+}
 
 async function uploadImage(path, alt) {
   const asset = await client.assets.upload('image', createReadStream(path), {
@@ -247,12 +255,17 @@ const POSTS = [
 async function seed() {
   console.log('Seeding products…')
   for (const prod of PRODUCTS) {
+    const _id = `product.${prod.slug}`
+    if (await existsDoc(_id)) {
+      console.log(`  • ${prod.name} (exists, skipped)`)
+      continue
+    }
     const images = []
     for (const src of prod.images) {
       images.push(await uploadImage(src, `${prod.name} abaya`))
     }
-    await client.createOrReplace({
-      _id: `product.${prod.slug}`,
+    await client.createIfNotExists({
+      _id,
       _type: 'product',
       name: prod.name,
       slug: {_type: 'slug', current: prod.slug},
@@ -269,12 +282,17 @@ async function seed() {
 
   console.log('Seeding rental products…')
   for (const r of RENTAL_PRODUCTS) {
+    const _id = `rentalProduct.${r.slug}`
+    if (await existsDoc(_id)) {
+      console.log(`  • ${r.name} (exists, skipped)`)
+      continue
+    }
     const images = []
     for (const src of r.images) {
       images.push(await uploadImage(src, r.name))
     }
-    await client.createOrReplace({
-      _id: `rentalProduct.${r.slug}`,
+    await client.createIfNotExists({
+      _id,
       _type: 'rentalProduct',
       name: r.name,
       slug: {_type: 'slug', current: r.slug},
@@ -293,9 +311,14 @@ async function seed() {
 
   console.log('Seeding blog posts…')
   for (const post of POSTS) {
+    const _id = `post.${post.slug}`
+    if (await existsDoc(_id)) {
+      console.log(`  • ${post.title} (exists, skipped)`)
+      continue
+    }
     const mainImage = await uploadImage(post.cover, post.title)
-    await client.createOrReplace({
-      _id: `post.${post.slug}`,
+    await client.createIfNotExists({
+      _id,
       _type: 'blogPost',
       title: post.title,
       slug: {_type: 'slug', current: post.slug},
@@ -308,7 +331,7 @@ async function seed() {
   }
 
   console.log('Seeding site settings…')
-  await client.createOrReplace({
+  await client.createIfNotExists({
     _id: 'siteSettings',
     _type: 'siteSettings',
     whatsapp: '60132209408',
