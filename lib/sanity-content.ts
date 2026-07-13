@@ -2,7 +2,14 @@ import type { PortableTextBlock } from "@portabletext/types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { COLOURS } from "@/data/products";
-import type { BlogPost, Colour, Product, Size, SiteSettings } from "@/lib/types";
+import type {
+  BlogPost,
+  Colour,
+  Product,
+  RentalProduct,
+  Size,
+  SiteSettings,
+} from "@/lib/types";
 
 const REVALIDATE = 60; // ISR: published content appears within ~60s
 
@@ -23,6 +30,21 @@ type RawProduct = {
   sizes?: string[];
   images?: unknown[];
   featured?: boolean;
+};
+
+type RawRentalProduct = {
+  id: string;
+  name: string;
+  slug: string | null;
+  rentalPricePerDay?: number;
+  deposit?: number;
+  fabric?: string;
+  description?: string;
+  colours?: string[];
+  sizes?: string[];
+  images?: unknown[];
+  available?: boolean;
+  category?: string;
 };
 
 type RawPost = {
@@ -69,6 +91,25 @@ function mapProduct(raw: RawProduct): Product {
       .map((img) => imageUrl(img))
       .filter((u): u is string => Boolean(u)),
     featured: Boolean(raw.featured),
+  };
+}
+
+function mapRentalProduct(raw: RawRentalProduct): RentalProduct {
+  return {
+    id: raw.id,
+    slug: raw.slug ?? raw.id,
+    name: raw.name,
+    rentalPricePerDay: raw.rentalPricePerDay ?? 0,
+    deposit: raw.deposit ?? 0,
+    fabric: raw.fabric ?? "Cotton Nida",
+    description: raw.description ?? "",
+    colours: mapColours(raw.colours),
+    sizes: (raw.sizes ?? []) as Size[],
+    images: (raw.images ?? [])
+      .map((img) => imageUrl(img))
+      .filter((u): u is string => Boolean(u)),
+    available: Boolean(raw.available),
+    category: raw.category ?? "",
   };
 }
 
@@ -139,6 +180,36 @@ export async function getRelatedProducts(
 export async function getProductSlugs(): Promise<string[]> {
   return query<string[]>(
     `*[_type == "product" && defined(slug.current)].slug.current`,
+  );
+}
+
+// --- Rental products -----------------------------------------------------
+
+const RENTAL_FIELDS = `
+  "id": _id, name, "slug": slug.current, rentalPricePerDay, deposit, fabric,
+  description, colours, sizes, available, category, images
+`;
+
+export async function getAllRentalProducts(): Promise<RentalProduct[]> {
+  const raw = await query<RawRentalProduct[]>(
+    `*[_type == "rentalProduct" && available == true && defined(slug.current)] | order(name asc){${RENTAL_FIELDS}}`,
+  );
+  return raw.map(mapRentalProduct);
+}
+
+export async function getRentalProductBySlug(
+  slug: string,
+): Promise<RentalProduct | null> {
+  const raw = await query<RawRentalProduct | null>(
+    `*[_type == "rentalProduct" && slug.current == $slug][0]{${RENTAL_FIELDS}}`,
+    { slug },
+  );
+  return raw ? mapRentalProduct(raw) : null;
+}
+
+export async function getRentalProductSlugs(): Promise<string[]> {
+  return query<string[]>(
+    `*[_type == "rentalProduct" && defined(slug.current)].slug.current`,
   );
 }
 

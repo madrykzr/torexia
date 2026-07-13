@@ -129,6 +129,33 @@ const PRODUCTS = [
   },
 ]
 
+const RENTAL_PRODUCTS = [
+  {
+    slug: 'premium-abaya-rental',
+    name: 'Premium Abaya Rental',
+    rentalPricePerDay: 50,
+    deposit: 100,
+    category: 'Premium Abaya',
+    description:
+      'Our premium open abaya, available to rent for weddings, engagements and special occasions. Elegant loop-lace detailing and a graceful drape. ' +
+      BASE_DESCRIPTION,
+    colours: ['black', 'coffee', 'sand'],
+    images: [p('black', 1), p('coffee', 1), p('sand', 1)],
+  },
+  {
+    slug: 'luxury-kaftan-rental',
+    name: 'Luxury Kaftan Rental',
+    rentalPricePerDay: 80,
+    deposit: 150,
+    category: 'Kaftan',
+    description:
+      'A statement luxury kaftan for your most special moments — a flowing silhouette with a refined, elevated finish. ' +
+      BASE_DESCRIPTION,
+    colours: ['soft-pink', 'sage-green', 'sky-blue'],
+    images: [p('soft-pink', 1), p('sage-green', 1), p('sky-blue', 1)],
+  },
+]
+
 const POSTS = [
   {
     slug: 'styling-your-daily-abaya',
@@ -238,6 +265,30 @@ async function seed() {
       featured: prod.featured,
     })
     console.log(`  ✓ ${prod.name}`)
+  }
+
+  console.log('Seeding rental products…')
+  for (const r of RENTAL_PRODUCTS) {
+    const images = []
+    for (const src of r.images) {
+      images.push(await uploadImage(src, r.name))
+    }
+    await client.createOrReplace({
+      _id: `rentalProduct.${r.slug}`,
+      _type: 'rentalProduct',
+      name: r.name,
+      slug: {_type: 'slug', current: r.slug},
+      rentalPricePerDay: r.rentalPricePerDay,
+      deposit: r.deposit,
+      fabric: 'Cotton Nida',
+      description: r.description,
+      colours: r.colours,
+      sizes: ['S', 'M', 'L', 'XL'],
+      images,
+      available: true,
+      category: r.category,
+    })
+    console.log(`  ✓ ${r.name}`)
   }
 
   console.log('Seeding blog posts…')

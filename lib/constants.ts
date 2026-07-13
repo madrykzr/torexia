@@ -32,6 +32,7 @@ export const CONTACT = {
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/shop" },
+  { label: "Rent", href: "/rent" },
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
 ] as const;
@@ -47,6 +48,22 @@ export function whatsappUrl(message?: string): string {
 /** Format a Ringgit price, e.g. 199 -> "RM199" */
 export function formatPrice(price: number): string {
   return `RM${price}`;
+}
+
+/** Pre-filled WhatsApp enquiry for a rental piece. Unset fields show as "___". */
+export function rentalMessage(opts: {
+  name: string;
+  size?: string;
+  colour?: string;
+  days?: number | string;
+  date?: string;
+}): string {
+  const blank = "___";
+  return `Hi Torexia! I'm interested in renting ${opts.name}. Size: ${
+    opts.size || blank
+  } Colour: ${opts.colour || blank} Number of days: ${
+    opts.days || blank
+  } Date needed: ${opts.date || blank}`;
 }
 
 /** Format an ISO date string, e.g. "2026-06-18" -> "18 June 2026" */

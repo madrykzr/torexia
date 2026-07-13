@@ -24,6 +24,26 @@ export type Product = {
   featured: boolean;
 };
 
+export type RentalProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  /** Rental price per day in Malaysian Ringgit */
+  rentalPricePerDay: number;
+  /** Refundable deposit in Malaysian Ringgit */
+  deposit: number;
+  fabric: string;
+  description: string;
+  colours: Colour[];
+  sizes: Size[];
+  /** Resolved image URLs (Sanity CDN), ordered */
+  images: string[];
+  /** When false, hidden from the rental listing */
+  available: boolean;
+  /** Premium Abaya | Kaftan | Accessories */
+  category: string;
+};
+
 export type BlogPost = {
   id: string;
   slug: string;
