@@ -22,6 +22,8 @@ export type Product = {
   /** Resolved image URLs (Sanity CDN), ordered */
   images: string[];
   featured: boolean;
+  /** Collection slug, e.g. "daily-abaya" (empty when untagged) */
+  collection: string;
 };
 
 export type RentalProduct = {

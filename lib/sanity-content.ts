@@ -30,6 +30,7 @@ type RawProduct = {
   sizes?: string[];
   images?: unknown[];
   featured?: boolean;
+  collection?: string;
 };
 
 type RawRentalProduct = {
@@ -91,6 +92,7 @@ function mapProduct(raw: RawProduct): Product {
       .map((img) => imageUrl(img))
       .filter((u): u is string => Boolean(u)),
     featured: Boolean(raw.featured),
+    collection: raw.collection ?? "",
   };
 }
 
@@ -134,7 +136,7 @@ function mapPost(raw: RawPost): BlogPost {
 
 const PRODUCT_FIELDS = `
   "id": _id, name, "slug": slug.current, price, fabric, description,
-  colours, sizes, featured, images
+  colours, sizes, featured, collection, images
 `;
 
 export async function getAllProducts(): Promise<Product[]> {

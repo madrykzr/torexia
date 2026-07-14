@@ -2,6 +2,18 @@ import type { Colour, Product, Size } from "@/lib/types";
 
 export const SIZES: Size[] = ["S", "M", "L", "XL"];
 
+// Collection tabs for the shop filter. `value` matches the product schema's
+// COLLECTION_OPTIONS slugs; `label` is what shows on the tab.
+export const COLLECTIONS: { value: string; label: string }[] = [
+  { value: "daily-abaya", label: "Daily Abaya" },
+  { value: "premium-abaya", label: "Premium Abaya" },
+  { value: "luxury", label: "Luxury" },
+  { value: "plus-size", label: "Plus Size" },
+  { value: "kaftan", label: "Kaftan" },
+  { value: "hijab", label: "Hijab" },
+  { value: "accessories", label: "Accessories" },
+];
+
 // Brand colour palette — swatch metadata (hex) keyed by slug. Products in
 // Sanity store colour slugs; the frontend resolves name + hex from here.
 export const COLOURS: Record<string, Colour> = {

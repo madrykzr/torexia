@@ -3,11 +3,21 @@
 import { useMemo, useState } from "react";
 import { X } from "lucide-react";
 import type { Product, Size } from "@/lib/types";
-import { COLOUR_LIST, SIZES } from "@/data/products";
+import { COLLECTIONS, COLOUR_LIST, SIZES } from "@/data/products";
 import { cn } from "@/lib/cn";
 import { ProductCard } from "./ProductCard";
 
-export function ShopBrowser({ products }: { products: Product[] }) {
+const COLLECTION_TABS = [{ value: "all", label: "All" }, ...COLLECTIONS];
+
+export function ShopBrowser({
+  products,
+  collection,
+  onCollectionChange,
+}: {
+  products: Product[];
+  collection: string;
+  onCollectionChange: (value: string) => void;
+}) {
   const [colours, setColours] = useState<Set<string>>(new Set());
   const [sizes, setSizes] = useState<Set<Size>>(new Set());
 
@@ -20,17 +30,40 @@ export function ShopBrowser({ products }: { products: Product[] }) {
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
+      const collectionOk = collection === "all" || p.collection === collection;
       const colourOk =
         colours.size === 0 || p.colours.some((c) => colours.has(c.slug));
       const sizeOk = sizes.size === 0 || p.sizes.some((s) => sizes.has(s));
-      return colourOk && sizeOk;
+      return collectionOk && colourOk && sizeOk;
     });
-  }, [products, colours, sizes]);
+  }, [products, collection, colours, sizes]);
 
   const hasFilters = colours.size > 0 || sizes.size > 0;
 
   return (
     <div>
+      {/* Collection filter tabs — scroll horizontally on mobile, never wrap */}
+      <div className="mb-8 flex gap-2 overflow-x-auto no-scrollbar pb-1">
+        {COLLECTION_TABS.map((t) => {
+          const active = collection === t.value;
+          return (
+            <button
+              key={t.value}
+              onClick={() => onCollectionChange(t.value)}
+              aria-pressed={active}
+              className={cn(
+                "shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-colors",
+                active
+                  ? "border-coffee bg-coffee text-cream"
+                  : "border-charcoal/20 text-charcoal hover:border-coffee",
+              )}
+            >
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+
       <div className="flex flex-col gap-6 border-b border-charcoal/10 pb-8 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-5">
           {/* Colour filter */}
@@ -114,7 +147,7 @@ export function ShopBrowser({ products }: { products: Product[] }) {
         </div>
       ) : (
         <p className="mt-16 text-center text-charcoal-600">
-          No pieces match your filters yet. Try clearing them.
+          Coming soon — new pieces dropping soon! 🌙
         </p>
       )}
     </div>
