@@ -11,7 +11,7 @@ export async function FeaturedProducts() {
   if (featured.length === 0) return null;
 
   return (
-    <Section tone="cream">
+    <Section tone="white">
       <SectionHeading
         align="left"
         eyebrow="Best Sellers"

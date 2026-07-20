@@ -10,7 +10,43 @@ blocks below, then `npm run build`.
 
 ---
 
-## Preset A — "Soft Premium" (currently active)
+## Preset D — "Soft Boutique" (currently active)
+
+All-light, feminine boutique. **No dark sections anywhere — including the
+footer.** Burgundy appears only on the logo, buttons, links and small accents.
+
+```css
+--color-cream: #fdf9f7;        /* main background — soft warm white */
+--color-cream-200: #fef6f0;    /* subtle section — soft peach */
+--color-blush-100: #fff0f3;    /* alternate section — soft blush pink */
+--color-coffee: #8e0045;       /* Burgundy Bloom — buttons, links, small accents */
+--color-coffee-600: #75003a;   /* deeper burgundy — hover fill */
+--color-coffee-700: #5e002f;   /* deepest burgundy */
+--color-blush: #8e0045;        /* small accent labels */
+--color-blush-300: #8e0045;    /* eyebrow labels (all sections are light) */
+--color-charcoal: #2c2c2c;     /* primary text */
+--color-charcoal-600: #9b8b8b; /* secondary text — soft warm grey */
+--color-line: #f0e8e8;         /* divider */
+
+--font-heading: var(--font-borniarte);
+--font-body: var(--font-poppins);
+```
+
+Section map: Hero `#FDF9F7` · Featured Products `#FFFFFF` · Why Torexia
+`#FFF0F3` · Collections `#FEF6F0` · Newsletter `#FFF0F3` · Footer `#FDF9F7`.
+Cards are `#FFFFFF` with `box-shadow: 0 2px 16px rgba(0,0,0,0.05)`.
+Buttons are a thin `#8E0045` outline that fills burgundy with white text on hover.
+
+> **Preset D removed the `--color-espresso` token** and the whole dark-surface
+> layer. `Section tone="dark"` is now an alias for soft blush, the footer and
+> page headers are light, the hero/About/Blog photo overlays use a cream veil,
+> the navbar has no transparent light-text mode, and all button variants are
+> outlines. Switching back to a preset below restores the *colours* but the
+> layout stays light — see "Full rollback".
+
+---
+
+## Preset A — "Soft Premium"
 
 Warm cream base, deep warm brown dark bands, dusty rose-brown accent.
 
@@ -115,7 +151,8 @@ Reference commits:
 
 | Commit | State |
 |---|---|
-| `a63481e` | Soft Premium redesign (current) |
+| _(this commit)_ | Preset D — Soft Boutique, all-light (current) |
+| `a63481e` | Soft Premium redesign |
 | `4a815bf` | Burgundy Bloom — last commit before the redesign |
 | `efe659c` | Burgundy Bloom introduced (brand kit applied) |
 | `efe659c^` | Original Phase 1 cream & coffee |

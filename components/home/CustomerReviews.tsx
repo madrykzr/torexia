@@ -43,7 +43,7 @@ export function CustomerReviews() {
       <div className="mt-12 grid gap-6 sm:mt-16 lg:grid-cols-3">
         {reviews.map((r, i) => (
           <Reveal key={r.name} delay={i * 0.1}>
-            <figure className="flex h-full flex-col rounded-2xl border border-line bg-white p-8 shadow-[0_1px_2px_rgba(28,28,28,0.03)]">
+            <figure className="flex h-full flex-col rounded-2xl border border-line bg-white p-8 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
               <Stars />
               <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-charcoal-600">
                 “{r.text}”

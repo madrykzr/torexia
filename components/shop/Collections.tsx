@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
@@ -72,7 +72,7 @@ function CollectionCard({
   );
 
   const base =
-    "block h-full rounded-2xl border border-line bg-white p-7 text-left shadow-[0_1px_2px_rgba(28,28,28,0.03)] transition-shadow duration-500";
+    "block h-full rounded-2xl border border-line bg-white p-7 text-left shadow-[0_2px_16px_rgba(0,0,0,0.05)] transition-shadow duration-500";
 
   if (collection.comingSoon || !collection.value) {
     return <div className={`${base} opacity-70`}>{inner}</div>;
@@ -85,7 +85,7 @@ function CollectionCard({
       <button
         type="button"
         onClick={() => onExplore(value)}
-        className={`group w-full ${base} hover:shadow-[0_16px_40px_-16px_rgba(28,28,28,0.16)]`}
+        className={`group w-full ${base} hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]`}
       >
         {inner}
       </button>
@@ -94,7 +94,7 @@ function CollectionCard({
 
   // Fallback (no handler): link to the shop page.
   return (
-    <Link href="/shop" className={`group ${base} hover:shadow-[0_16px_40px_-16px_rgba(28,28,28,0.16)]`}>
+    <Link href="/shop" className={`group ${base} hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]`}>
       {inner}
     </Link>
   );
@@ -106,7 +106,7 @@ export function Collections({
   onExplore?: (value: string) => void;
 }) {
   return (
-    <Section tone="cream" className="pb-0">
+    <Section tone="alt" className="pb-0">
       <SectionHeading
         align="left"
         eyebrow="Collections"

@@ -1,18 +1,18 @@
-﻿import { Section } from "@/components/ui/Section";
+import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 
 export function CtaBanner() {
   return (
     <Section tone="cream">
-      <Reveal className="flex flex-col items-center gap-6 rounded-3xl bg-espresso px-6 py-16 text-center sm:px-12 sm:py-24">
+      <Reveal className="flex flex-col items-center gap-6 rounded-3xl border border-line bg-white px-6 py-16 text-center sm:px-12 sm:py-24">
         <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
           Just Arrived
         </p>
-        <h2 className="max-w-2xl font-heading text-3xl leading-tight text-cream sm:text-5xl">
+        <h2 className="max-w-2xl font-heading text-3xl leading-tight text-charcoal sm:text-5xl">
           New Collection Available
         </h2>
-        <p className="max-w-md text-sm text-cream/70 sm:text-base">
+        <p className="max-w-md text-sm text-charcoal-600 sm:text-base">
           Discover the latest daily abayas — crafted in six calming shades,
           ready to wear.
         </p>

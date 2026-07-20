@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
@@ -48,7 +48,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           <div className="group relative">
             <button
               disabled
-              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-coffee/40 text-sm font-medium tracking-wide text-cream/90"
+              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-line text-sm font-medium tracking-wide text-charcoal-600"
             >
               <ShoppingBag className="h-4 w-4" /> Add to Cart
             </button>
@@ -64,7 +64,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
             href={whatsappUrl(message)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-cream"
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
           >
             Enquire via WhatsApp
           </a>

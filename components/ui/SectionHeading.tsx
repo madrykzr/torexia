@@ -39,7 +39,8 @@ export function SectionHeading({
       <h2
         className={cn(
           "mt-5 font-heading text-4xl leading-[1.15] sm:text-5xl",
-          tone === "light" ? "text-cream" : "text-charcoal",
+          // Every surface is light in this preset, so both tones read dark.
+          tone === "light" ? "text-charcoal" : "text-charcoal",
         )}
       >
         {title}
@@ -48,7 +49,7 @@ export function SectionHeading({
         <p
           className={cn(
             "mt-5 text-sm leading-loose sm:text-base",
-            tone === "light" ? "text-cream/70" : "text-charcoal-600",
+            tone === "light" ? "text-charcoal-600" : "text-charcoal-600",
           )}
         >
           {description}

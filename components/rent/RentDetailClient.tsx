@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
@@ -130,7 +130,7 @@ export function RentDetailClient({ product }: { product: RentalProduct }) {
             href={whatsappUrl(message)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-coffee text-sm font-medium tracking-wide text-cream transition-colors hover:bg-coffee-600"
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
           >
             Book via WhatsApp
           </a>

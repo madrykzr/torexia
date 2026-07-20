@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -79,7 +79,7 @@ export function MobileDrawer({
                 href={whatsappUrl("Hi Torexia! I'd like to know more about your abayas.")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex min-h-12 w-full items-center justify-center rounded-full bg-coffee text-sm font-medium tracking-wide text-cream"
+                className="flex min-h-12 w-full items-center justify-center rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
               >
                 Enquire via WhatsApp
               </a>

@@ -1,25 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-  /* Premium / quiet-luxury palette. Token names are kept from the previous
-     system so utilities recolour globally. "cream" = warm creams,
-     "espresso" = deep warm brown bands, "coffee" = dusty rose-brown accent.
-     The Burgundy Bloom #8E0045 brand mark survives only in the logo/favicon.
+  /* Preset D — soft, light, feminine boutique. Every surface is light: no dark
+     sections anywhere, including the footer. Burgundy #8E0045 appears only on
+     the logo, buttons, links and small accents — never as a section fill.
 
      Swapping the whole look = replacing the values below. Earlier palettes
      (Burgundy Bloom, original Phase 1) are saved in docs/theme-presets.md. */
-  --color-cream: #faf7f2; /* primary background — warm cream */
-  --color-cream-200: #f2ebe3; /* alternating section background */
-  --color-espresso: #2c1810; /* dark accent sections — footer, headers, bands */
-  --color-coffee: #8b5e52; /* brand accent — buttons, links, active states */
-  --color-coffee-600: #6b4438; /* button hover */
-  --color-coffee-700: #5a3a2f; /* deeper hover */
-  --color-blush: #a6806f; /* soft accent label — reads on light and dark */
-  --color-blush-300: #c9afa4; /* light label on dark sections */
-  --color-blush-100: #efe6df; /* soft tinted section */
-  --color-charcoal: #1c1c1c; /* primary text — near-black */
-  --color-charcoal-600: #6b5b52; /* secondary text — warm muted brown */
-  --color-line: #e8ddd5; /* borders / dividers — soft warm grey */
+  --color-cream: #fdf9f7; /* main background — soft warm white */
+  --color-cream-200: #fef6f0; /* subtle section — soft peach */
+  --color-blush-100: #fff0f3; /* alternate section — soft blush pink */
+  --color-coffee: #8e0045; /* Burgundy Bloom — buttons, links, small accents */
+  --color-coffee-600: #75003a; /* deeper burgundy — hover fill */
+  --color-coffee-700: #5e002f; /* deepest burgundy */
+  --color-blush: #8e0045; /* small accent labels */
+  --color-blush-300: #8e0045; /* eyebrow labels (all sections are light now) */
+  --color-charcoal: #2c2c2c; /* primary text */
+  --color-charcoal-600: #9b8b8b; /* secondary text — soft warm grey */
+  --color-line: #f0e8e8; /* divider */
 
   /* Typography — brand fonts: Borniarte (display) + Poppins (body) */
   --font-heading: var(--font-borniarte);
@@ -75,8 +73,8 @@ h4,
 
 /* Logomania: top-level cream sections share the body's cream, so drop their
    opaque fill to let the fixed monogram watermark read through. Cards, inputs,
-   the mobile drawer (divs/aside), alternating `bg-cream-200` sections and the
-   dark espresso bands keep their own background. */
+   the mobile drawer (divs/aside) and the tinted `bg-cream-200` / `bg-blush-100`
+   sections keep their own background. */
 section.bg-cream {
   background-color: transparent;
 }

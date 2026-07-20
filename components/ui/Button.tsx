@@ -8,12 +8,14 @@ type Variant = "primary" | "light" | "outline" | "outlineLight" | "blush";
 const base =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-8 text-sm font-normal tracking-[0.06em] transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coffee";
 
+// House style: a thin burgundy outline that fills on hover. Every variant is
+// an outline so no button ever reads as a heavy block of colour.
 const variants: Record<Variant, string> = {
-  primary: "bg-coffee text-cream hover:bg-coffee-600",
-  light: "bg-cream text-coffee hover:bg-cream-200",
-  outline: "border border-coffee/40 text-coffee hover:bg-coffee hover:text-cream",
-  outlineLight: "border border-cream/40 text-cream hover:bg-cream hover:text-coffee",
-  blush: "bg-blush text-white hover:bg-blush/90",
+  primary: "border border-coffee text-coffee hover:bg-coffee hover:text-white",
+  light: "border border-coffee text-coffee hover:bg-coffee hover:text-white",
+  outline: "border border-coffee text-coffee hover:bg-coffee hover:text-white",
+  outlineLight: "border border-coffee text-coffee hover:bg-coffee hover:text-white",
+  blush: "border border-coffee text-coffee hover:bg-coffee hover:text-white",
 };
 
 type CommonProps = {

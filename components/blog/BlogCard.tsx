@@ -7,7 +7,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-[0_1px_2px_rgba(28,28,28,0.03)] transition-shadow duration-500 hover:shadow-[0_16px_40px_-16px_rgba(28,28,28,0.16)]"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-[0_2px_16px_rgba(0,0,0,0.05)] transition-shadow duration-500 hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
     >
       <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-cream-200">
         <Image

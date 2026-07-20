@@ -13,7 +13,7 @@ export function RentCard({
   const cover = product.images[0] ?? "/images/og.jpg";
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-[0_1px_2px_rgba(28,28,28,0.03)] transition-shadow duration-500 hover:shadow-[0_16px_40px_-16px_rgba(28,28,28,0.16)]">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-[0_2px_16px_rgba(0,0,0,0.05)] transition-shadow duration-500 hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
       <Link href={`/rent/${product.slug}`} className="block">
         <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-cream-200">
           <Image
@@ -50,7 +50,7 @@ export function RentCard({
         href={whatsappUrl(rentalMessage({ name: product.name }))}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-4 flex min-h-11 w-full items-center justify-center rounded-full bg-coffee text-sm font-medium tracking-wide text-cream transition-colors hover:bg-coffee-600"
+        className="mt-4 flex min-h-11 w-full items-center justify-center rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
       >
         Book Now
       </a>

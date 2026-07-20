@@ -11,16 +11,7 @@ import { MobileDrawer } from "./MobileDrawer";
 
 export function Navbar() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -29,23 +20,15 @@ export function Navbar() {
     };
   }, [open]);
 
-  // Transparent (light text) only over the home hero when not scrolled.
-  const overlay = isHome && !scrolled;
-
+  // Every surface in this preset is light, so the bar stays soft warm white
+  // throughout — no transparent/light-text overlay variant.
   return (
     <>
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-40 transition-colors duration-300",
-          overlay
-            ? "bg-transparent"
-            : "border-b border-line bg-cream/90 backdrop-blur-md",
-        )}
-      >
+      <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-cream/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
           <Link href="/" aria-label="Torexia home" className="flex items-center">
             <Image
-              src={overlay ? "/images/logo-white.svg" : "/images/logo.svg"}
+              src="/images/logo.svg"
               alt="Torexia"
               width={177}
               height={32}
@@ -66,10 +49,8 @@ export function Navbar() {
                   href={link.href}
                   className={cn(
                     "text-sm tracking-[0.04em] transition-colors",
-                    overlay
-                      ? "text-cream/90 hover:text-white"
-                      : "text-charcoal/75 hover:text-coffee",
-                    active && !overlay && "text-coffee",
+                    "text-charcoal/75 hover:text-coffee",
+                    active && "text-coffee",
                   )}
                 >
                   {link.label}
@@ -81,10 +62,7 @@ export function Navbar() {
           <button
             onClick={() => setOpen(true)}
             aria-label="Open menu"
-            className={cn(
-              "flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden",
-              overlay ? "text-cream" : "text-espresso",
-            )}
+            className="flex h-11 w-11 items-center justify-center rounded-full text-charcoal transition-colors md:hidden"
           >
             <Menu className="h-6 w-6" />
           </button>

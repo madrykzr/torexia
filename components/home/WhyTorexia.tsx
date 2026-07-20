@@ -30,9 +30,8 @@ const features = [
 
 export function WhyTorexia() {
   return (
-    <Section tone="dark">
+    <Section tone="blush">
       <SectionHeading
-        tone="light"
         eyebrow="Why Torexia"
         title="Why choose Torexia"
       />
@@ -42,12 +41,12 @@ export function WhyTorexia() {
           <Reveal
             key={f.title}
             delay={i * 0.06}
-            className="flex items-start gap-4 rounded-2xl border border-cream/10 bg-cream/5 p-5"
+            className="flex items-start gap-4 rounded-2xl border border-line bg-white p-5"
           >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blush/20 text-blush-300">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-coffee/10 text-coffee">
               <f.icon className="h-5 w-5" strokeWidth={1.6} />
             </div>
-            <p className="pt-1.5 text-sm leading-relaxed text-cream/90">
+            <p className="pt-1.5 text-sm leading-relaxed text-charcoal">
               {f.title}
             </p>
           </Reveal>

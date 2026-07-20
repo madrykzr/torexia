@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { Check } from "lucide-react";
@@ -26,7 +26,7 @@ export function Newsletter() {
         </p>
 
         {submitted ? (
-          <p className="mt-8 inline-flex items-center gap-2 rounded-full bg-coffee px-6 py-3 text-sm text-cream">
+          <p className="mt-8 inline-flex items-center gap-2 rounded-full bg-coffee/10 px-6 py-3 text-sm text-coffee">
             <Check className="h-4 w-4" /> Thank you — you&apos;re on the list!
           </p>
         ) : (
@@ -48,7 +48,7 @@ export function Newsletter() {
             />
             <button
               type="submit"
-              className="min-h-12 rounded-full bg-coffee px-8 text-sm font-medium tracking-wide text-cream transition-colors hover:bg-coffee-600"
+              className="min-h-12 rounded-full border border-coffee px-8 text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
             >
               Subscribe
             </button>

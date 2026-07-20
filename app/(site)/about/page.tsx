@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import { Section } from "@/components/ui/Section";
@@ -40,12 +40,12 @@ export default function AboutPage() {
           sizes="100vw"
           className="object-cover object-[60%_top]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-coffee/85 via-coffee/30 to-coffee/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/85 to-cream/40" />
         <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-28 sm:px-8 sm:pb-20">
           <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
             Our Story
           </p>
-          <h1 className="mt-4 font-heading text-4xl leading-tight text-cream sm:text-6xl">
+          <h1 className="mt-4 font-heading text-4xl leading-tight text-charcoal sm:text-6xl">
             Who is Torexia?
           </h1>
         </div>
@@ -85,9 +85,8 @@ export default function AboutPage() {
       </Section>
 
       {/* Brand Foundations */}
-      <Section tone="dark">
+      <Section tone="blush">
         <SectionHeading
-          tone="light"
           eyebrow="Brand Foundations"
           title="What we stand for"
           description="The vision, mission and values that guide everything we make."
@@ -99,7 +98,7 @@ export default function AboutPage() {
             <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
               Our Vision
             </p>
-            <p className="mt-4 font-heading text-2xl leading-snug text-cream sm:text-3xl">
+            <p className="mt-4 font-heading text-2xl leading-snug text-charcoal sm:text-3xl">
               {vision}
             </p>
           </Reveal>
@@ -112,10 +111,10 @@ export default function AboutPage() {
             <ul className="mt-5 space-y-4">
               {mission.map((m) => (
                 <li key={m} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blush/20 text-blush-300">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-coffee/10 text-coffee">
                     <Check className="h-3.5 w-3.5" strokeWidth={2.2} />
                   </span>
-                  <span className="text-sm leading-relaxed text-cream/80">
+                  <span className="text-sm leading-relaxed text-charcoal-600">
                     {m}
                   </span>
                 </li>
@@ -125,7 +124,7 @@ export default function AboutPage() {
         </div>
 
         {/* Core Values */}
-        <Reveal delay={0.15} className="mt-14 border-t border-cream/10 pt-10">
+        <Reveal delay={0.15} className="mt-14 border-t border-line pt-10">
           <p className="text-center text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
             Core Values
           </p>
@@ -133,7 +132,7 @@ export default function AboutPage() {
             {coreValues.map((v) => (
               <span
                 key={v}
-                className="rounded-full border border-cream/20 px-5 py-2 font-heading text-base text-cream"
+                className="rounded-full border border-line px-5 py-2 font-heading text-base text-charcoal"
               >
                 {v}
               </span>
@@ -212,7 +211,7 @@ export default function AboutPage() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-coffee text-cream transition-transform hover:scale-105"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-coffee text-charcoal transition-transform hover:scale-105"
             >
               <InstagramIcon className="h-5 w-5" />
             </a>
@@ -221,7 +220,7 @@ export default function AboutPage() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="TikTok"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-coffee text-cream transition-transform hover:scale-105"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-coffee text-charcoal transition-transform hover:scale-105"
             >
               <TikTokIcon className="h-5 w-5" />
             </a>

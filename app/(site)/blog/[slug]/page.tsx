@@ -64,14 +64,14 @@ export default async function BlogPostPage({
           sizes="100vw"
           className="object-cover object-top"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-coffee/85 via-coffee/30 to-coffee/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/85 to-cream/40" />
         <div className="relative mx-auto w-full max-w-3xl px-5 pb-12 pt-28 sm:px-8 sm:pb-16">
           <div className="flex items-center gap-2 text-xs tracking-wide text-blush-300">
             <time dateTime={post.date}>{formatDate(post.date)}</time>
             <span aria-hidden="true">·</span>
             <span>{post.readTime}</span>
           </div>
-          <h1 className="mt-3 font-heading text-3xl leading-tight text-cream sm:text-5xl">
+          <h1 className="mt-3 font-heading text-3xl leading-tight text-charcoal sm:text-5xl">
             {post.title}
           </h1>
         </div>
