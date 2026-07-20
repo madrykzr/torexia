@@ -4,7 +4,10 @@
   /* Premium / quiet-luxury palette. Token names are kept from the previous
      system so utilities recolour globally. "cream" = warm creams,
      "espresso" = deep warm brown bands, "coffee" = dusty rose-brown accent.
-     The Burgundy Bloom #8E0045 brand mark survives only in the logo/favicon. */
+     The Burgundy Bloom #8E0045 brand mark survives only in the logo/favicon.
+
+     Swapping the whole look = replacing the values below. Earlier palettes
+     (Burgundy Bloom, original Phase 1) are saved in docs/theme-presets.md. */
   --color-cream: #faf7f2; /* primary background — warm cream */
   --color-cream-200: #f2ebe3; /* alternating section background */
   --color-espresso: #2c1810; /* dark accent sections — footer, headers, bands */
