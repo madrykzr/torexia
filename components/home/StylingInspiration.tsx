@@ -17,9 +17,8 @@ const shots = [
 
 export function StylingInspiration() {
   return (
-    <Section tone="dark">
+    <Section tone="alt">
       <SectionHeading
-        tone="light"
         eyebrow="Lookbook"
         title="Styling inspiration"
         description="Everyday looks and ways to wear your Torexia pieces."
@@ -30,7 +29,7 @@ export function StylingInspiration() {
           <Reveal
             key={src}
             delay={i * 0.05}
-            className="relative aspect-[3/4] overflow-hidden rounded-xl bg-coffee-700"
+            className="relative aspect-[3/4] overflow-hidden rounded-xl bg-cream-200"
           >
             <Image
               src={src}
@@ -46,7 +45,7 @@ export function StylingInspiration() {
       <div className="mt-10 flex justify-center">
         <ButtonLink
           href={CONTACT.instagram.url}
-          variant="outlineLight"
+          variant="outline"
           className="min-h-12"
         >
           Follow {CONTACT.instagram.handle}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import { X } from "lucide-react";
@@ -55,7 +55,7 @@ export function ShopBrowser({
                 "shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-colors",
                 active
                   ? "border-coffee bg-coffee text-cream"
-                  : "border-charcoal/20 text-charcoal hover:border-coffee",
+                  : "border-line text-charcoal hover:border-coffee",
               )}
             >
               {t.label}
@@ -64,11 +64,11 @@ export function ShopBrowser({
         })}
       </div>
 
-      <div className="flex flex-col gap-6 border-b border-charcoal/10 pb-8 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-col gap-6 border-b border-line pb-8 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex flex-col gap-5">
           {/* Colour filter */}
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-charcoal-600">
+            <span className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
               Colour
             </span>
             <div className="flex flex-wrap items-center gap-2.5">
@@ -81,7 +81,7 @@ export function ShopBrowser({
                     aria-pressed={active}
                     title={c.name}
                     className={cn(
-                      "flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-charcoal/15 transition-transform hover:scale-105",
+                      "flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-line transition-transform hover:scale-105",
                       active && "ring-2 ring-coffee ring-offset-2 ring-offset-cream",
                     )}
                     style={{ backgroundColor: c.hex }}
@@ -95,7 +95,7 @@ export function ShopBrowser({
 
           {/* Size filter */}
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-charcoal-600">
+            <span className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
               Size
             </span>
             <div className="flex flex-wrap items-center gap-2">
@@ -110,7 +110,7 @@ export function ShopBrowser({
                       "flex h-9 min-w-11 items-center justify-center rounded-full border px-3 text-sm transition-colors",
                       active
                         ? "border-coffee bg-coffee text-cream"
-                        : "border-charcoal/20 text-charcoal hover:border-coffee",
+                        : "border-line text-charcoal hover:border-coffee",
                     )}
                   >
                     {s}

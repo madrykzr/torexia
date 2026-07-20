@@ -6,7 +6,7 @@ import { InstagramIcon, TikTokIcon } from "@/components/ui/BrandIcons";
 
 export function Footer() {
   return (
-    <footer className="bg-coffee text-cream">
+    <footer className="bg-espresso text-cream">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:gap-8">
         <div className="lg:col-span-2">
           <Image
@@ -25,7 +25,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-xs font-medium uppercase tracking-[0.2em] text-blush-300">
+          <h3 className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
             Explore
           </h3>
           <ul className="mt-4 space-y-3">
@@ -33,7 +33,7 @@ export function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-cream/80 transition-colors hover:text-blush"
+                  className="text-sm text-cream/80 transition-colors hover:text-blush-300"
                 >
                   {link.label}
                 </Link>
@@ -43,7 +43,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-xs font-medium uppercase tracking-[0.2em] text-blush-300">
+          <h3 className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
             Connect
           </h3>
           <ul className="mt-4 space-y-3 text-sm text-cream/80">
@@ -52,7 +52,7 @@ export function Footer() {
                 href={CONTACT.instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 transition-colors hover:text-blush"
+                className="inline-flex items-center gap-2 transition-colors hover:text-blush-300"
               >
                 <InstagramIcon className="h-4 w-4" /> {CONTACT.instagram.handle}
               </a>
@@ -62,7 +62,7 @@ export function Footer() {
                 href={CONTACT.tiktok.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 transition-colors hover:text-blush"
+                className="inline-flex items-center gap-2 transition-colors hover:text-blush-300"
               >
                 <TikTokIcon className="h-4 w-4" /> {CONTACT.tiktok.handle}
               </a>
@@ -70,7 +70,7 @@ export function Footer() {
             <li>
               <a
                 href={`mailto:${CONTACT.email}`}
-                className="inline-flex items-center gap-2 transition-colors hover:text-blush"
+                className="inline-flex items-center gap-2 transition-colors hover:text-blush-300"
               >
                 <Mail className="h-4 w-4" /> {CONTACT.email}
               </a>
@@ -78,7 +78,7 @@ export function Footer() {
             <li>
               <a
                 href={`tel:${CONTACT.phone.replace(/[\s-]/g, "")}`}
-                className="inline-flex items-center gap-2 transition-colors hover:text-blush"
+                className="inline-flex items-center gap-2 transition-colors hover:text-blush-300"
               >
                 <Phone className="h-4 w-4" /> {CONTACT.phone}
               </a>
@@ -88,7 +88,7 @@ export function Footer() {
                 href={CONTACT.website.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 transition-colors hover:text-blush"
+                className="inline-flex items-center gap-2 transition-colors hover:text-blush-300"
               >
                 <Globe className="h-4 w-4" /> {CONTACT.website.label}
               </a>

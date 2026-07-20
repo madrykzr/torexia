@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,7 +17,7 @@ export function Accordion({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-charcoal/10">
+    <div className="border-b border-line">
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}

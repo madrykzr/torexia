@@ -1,4 +1,4 @@
-import { Section } from "@/components/ui/Section";
+﻿import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 
 export function BrandQuote() {
@@ -9,7 +9,7 @@ export function BrandQuote() {
           “Modest fashion isn&apos;t about covering up. It&apos;s about feeling
           beautiful, comfortable and confident — on an ordinary everyday.”
         </p>
-        <p className="mt-8 text-xs font-medium uppercase tracking-[0.3em] text-blush-300">
+        <p className="mt-8 text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
           The Torexia Promise
         </p>
       </Reveal>

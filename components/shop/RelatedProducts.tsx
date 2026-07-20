@@ -1,4 +1,4 @@
-import { getRelatedProducts } from "@/lib/sanity-content";
+﻿import { getRelatedProducts } from "@/lib/sanity-content";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProductCard } from "./ProductCard";
 
@@ -7,7 +7,7 @@ export async function RelatedProducts({ slug }: { slug: string }) {
   if (related.length === 0) return null;
 
   return (
-    <div className="border-t border-charcoal/10 pt-16">
+    <div className="border-t border-line pt-16">
       <Reveal>
         <h2 className="font-heading text-2xl text-charcoal sm:text-3xl">
           You may also like

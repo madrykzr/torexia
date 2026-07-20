@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
@@ -64,7 +64,7 @@ function CollectionCard({
         {collection.description}
       </p>
       {!collection.comingSoon && (
-        <span className="mt-4 inline-block text-xs font-medium uppercase tracking-[0.2em] text-blush transition-colors group-hover:text-coffee">
+        <span className="mt-4 inline-block text-xs font-medium uppercase tracking-[0.15em] text-blush transition-colors group-hover:text-coffee">
           Explore →
         </span>
       )}
@@ -72,7 +72,7 @@ function CollectionCard({
   );
 
   const base =
-    "block h-full rounded-2xl border border-charcoal/10 bg-cream p-6 text-left transition-colors";
+    "block h-full rounded-2xl border border-line bg-white p-7 text-left shadow-[0_1px_2px_rgba(28,28,28,0.03)] transition-shadow duration-500";
 
   if (collection.comingSoon || !collection.value) {
     return <div className={`${base} opacity-70`}>{inner}</div>;
@@ -85,7 +85,7 @@ function CollectionCard({
       <button
         type="button"
         onClick={() => onExplore(value)}
-        className={`group w-full ${base} hover:border-coffee/30`}
+        className={`group w-full ${base} hover:shadow-[0_16px_40px_-16px_rgba(28,28,28,0.16)]`}
       >
         {inner}
       </button>
@@ -94,7 +94,7 @@ function CollectionCard({
 
   // Fallback (no handler): link to the shop page.
   return (
-    <Link href="/shop" className={`group ${base} hover:border-coffee/30`}>
+    <Link href="/shop" className={`group ${base} hover:shadow-[0_16px_40px_-16px_rgba(28,28,28,0.16)]`}>
       {inner}
     </Link>
   );

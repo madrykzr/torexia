@@ -13,9 +13,9 @@ export function RentCard({
   const cover = product.images[0] ?? "/images/og.jpg";
 
   return (
-    <div className="group flex flex-col">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-[0_1px_2px_rgba(28,28,28,0.03)] transition-shadow duration-500 hover:shadow-[0_16px_40px_-16px_rgba(28,28,28,0.16)]">
       <Link href={`/rent/${product.slug}`} className="block">
-        <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-cream-200">
+        <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-cream-200">
           <Image
             src={cover}
             alt={product.name}
@@ -25,7 +25,7 @@ export function RentCard({
             className="object-cover transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105"
           />
         </div>
-        <div className="mt-4">
+        <div className="mt-5 px-1">
           <h3 className="font-heading text-lg text-charcoal">{product.name}</h3>
           <p className="mt-1 text-sm text-charcoal-600">
             RM{product.rentalPricePerDay}
@@ -37,7 +37,7 @@ export function RentCard({
                 <span
                   key={c.slug}
                   title={c.name}
-                  className="h-3.5 w-3.5 rounded-full ring-1 ring-charcoal/15"
+                  className="h-3.5 w-3.5 rounded-full ring-1 ring-line"
                   style={{ backgroundColor: c.hex }}
                 />
               ))}

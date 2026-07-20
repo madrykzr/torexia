@@ -4,13 +4,14 @@ import { cn } from "@/lib/cn";
 
 type Variant = "primary" | "light" | "outline" | "outlineLight" | "blush";
 
+// Elegant, not chunky: airier padding, lighter weight, restrained tracking.
 const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-7 text-sm font-medium tracking-wide transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blush";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-8 text-sm font-normal tracking-[0.06em] transition-colors duration-300 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coffee";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-coffee text-cream hover:bg-coffee-700",
+  primary: "bg-coffee text-cream hover:bg-coffee-600",
   light: "bg-cream text-coffee hover:bg-cream-200",
-  outline: "border border-coffee/30 text-coffee hover:bg-coffee hover:text-cream",
+  outline: "border border-coffee/40 text-coffee hover:bg-coffee hover:text-cream",
   outlineLight: "border border-cream/40 text-cream hover:bg-cream hover:text-coffee",
   blush: "bg-blush text-white hover:bg-blush/90",
 };

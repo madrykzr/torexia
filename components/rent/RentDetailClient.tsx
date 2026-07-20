@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
@@ -62,7 +62,7 @@ export function RentDetailClient({ product }: { product: RentalProduct }) {
 
           {/* Number of days */}
           <div>
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-charcoal-600">
+            <span className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
               Number of days
             </span>
             <div className="mt-3 flex items-center gap-3">
@@ -70,7 +70,7 @@ export function RentDetailClient({ product }: { product: RentalProduct }) {
                 type="button"
                 onClick={() => setDays((d) => Math.max(1, d - 1))}
                 aria-label="Decrease days"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-charcoal/20 text-charcoal transition-colors hover:border-coffee disabled:opacity-40"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-charcoal transition-colors hover:border-coffee disabled:opacity-40"
                 disabled={days <= 1}
               >
                 <Minus className="h-4 w-4" />
@@ -83,13 +83,13 @@ export function RentDetailClient({ product }: { product: RentalProduct }) {
                   setDays(Math.max(1, Math.floor(Number(e.target.value) || 1)))
                 }
                 aria-label="Number of rental days"
-                className="h-11 w-20 rounded-full border border-charcoal/20 bg-transparent text-center text-sm text-charcoal focus:border-coffee focus:outline-none"
+                className="h-11 w-20 rounded-full border border-line bg-transparent text-center text-sm text-charcoal focus:border-coffee focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => setDays((d) => d + 1)}
                 aria-label="Increase days"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-charcoal/20 text-charcoal transition-colors hover:border-coffee"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-line text-charcoal transition-colors hover:border-coffee"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -98,7 +98,7 @@ export function RentDetailClient({ product }: { product: RentalProduct }) {
 
           {/* Date needed */}
           <div>
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-charcoal-600">
+            <span className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
               Date needed
             </span>
             <div className="mt-3">
@@ -108,7 +108,7 @@ export function RentDetailClient({ product }: { product: RentalProduct }) {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 aria-label="Date needed"
-                className="h-11 rounded-full border border-charcoal/20 bg-transparent px-4 text-sm text-charcoal focus:border-coffee focus:outline-none"
+                className="h-11 rounded-full border border-line bg-transparent px-4 text-sm text-charcoal focus:border-coffee focus:outline-none"
               />
             </div>
           </div>

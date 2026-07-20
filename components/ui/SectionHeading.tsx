@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+﻿import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Reveal } from "./Reveal";
 
@@ -29,7 +29,7 @@ export function SectionHeading({
       {eyebrow && (
         <p
           className={cn(
-            "text-xs font-medium uppercase tracking-[0.28em]",
+            "text-xs font-medium uppercase tracking-[0.15em]",
             tone === "light" ? "text-blush-300" : "text-blush",
           )}
         >
@@ -38,7 +38,7 @@ export function SectionHeading({
       )}
       <h2
         className={cn(
-          "mt-3 font-heading text-3xl leading-tight sm:text-4xl",
+          "mt-5 font-heading text-4xl leading-[1.15] sm:text-5xl",
           tone === "light" ? "text-cream" : "text-charcoal",
         )}
       >
@@ -47,7 +47,7 @@ export function SectionHeading({
       {description && (
         <p
           className={cn(
-            "mt-4 text-sm leading-relaxed sm:text-base",
+            "mt-5 text-sm leading-loose sm:text-base",
             tone === "light" ? "text-cream/70" : "text-charcoal-600",
           )}
         >

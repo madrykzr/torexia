@@ -11,7 +11,7 @@ export default function SiteLayout({
       {/* Logomania — subtle fixed monogram watermark behind all content */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10 opacity-[0.04]"
+        className="pointer-events-none fixed inset-0 -z-10 opacity-[0.03]"
         style={{
           backgroundImage: "url(/images/icon.svg)",
           backgroundSize: "132px",

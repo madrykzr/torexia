@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-type Tone = "cream" | "dark" | "blush";
+type Tone = "cream" | "alt" | "dark" | "blush";
 
 const toneClasses: Record<Tone, string> = {
   cream: "bg-cream text-charcoal",
-  dark: "bg-coffee text-cream",
+  /** Alternating warm cream — slightly deeper than the page base */
+  alt: "bg-cream-200 text-charcoal",
+  dark: "bg-espresso text-cream",
   blush: "bg-blush-100 text-charcoal",
 };
 
@@ -27,7 +29,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn(toneClasses[tone], spacing && "py-16 sm:py-24", className)}
+      className={cn(toneClasses[tone], spacing && "py-20 sm:py-32", className)}
     >
       {container ? (
         <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">{children}</div>

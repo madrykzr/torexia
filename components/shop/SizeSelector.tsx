@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { Size } from "@/lib/types";
 import { cn } from "@/lib/cn";
@@ -14,7 +14,7 @@ export function SizeSelector({
 }) {
   return (
     <div>
-      <span className="text-xs font-medium uppercase tracking-[0.2em] text-charcoal-600">
+      <span className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
         Size
       </span>
       <div className="mt-3 flex flex-wrap gap-2.5">
@@ -29,7 +29,7 @@ export function SizeSelector({
                 "flex h-11 min-w-12 items-center justify-center rounded-full border px-4 text-sm font-medium transition-colors",
                 active
                   ? "border-coffee bg-coffee text-cream"
-                  : "border-charcoal/20 text-charcoal hover:border-coffee",
+                  : "border-line text-charcoal hover:border-coffee",
               )}
             >
               {s}

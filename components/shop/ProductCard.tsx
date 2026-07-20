@@ -12,8 +12,11 @@ export function ProductCard({
   priority?: boolean;
 }) {
   return (
-    <Link href={`/shop/${product.slug}`} className="group block">
-      <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-cream-200">
+    <Link
+      href={`/shop/${product.slug}`}
+      className="group block overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-[0_1px_2px_rgba(28,28,28,0.03)] transition-shadow duration-500 hover:shadow-[0_16px_40px_-16px_rgba(28,28,28,0.16)]"
+    >
+      <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-cream-200">
         <Image
           src={primaryImage(product)}
           alt={product.name}
@@ -23,7 +26,7 @@ export function ProductCard({
           className="object-cover transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105"
         />
       </div>
-      <div className="mt-4 flex items-start justify-between gap-3">
+      <div className="mt-5 flex items-start justify-between gap-3 px-1">
         <div>
           <h3 className="font-heading text-lg text-charcoal">{product.name}</h3>
           <p className="mt-1 text-sm text-charcoal-600">
@@ -35,13 +38,13 @@ export function ProductCard({
             <span
               key={c.slug}
               title={c.name}
-              className="h-3.5 w-3.5 rounded-full ring-1 ring-charcoal/15"
+              className="h-3.5 w-3.5 rounded-full ring-1 ring-line"
               style={{ backgroundColor: c.hex }}
             />
           ))}
         </div>
       </div>
-      <span className="mt-3 inline-block text-xs font-medium uppercase tracking-[0.2em] text-blush transition-colors group-hover:text-coffee">
+      <span className="mb-1 mt-4 inline-block px-1 text-xs font-medium uppercase tracking-[0.15em] text-blush transition-colors group-hover:text-coffee">
         View Details →
       </span>
     </Link>

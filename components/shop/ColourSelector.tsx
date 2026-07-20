@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import type { Colour } from "@/lib/types";
 import { cn } from "@/lib/cn";
@@ -15,7 +15,7 @@ export function ColourSelector({
   return (
     <div>
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium uppercase tracking-[0.2em] text-charcoal-600">
+        <span className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
           Colour
         </span>
         <span className="text-sm text-charcoal">{selected.name}</span>
@@ -30,7 +30,7 @@ export function ColourSelector({
               aria-pressed={active}
               title={c.name}
               className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-charcoal/15 transition-transform hover:scale-105",
+                "flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-line transition-transform hover:scale-105",
                 active && "ring-2 ring-coffee ring-offset-2 ring-offset-cream",
               )}
               style={{ backgroundColor: c.hex }}

@@ -83,7 +83,7 @@ export function ProductGallery({
                 "relative aspect-[3/4] overflow-hidden rounded-lg ring-1 transition",
                 i === active
                   ? "ring-2 ring-coffee"
-                  : "ring-charcoal/10 hover:ring-coffee/40",
+                  : "ring-line hover:ring-coffee/40",
               )}
             >
               <Image src={src} alt="" fill sizes="10vw" className="object-cover" />

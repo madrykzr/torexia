@@ -82,7 +82,7 @@ export default async function BlogPostPage({
         <article className="mx-auto max-w-2xl">
           <PortableBody value={post.body} />
 
-          <div className="mt-12 border-t border-charcoal/10 pt-8">
+          <div className="mt-12 border-t border-line pt-8">
             <Link
               href="/blog"
               className="inline-flex items-center gap-2 text-sm font-medium tracking-wide text-coffee transition-colors hover:text-blush"
@@ -96,7 +96,7 @@ export default async function BlogPostPage({
       {/* More posts */}
       {more.length > 0 && (
         <Section tone="cream" className="pt-0">
-          <div className="border-t border-charcoal/10 pt-16">
+          <div className="border-t border-line pt-16">
             <h2 className="font-heading text-2xl text-charcoal sm:text-3xl">
               More from the Journal
             </h2>

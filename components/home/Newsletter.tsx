@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Check } from "lucide-react";
@@ -44,11 +44,11 @@ export function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email address"
-              className="min-h-12 flex-1 rounded-full border border-charcoal/15 bg-cream px-6 text-sm text-charcoal outline-none transition-colors placeholder:text-charcoal/40 focus:border-coffee"
+              className="min-h-12 flex-1 rounded-full border border-line bg-cream px-6 text-sm text-charcoal outline-none transition-colors placeholder:text-charcoal/40 focus:border-coffee"
             />
             <button
               type="submit"
-              className="min-h-12 rounded-full bg-coffee px-8 text-sm font-medium tracking-wide text-cream transition-colors hover:bg-coffee-700"
+              className="min-h-12 rounded-full bg-coffee px-8 text-sm font-medium tracking-wide text-cream transition-colors hover:bg-coffee-600"
             >
               Subscribe
             </button>

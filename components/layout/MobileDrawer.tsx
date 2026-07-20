@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -66,7 +66,7 @@ export function MobileDrawer({
                   <Link
                     href={link.href}
                     onClick={onClose}
-                    className="block border-b border-charcoal/10 py-4 font-heading text-2xl text-charcoal transition-colors hover:text-blush"
+                    className="block border-b border-line py-4 font-heading text-2xl text-charcoal transition-colors hover:text-blush"
                   >
                     {link.label}
                   </Link>

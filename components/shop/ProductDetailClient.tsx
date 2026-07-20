@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
@@ -84,7 +84,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
             </p>
             <table className="w-full border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-charcoal/15 text-charcoal">
+                <tr className="border-b border-line text-charcoal">
                   <th className="py-2 pr-3 font-medium">Size</th>
                   <th className="py-2 pr-3 font-medium">Chest</th>
                   <th className="py-2 pr-3 font-medium">Length</th>
@@ -93,7 +93,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </thead>
               <tbody>
                 {SIZE_GUIDE.map((r) => (
-                  <tr key={r.size} className="border-b border-charcoal/10">
+                  <tr key={r.size} className="border-b border-line">
                     <td className="py-2 pr-3 font-medium text-charcoal">
                       {r.size}
                     </td>

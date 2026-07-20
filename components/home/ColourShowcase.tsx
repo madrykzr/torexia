@@ -21,7 +21,7 @@ export function ColourShowcase() {
             className="flex flex-col items-center gap-3"
           >
             <div
-              className="relative h-20 w-20 overflow-hidden rounded-full shadow-sm ring-1 ring-charcoal/10 sm:h-24 sm:w-24"
+              className="relative h-20 w-20 overflow-hidden rounded-full shadow-sm ring-1 ring-line sm:h-24 sm:w-24"
               style={{ backgroundColor: colour.hex }}
             >
               <Image

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import { Section } from "@/components/ui/Section";
@@ -42,7 +42,7 @@ export default function AboutPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-coffee/85 via-coffee/30 to-coffee/40" />
         <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-28 sm:px-8 sm:pb-20">
-          <p className="text-xs font-medium uppercase tracking-[0.3em] text-blush-300">
+          <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
             Our Story
           </p>
           <h1 className="mt-4 font-heading text-4xl leading-tight text-cream sm:text-6xl">
@@ -96,7 +96,7 @@ export default function AboutPage() {
         <div className="mt-12 grid gap-10 sm:mt-16 lg:grid-cols-2 lg:gap-16">
           {/* Vision */}
           <Reveal>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-blush-300">
+            <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
               Our Vision
             </p>
             <p className="mt-4 font-heading text-2xl leading-snug text-cream sm:text-3xl">
@@ -106,7 +106,7 @@ export default function AboutPage() {
 
           {/* Mission */}
           <Reveal delay={0.1}>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-blush-300">
+            <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
               Our Mission
             </p>
             <ul className="mt-5 space-y-4">
@@ -126,7 +126,7 @@ export default function AboutPage() {
 
         {/* Core Values */}
         <Reveal delay={0.15} className="mt-14 border-t border-cream/10 pt-10">
-          <p className="text-center text-xs font-medium uppercase tracking-[0.28em] text-blush-300">
+          <p className="text-center text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
             Core Values
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

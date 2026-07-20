@@ -39,7 +39,7 @@ export function Navbar() {
           "fixed inset-x-0 top-0 z-40 transition-colors duration-300",
           overlay
             ? "bg-transparent"
-            : "border-b border-charcoal/10 bg-cream/85 backdrop-blur-md",
+            : "border-b border-line bg-cream/90 backdrop-blur-md",
         )}
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
@@ -65,11 +65,11 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "text-sm tracking-wide transition-colors",
+                    "text-sm tracking-[0.04em] transition-colors",
                     overlay
                       ? "text-cream/90 hover:text-white"
-                      : "text-charcoal/80 hover:text-blush",
-                    active && !overlay && "text-blush",
+                      : "text-charcoal/75 hover:text-coffee",
+                    active && !overlay && "text-coffee",
                   )}
                 >
                   {link.label}
@@ -83,7 +83,7 @@ export function Navbar() {
             aria-label="Open menu"
             className={cn(
               "flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden",
-              overlay ? "text-cream" : "text-coffee",
+              overlay ? "text-cream" : "text-espresso",
             )}
           >
             <Menu className="h-6 w-6" />
