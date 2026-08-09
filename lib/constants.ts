@@ -7,7 +7,8 @@ export const SITE = {
   subtitle: "Modest fashion for real everyday women",
   description:
     "Torexia is a Malaysian modest fashion brand crafting timeless, elegant and practical apparel for the modern Muslimah — designed for comfort, modesty and effortless elegance.",
-  url: "https://torexiacom.biz",
+  // Canonical/Open Graph base URL — the live domain (feeds metadataBase).
+  url: "https://ladytorexia.my",
 } as const;
 
 export const CONTACT = {
