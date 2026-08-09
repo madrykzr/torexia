@@ -14,7 +14,7 @@ import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
 
 // Singleton types should not be creatable/deletable from the global menu.
-const singletonTypes = new Set(['siteSettings'])
+const singletonTypes = new Set(['siteSettings', 'homePage'])
 
 export default defineConfig({
   basePath: '/studio',

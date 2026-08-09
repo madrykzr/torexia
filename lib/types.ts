@@ -26,6 +26,39 @@ export type Product = {
   collection: string;
 };
 
+export type Collection = {
+  id: string;
+  slug: string;
+  name: string;
+  /** kaftan | jubah | abaya */
+  category: string;
+  /** Price in RM, or null when "on enquiry" */
+  price: number | null;
+  /** Resolved cover image URL */
+  cover: string;
+  /** Resolved gallery image URLs */
+  gallery: string[];
+  /** Resolved size-guide image URL, or null */
+  sizeGuide: string | null;
+  description: string;
+  featuredOnHome: boolean;
+  order: number;
+  /** Optional linked products (e.g. Abaya) */
+  products: Product[];
+};
+
+export type HomePage = {
+  heroImage: string | null;
+  heroHeading: string | null;
+  heroSubheading: string | null;
+  heroCtaLabel: string;
+  heroCtaHref: string;
+  featuredCollections: Collection[];
+  promoEnabled: boolean;
+  promoText: string | null;
+  promoHref: string | null;
+};
+
 export type RentalProduct = {
   id: string;
   slug: string;

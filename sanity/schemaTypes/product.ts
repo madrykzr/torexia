@@ -18,16 +18,6 @@ export const SIZE_OPTIONS = [
   {title: 'XL', value: 'XL'},
 ]
 
-export const COLLECTION_OPTIONS = [
-  {title: 'Daily Abaya', value: 'daily-abaya'},
-  {title: 'Premium Abaya', value: 'premium-abaya'},
-  {title: 'Luxury', value: 'luxury'},
-  {title: 'Plus Size', value: 'plus-size'},
-  {title: 'Kaftan', value: 'kaftan'},
-  {title: 'Hijab', value: 'hijab'},
-  {title: 'Accessories', value: 'accessories'},
-]
-
 export const product = defineType({
   name: 'product',
   title: 'Product',
@@ -58,13 +48,6 @@ export const product = defineType({
       title: 'Fabric',
       type: 'string',
       initialValue: 'Cotton Nida',
-    }),
-    defineField({
-      name: 'collection',
-      title: 'Collection',
-      type: 'string',
-      options: {list: COLLECTION_OPTIONS, layout: 'dropdown'},
-      description: 'Which collection this product belongs to.',
     }),
     defineField({
       name: 'description',

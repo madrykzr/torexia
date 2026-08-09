@@ -58,6 +58,39 @@ async function uploadImage(path, alt) {
 }
 
 const p = (slug, n) => `public/images/products/${slug}/0${n}.jpg`
+const col = (slug, name) => `public/images/collections/${slug}/${name}`
+
+// Lookbook collections (Kaftan / Jubah). Abaya is seeded separately from the
+// existing products further below.
+const COLLECTIONS = [
+  {
+    slug: 'kaftan',
+    name: 'Kaftan',
+    category: 'kaftan',
+    featured: true,
+    order: 1,
+    description:
+      'Relaxed, elegant kaftans in soft printed weaves — an effortless drape for everyday grace and special occasions alike.',
+  },
+  {
+    slug: 'jubah-linea',
+    name: 'Jubah Linea',
+    category: 'jubah',
+    featured: true,
+    order: 2,
+    description:
+      'Clean, contemporary jubah with a subtle linear weave — understated, refined and made for all-day comfort.',
+  },
+  {
+    slug: 'jubah-saira',
+    name: 'Jubah Saira',
+    category: 'jubah',
+    featured: true,
+    order: 3,
+    description:
+      'Softly feminine jubah in delicate floral prints — timeless pieces with a graceful, flowing silhouette.',
+  },
+]
 
 // Portable Text block helpers
 const block = (style, text) => ({
@@ -280,6 +313,65 @@ async function seed() {
     console.log(`  ✓ ${prod.name}`)
   }
 
+  console.log('Seeding collections…')
+  for (const c of COLLECTIONS) {
+    const _id = `collection.${c.slug}`
+    if (await existsDoc(_id)) {
+      console.log(`  • ${c.name} (exists, skipped)`)
+      continue
+    }
+    const coverImage = await uploadImage(col(c.slug, 'cover.jpg'), c.name)
+    const gallery = []
+    for (const g of ['01.jpg', '02.jpg']) {
+      gallery.push(await uploadImage(col(c.slug, g), c.name))
+    }
+    const sizeGuide = await uploadImage(col(c.slug, 'size-guide.jpg'), `${c.name} size guide`)
+    await client.createIfNotExists({
+      _id,
+      _type: 'collection',
+      name: c.name,
+      slug: {_type: 'slug', current: c.slug},
+      category: c.category,
+      coverImage,
+      gallery,
+      sizeGuide,
+      description: c.description,
+      featuredOnHome: c.featured,
+      order: c.order,
+    })
+    console.log(`  ✓ ${c.name}`)
+  }
+
+  // Abaya collection — built from the existing abaya products
+  if (await existsDoc('collection.abaya')) {
+    console.log('  • Abaya (exists, skipped)')
+  } else {
+    const coverImage = await uploadImage(p('coffee', 1), 'Abaya')
+    const gallery = [
+      await uploadImage(p('soft-pink', 1), 'Abaya'),
+      await uploadImage(p('sage-green', 1), 'Abaya'),
+    ]
+    await client.createIfNotExists({
+      _id: 'collection.abaya',
+      _type: 'collection',
+      name: 'Abaya',
+      slug: {_type: 'slug', current: 'abaya'},
+      category: 'abaya',
+      coverImage,
+      gallery,
+      description:
+        'Our signature daily abayas in soft cotton nida — calming everyday shades made for comfort and effortless elegance.',
+      featuredOnHome: false,
+      order: 10,
+      products: PRODUCTS.map((prod) => ({
+        _type: 'reference',
+        _key: key(),
+        _ref: `product.${prod.slug}`,
+      })),
+    })
+    console.log('  ✓ Abaya')
+  }
+
   console.log('Seeding rental products…')
   for (const r of RENTAL_PRODUCTS) {
     const _id = `rentalProduct.${r.slug}`
@@ -341,6 +433,23 @@ async function seed() {
     phone: '+60 13-220 9408',
   })
   console.log('  ✓ Site Settings')
+
+  console.log('Seeding home page…')
+  await client.createIfNotExists({
+    _id: 'homePage',
+    _type: 'homePage',
+    heroHeading: 'Designed for Comfort & Confidence',
+    heroSubheading: 'Modest, elegant everyday wear — kaftan, jubah and abaya.',
+    heroCtaLabel: 'Explore Collections',
+    heroCtaHref: '/collections',
+    featuredCollections: COLLECTIONS.map((c) => ({
+      _type: 'reference',
+      _key: key(),
+      _ref: `collection.${c.slug}`,
+    })),
+    promoEnabled: false,
+  })
+  console.log('  ✓ Home Page')
 
   console.log('\nDone. Content is published and live via the API.')
 }

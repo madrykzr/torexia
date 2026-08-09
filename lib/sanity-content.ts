@@ -4,7 +4,9 @@ import { urlFor } from "@/sanity/lib/image";
 import { COLOURS } from "@/data/products";
 import type {
   BlogPost,
+  Collection,
   Colour,
+  HomePage,
   Product,
   RentalProduct,
   Size,
@@ -93,6 +95,40 @@ function mapProduct(raw: RawProduct): Product {
       .filter((u): u is string => Boolean(u)),
     featured: Boolean(raw.featured),
     collection: raw.collection ?? "",
+  };
+}
+
+type RawCollection = {
+  id: string;
+  name: string;
+  slug: string | null;
+  category?: string;
+  price?: number;
+  coverImage?: unknown;
+  gallery?: unknown[];
+  sizeGuide?: unknown;
+  description?: string;
+  featuredOnHome?: boolean;
+  order?: number;
+  products?: RawProduct[];
+};
+
+function mapCollection(raw: RawCollection): Collection {
+  return {
+    id: raw.id,
+    slug: raw.slug ?? raw.id,
+    name: raw.name,
+    category: raw.category ?? "",
+    price: typeof raw.price === "number" ? raw.price : null,
+    cover: imageUrl(raw.coverImage) ?? "/images/og.jpg",
+    gallery: (raw.gallery ?? [])
+      .map((g) => imageUrl(g))
+      .filter((u): u is string => Boolean(u)),
+    sizeGuide: imageUrl(raw.sizeGuide),
+    description: raw.description ?? "",
+    featuredOnHome: Boolean(raw.featuredOnHome),
+    order: typeof raw.order === "number" ? raw.order : 100,
+    products: (raw.products ?? []).map(mapProduct),
   };
 }
 
@@ -213,6 +249,80 @@ export async function getRentalProductSlugs(): Promise<string[]> {
   return query<string[]>(
     `*[_type == "rentalProduct" && defined(slug.current)].slug.current`,
   );
+}
+
+// --- Collections ---------------------------------------------------------
+
+const COLLECTION_FIELDS = `
+  "id": _id, name, "slug": slug.current, category, price,
+  coverImage, gallery, sizeGuide, description, featuredOnHome, order,
+  "products": products[]->{${PRODUCT_FIELDS}}
+`;
+
+export async function getAllCollections(): Promise<Collection[]> {
+  const raw = await query<RawCollection[]>(
+    `*[_type == "collection" && defined(slug.current)] | order(order asc, name asc){${COLLECTION_FIELDS}}`,
+  );
+  return raw.map(mapCollection);
+}
+
+export async function getFeaturedCollections(): Promise<Collection[]> {
+  const raw = await query<RawCollection[]>(
+    `*[_type == "collection" && featuredOnHome == true && defined(slug.current)] | order(order asc, name asc){${COLLECTION_FIELDS}}`,
+  );
+  return raw.map(mapCollection);
+}
+
+export async function getCollectionBySlug(
+  slug: string,
+): Promise<Collection | null> {
+  const raw = await query<RawCollection | null>(
+    `*[_type == "collection" && slug.current == $slug][0]{${COLLECTION_FIELDS}}`,
+    { slug },
+  );
+  return raw ? mapCollection(raw) : null;
+}
+
+export async function getCollectionSlugs(): Promise<string[]> {
+  return query<string[]>(
+    `*[_type == "collection" && defined(slug.current)].slug.current`,
+  );
+}
+
+// --- Home page -----------------------------------------------------------
+
+type RawHomePage = {
+  heroImage?: unknown;
+  heroHeading?: string;
+  heroSubheading?: string;
+  heroCtaLabel?: string;
+  heroCtaHref?: string;
+  featuredCollections?: RawCollection[];
+  promoEnabled?: boolean;
+  promoText?: string;
+  promoHref?: string;
+} | null;
+
+export async function getHomePage(): Promise<HomePage | null> {
+  const raw = await query<RawHomePage>(
+    `*[_type == "homePage"][0]{
+      heroImage, heroHeading, heroSubheading, heroCtaLabel, heroCtaHref,
+      "featuredCollections": featuredCollections[]->{${COLLECTION_FIELDS}},
+      promoEnabled, promoText, promoHref
+    }`,
+  );
+  if (!raw) return null;
+  return {
+    heroImage: imageUrl(raw.heroImage),
+    heroHeading: raw.heroHeading ?? null,
+    heroSubheading: raw.heroSubheading ?? null,
+    heroCtaLabel: raw.heroCtaLabel ?? "Shop Now",
+    heroCtaHref: raw.heroCtaHref ?? "/collections",
+    featuredCollections: (raw.featuredCollections ?? []).map(mapCollection),
+    promoEnabled: Boolean(raw.promoEnabled),
+    promoText: raw.promoText ?? null,
+    promoHref: raw.promoHref ?? null,
+  };
 }
 
 // --- Blog ----------------------------------------------------------------

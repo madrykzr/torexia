@@ -6,12 +6,24 @@ import { ButtonLink } from "@/components/ui/Button";
 import { fadeUpContainer as container, fadeUpItem as item } from "@/lib/motion";
 import { SITE } from "@/lib/constants";
 
-export function Hero() {
+export function Hero({
+  heading,
+  subheading,
+  ctaLabel,
+  ctaHref,
+  image,
+}: {
+  heading?: string | null;
+  subheading?: string | null;
+  ctaLabel?: string | null;
+  ctaHref?: string | null;
+  image?: string | null;
+} = {}) {
   return (
     <section className="relative flex min-h-svh items-end overflow-hidden sm:items-center">
       <Image
-        src="/images/hero.jpg"
-        alt="Torexia model wearing a Coffee daily abaya"
+        src={image || "/images/hero.jpg"}
+        alt="Torexia modest fashion"
         fill
         priority
         sizes="100vw"
@@ -36,17 +48,21 @@ export function Hero() {
           variants={item}
           className="mt-6 max-w-3xl font-heading text-5xl leading-[1.08] text-charcoal sm:text-7xl"
         >
-          Designed for Comfort &amp; Confidence
+          {heading || "Designed for Comfort & Confidence"}
         </motion.h1>
         <motion.p
           variants={item}
           className="mt-5 max-w-md text-base leading-relaxed text-charcoal-600 sm:text-lg"
         >
-          {SITE.promise}
+          {subheading || SITE.promise}
         </motion.p>
         <motion.div variants={item} className="mt-9">
-          <ButtonLink href="/shop" variant="outline" className="min-h-12 px-9">
-            Shop Now
+          <ButtonLink
+            href={ctaHref || "/collections"}
+            variant="outline"
+            className="min-h-12 px-9"
+          >
+            {ctaLabel || "Explore Collections"}
           </ButtonLink>
         </motion.div>
       </motion.div>

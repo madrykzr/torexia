@@ -1,25 +1,8 @@
-import type { Metadata } from "next";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { ShopWithCollections } from "@/components/shop/ShopWithCollections";
-import { getAllProducts } from "@/lib/sanity-content";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Shop",
-  description:
-    "Shop Torexia daily abayas — crafted from soft cotton nida in six calming shades. Filter by colour and size to find your everyday staple.",
-};
-
-export default async function ShopPage() {
-  const products = await getAllProducts();
-
-  return (
-    <>
-      <PageHeader
-        eyebrow="The Collection"
-        title="Shop"
-        subtitle="Everyday abayas in soft cotton nida — designed for comfort, confidence and effortless elegance."
-      />
-      <ShopWithCollections products={products} />
-    </>
-  );
+// The catalogue is now collection-first. /shop lives on as a redirect so any
+// old links/bookmarks land on the Collections page. Individual product detail
+// pages remain at /shop/[slug] (linked from the Abaya collection).
+export default function ShopPage() {
+  redirect("/collections");
 }
