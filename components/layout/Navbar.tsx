@@ -4,14 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, ShoppingBag } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/cn";
+import { useCart } from "@/lib/cart";
 import { MobileDrawer } from "./MobileDrawer";
 
 export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { count, ready } = useCart();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -59,13 +61,28 @@ export function Navbar() {
             })}
           </nav>
 
-          <button
-            onClick={() => setOpen(true)}
-            aria-label="Open menu"
-            className="flex h-11 w-11 items-center justify-center rounded-full text-charcoal transition-colors md:hidden"
-          >
-            <Menu className="h-6 w-6" />
-          </button>
+          <div className="flex items-center gap-1">
+            <Link
+              href="/cart"
+              aria-label={`Cart${ready && count > 0 ? ` (${count} items)` : ""}`}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full text-charcoal transition-colors hover:text-coffee"
+            >
+              <ShoppingBag className="h-5 w-5" strokeWidth={1.6} />
+              {ready && count > 0 && (
+                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-coffee px-1 text-[10px] font-medium text-white">
+                  {count}
+                </span>
+              )}
+            </Link>
+
+            <button
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-charcoal transition-colors md:hidden"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
         </div>
       </header>
 

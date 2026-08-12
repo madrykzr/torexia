@@ -26,6 +26,12 @@ export type Product = {
   collection: string;
 };
 
+export type SizeChartRow = {
+  label: string;
+  col1: string;
+  col2: string;
+};
+
 export type Collection = {
   id: string;
   slug: string;
@@ -38,8 +44,14 @@ export type Collection = {
   cover: string;
   /** Resolved gallery image URLs */
   gallery: string[];
-  /** Resolved size-guide image URL, or null */
-  sizeGuide: string | null;
+  colours: Colour[];
+  sizes: Size[];
+  fabric: string;
+  /** Size-chart column headers and measurement rows (inches) */
+  sizeChartCol1Label: string;
+  sizeChartCol2Label: string;
+  sizeChart: SizeChartRow[];
+  sizeChartNote: string | null;
   description: string;
   featuredOnHome: boolean;
   order: number;

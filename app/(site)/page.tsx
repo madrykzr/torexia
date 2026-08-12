@@ -1,7 +1,6 @@
 import { Hero } from "@/components/home/Hero";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { FeaturedCollections } from "@/components/home/FeaturedCollections";
-import { WhyTorexia } from "@/components/home/WhyTorexia";
 import { StylingInspiration } from "@/components/home/StylingInspiration";
 import { ColourShowcase } from "@/components/home/ColourShowcase";
 import { CustomerReviews } from "@/components/home/CustomerReviews";
@@ -28,7 +27,6 @@ export default async function HomePage() {
       />
       {/* Focus: Kaftan + Jubah collections */}
       <FeaturedCollections />
-      <WhyTorexia />
       <StylingInspiration />
       <ColourShowcase />
       <CustomerReviews />

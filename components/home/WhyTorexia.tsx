@@ -28,9 +28,13 @@ const features = [
   { icon: Users, title: "Trusted by our community" },
 ];
 
-export function WhyTorexia() {
+export function WhyTorexia({
+  tone = "blush",
+}: {
+  tone?: "cream" | "alt" | "blush";
+} = {}) {
   return (
-    <Section tone="blush">
+    <Section tone={tone}>
       <SectionHeading
         eyebrow="Why Torexia"
         title="Why choose Torexia"

@@ -32,7 +32,7 @@ export const CONTACT = {
 
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Collections", href: "/collections" },
+  { label: "Shop", href: "/collections" },
   { label: "Rent", href: "/rent" },
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },

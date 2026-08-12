@@ -1,5 +1,6 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {SparklesIcon} from '@sanity/icons'
+import {COLOUR_OPTIONS, SIZE_OPTIONS} from './product'
 
 // Product categories the catalogue is organised around.
 export const CATEGORY_OPTIONS = [
@@ -66,11 +67,66 @@ export const collection = defineType({
       ],
     }),
     defineField({
-      name: 'sizeGuide',
-      title: 'Size guide',
-      type: 'image',
-      description: 'The size-chart image for this collection.',
-      options: {hotspot: true},
+      name: 'colours',
+      title: 'Colours',
+      type: 'array',
+      description: 'Colourways available in this collection.',
+      of: [defineArrayMember({type: 'string'})],
+      options: {list: COLOUR_OPTIONS},
+      validation: (rule) => rule.unique(),
+    }),
+    defineField({
+      name: 'sizes',
+      title: 'Sizes',
+      type: 'array',
+      of: [defineArrayMember({type: 'string'})],
+      options: {list: SIZE_OPTIONS, layout: 'grid'},
+      validation: (rule) => rule.unique(),
+    }),
+    defineField({
+      name: 'fabric',
+      title: 'Fabric',
+      type: 'string',
+    }),
+    defineField({
+      name: 'sizeChartCol1Label',
+      title: 'Size chart — first column label',
+      type: 'string',
+      initialValue: 'S / M',
+    }),
+    defineField({
+      name: 'sizeChartCol2Label',
+      title: 'Size chart — second column label',
+      type: 'string',
+      initialValue: 'L / XL',
+    }),
+    defineField({
+      name: 'sizeChart',
+      title: 'Size chart',
+      type: 'array',
+      description: 'Measurement rows, in inches.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({name: 'label', title: 'Measurement', type: 'string'}),
+            defineField({name: 'col1', title: 'First column', type: 'string'}),
+            defineField({name: 'col2', title: 'Second column', type: 'string'}),
+          ],
+          preview: {
+            select: {title: 'label', col1: 'col1', col2: 'col2'},
+            prepare({title, col1, col2}) {
+              return {title, subtitle: [col1, col2].filter(Boolean).join('  ·  ')}
+            },
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'sizeChartNote',
+      title: 'Size chart note',
+      type: 'string',
+      description: 'Optional line under the chart — e.g. “Cuff: 1 inch”.',
     }),
     defineField({
       name: 'description',

@@ -1,28 +1,46 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingBag } from "lucide-react";
-import type { Product, Size, Colour } from "@/lib/types";
+import Link from "next/link";
+import { Check, ShoppingBag } from "lucide-react";
+import type { Product, Size, Colour, SizeChartRow } from "@/lib/types";
 import { formatPrice, whatsappUrl } from "@/lib/constants";
+import { useCart } from "@/lib/cart";
 import { ProductGallery } from "./ProductGallery";
 import { ColourSelector } from "./ColourSelector";
 import { SizeSelector } from "./SizeSelector";
 import { Accordion } from "./Accordion";
+import { SizeChart } from "@/components/ui/SizeChart";
 import { InstagramIcon } from "@/components/ui/BrandIcons";
 
-const SIZE_GUIDE: { size: Size; chest: number; length: number; sleeve: number }[] =
-  [
-    { size: "S", chest: 100, length: 135, sleeve: 56 },
-    { size: "M", chest: 106, length: 137, sleeve: 57 },
-    { size: "L", chest: 112, length: 140, sleeve: 58 },
-    { size: "XL", chest: 118, length: 142, sleeve: 59 },
-  ];
+// Abaya measurements, in inches (converted from the cm spec).
+const SIZE_GUIDE: SizeChartRow[] = [
+  { label: "Dada", col1: '39" – 42"', col2: '44" – 46"' },
+  { label: "Labuh Baju", col1: '53" – 54"', col2: '55" – 56"' },
+  { label: "Panjang Lengan", col1: '22" – 22½"', col2: '23" – 23½"' },
+];
 
 export function ProductDetailClient({ product }: { product: Product }) {
+  const { add } = useCart();
   const [colour, setColour] = useState<Colour>(product.colours[0]);
   const [size, setSize] = useState<Size>("M");
+  const [added, setAdded] = useState(false);
 
   const message = `Hi Torexia! I'm interested in the ${product.name} (${colour.name}, size ${size}). Is it available?`;
+
+  function handleAdd() {
+    add({
+      kind: "product",
+      slug: product.slug,
+      name: product.name,
+      image: product.images[0] ?? "/images/og.jpg",
+      price: product.price,
+      size,
+      colour: colour?.name ?? null,
+    });
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 2000);
+  }
 
   return (
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
@@ -43,22 +61,31 @@ export function ProductDetailClient({ product }: { product: Product }) {
           <SizeSelector sizes={product.sizes} selected={size} onSelect={setSize} />
         </div>
 
-        {/* CTAs */}
+        {/* CTAs — Add to Cart primary, WhatsApp enquiry below */}
         <div className="mt-9 flex flex-col gap-3">
-          <div className="group relative">
-            <button
-              disabled
-              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-line text-sm font-medium tracking-wide text-charcoal-600"
+          <button
+            onClick={handleAdd}
+            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-coffee text-sm font-medium tracking-wide text-white transition-colors hover:bg-coffee-600"
+          >
+            {added ? (
+              <>
+                <Check className="h-4 w-4" /> Added to Cart
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="h-4 w-4" /> Add to Cart
+              </>
+            )}
+          </button>
+
+          {added && (
+            <Link
+              href="/cart"
+              className="text-center text-xs font-medium uppercase tracking-[0.15em] text-blush transition-colors hover:text-coffee"
             >
-              <ShoppingBag className="h-4 w-4" /> Add to Cart
-            </button>
-            <span
-              role="tooltip"
-              className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-charcoal px-4 py-2 text-xs text-cream opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-            >
-              Coming Soon — Available in Phase 2
-            </span>
-          </div>
+              View cart →
+            </Link>
+          )}
 
           <a
             href={whatsappUrl(message)}
@@ -78,32 +105,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
         {/* Accordions */}
         <div className="mt-8">
           <Accordion title="Size Guide">
-            <p className="mb-4">
-              Measurements are approximate, in centimetres. For an oversized,
-              relaxed fit, size down or up as you prefer.
-            </p>
-            <table className="w-full border-collapse text-left text-sm">
-              <thead>
-                <tr className="border-b border-line text-charcoal">
-                  <th className="py-2 pr-3 font-medium">Size</th>
-                  <th className="py-2 pr-3 font-medium">Chest</th>
-                  <th className="py-2 pr-3 font-medium">Length</th>
-                  <th className="py-2 font-medium">Sleeve</th>
-                </tr>
-              </thead>
-              <tbody>
-                {SIZE_GUIDE.map((r) => (
-                  <tr key={r.size} className="border-b border-line">
-                    <td className="py-2 pr-3 font-medium text-charcoal">
-                      {r.size}
-                    </td>
-                    <td className="py-2 pr-3">{r.chest} cm</td>
-                    <td className="py-2 pr-3">{r.length} cm</td>
-                    <td className="py-2">{r.sleeve} cm</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <SizeChart rows={SIZE_GUIDE} col1Label="S / M" col2Label="L / XL" />
           </Accordion>
 
           <Accordion title="Fabric & Care">

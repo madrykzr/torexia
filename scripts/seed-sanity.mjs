@@ -14,6 +14,7 @@
 import {createClient} from '@sanity/client'
 import {createReadStream} from 'node:fs'
 import {basename} from 'node:path'
+import {COLLECTION_DETAILS} from './collection-details.mjs'
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
@@ -325,7 +326,7 @@ async function seed() {
     for (const g of ['01.jpg', '02.jpg']) {
       gallery.push(await uploadImage(col(c.slug, g), c.name))
     }
-    const sizeGuide = await uploadImage(col(c.slug, 'size-guide.jpg'), `${c.name} size guide`)
+    const d = COLLECTION_DETAILS[c.slug] ?? {}
     await client.createIfNotExists({
       _id,
       _type: 'collection',
@@ -334,7 +335,13 @@ async function seed() {
       category: c.category,
       coverImage,
       gallery,
-      sizeGuide,
+      colours: d.colours,
+      sizes: d.sizes,
+      fabric: d.fabric,
+      sizeChartCol1Label: d.sizeChartCol1Label,
+      sizeChartCol2Label: d.sizeChartCol2Label,
+      sizeChartNote: d.sizeChartNote ?? undefined,
+      sizeChart: (d.sizeChart ?? []).map((r) => ({...r, _key: key()})),
       description: c.description,
       featuredOnHome: c.featured,
       order: c.order,
@@ -359,6 +366,12 @@ async function seed() {
       category: 'abaya',
       coverImage,
       gallery,
+      colours: COLLECTION_DETAILS.abaya.colours,
+      sizes: COLLECTION_DETAILS.abaya.sizes,
+      fabric: COLLECTION_DETAILS.abaya.fabric,
+      sizeChartCol1Label: COLLECTION_DETAILS.abaya.sizeChartCol1Label,
+      sizeChartCol2Label: COLLECTION_DETAILS.abaya.sizeChartCol2Label,
+      sizeChart: COLLECTION_DETAILS.abaya.sizeChart.map((r) => ({...r, _key: key()})),
       description:
         'Our signature daily abayas in soft cotton nida — calming everyday shades made for comfort and effortless elegance.',
       featuredOnHome: false,

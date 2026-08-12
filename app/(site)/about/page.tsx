@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 import { InstagramIcon, TikTokIcon } from "@/components/ui/BrandIcons";
+import { WhyTorexia } from "@/components/home/WhyTorexia";
 import { CONTACT } from "@/lib/constants";
 import { whatsappUrl } from "@/lib/constants";
 
@@ -83,6 +84,9 @@ export default function AboutPage() {
           </Reveal>
         </div>
       </Section>
+
+      {/* Why Torexia — moved here from the homepage */}
+      <WhyTorexia tone="alt" />
 
       {/* Brand Foundations */}
       <Section tone="blush">

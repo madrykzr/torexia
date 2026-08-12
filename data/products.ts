@@ -23,6 +23,10 @@ export const COLOURS: Record<string, Colour> = {
   "sky-blue": { name: "Sky Blue", slug: "sky-blue", hex: "#a9cdda" },
   black: { name: "Black", slug: "black", hex: "#1c1c1c" },
   sand: { name: "Sand", slug: "sand", hex: "#d8d2c4" },
+  // Tones from the kaftan / jubah photography
+  berry: { name: "Berry", slug: "berry", hex: "#a0396b" },
+  chocolate: { name: "Chocolate", slug: "chocolate", hex: "#6b4a33" },
+  beige: { name: "Beige", slug: "beige", hex: "#e0c9a6" },
 };
 
 /** Ordered list for the colour showcase strip and shop filters. */
@@ -33,6 +37,9 @@ export const COLOUR_LIST: Colour[] = [
   COLOURS["sage-green"],
   COLOURS.sand,
   COLOURS.black,
+  COLOURS.berry,
+  COLOURS.chocolate,
+  COLOURS.beige,
 ];
 
 /** The first image for a product — used on cards. */

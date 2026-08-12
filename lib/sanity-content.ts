@@ -106,7 +106,13 @@ type RawCollection = {
   price?: number;
   coverImage?: unknown;
   gallery?: unknown[];
-  sizeGuide?: unknown;
+  colours?: string[];
+  sizes?: string[];
+  fabric?: string;
+  sizeChartCol1Label?: string;
+  sizeChartCol2Label?: string;
+  sizeChart?: { label?: string; col1?: string; col2?: string }[];
+  sizeChartNote?: string;
   description?: string;
   featuredOnHome?: boolean;
   order?: number;
@@ -124,7 +130,19 @@ function mapCollection(raw: RawCollection): Collection {
     gallery: (raw.gallery ?? [])
       .map((g) => imageUrl(g))
       .filter((u): u is string => Boolean(u)),
-    sizeGuide: imageUrl(raw.sizeGuide),
+    colours: mapColours(raw.colours),
+    sizes: (raw.sizes ?? []) as Size[],
+    fabric: raw.fabric ?? "",
+    sizeChartCol1Label: raw.sizeChartCol1Label ?? "S / M",
+    sizeChartCol2Label: raw.sizeChartCol2Label ?? "L / XL",
+    sizeChart: (raw.sizeChart ?? [])
+      .filter((r) => r?.label)
+      .map((r) => ({
+        label: r.label ?? "",
+        col1: r.col1 ?? "",
+        col2: r.col2 ?? "",
+      })),
+    sizeChartNote: raw.sizeChartNote ?? null,
     description: raw.description ?? "",
     featuredOnHome: Boolean(raw.featuredOnHome),
     order: typeof raw.order === "number" ? raw.order : 100,
@@ -255,7 +273,9 @@ export async function getRentalProductSlugs(): Promise<string[]> {
 
 const COLLECTION_FIELDS = `
   "id": _id, name, "slug": slug.current, category, price,
-  coverImage, gallery, sizeGuide, description, featuredOnHome, order,
+  coverImage, gallery, colours, sizes, fabric,
+  sizeChartCol1Label, sizeChartCol2Label, sizeChart, sizeChartNote,
+  description, featuredOnHome, order,
   "products": products[]->{${PRODUCT_FIELDS}}
 `;
 

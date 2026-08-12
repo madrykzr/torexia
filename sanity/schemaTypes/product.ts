@@ -9,6 +9,9 @@ export const COLOUR_OPTIONS = [
   {title: 'Sage Green', value: 'sage-green'},
   {title: 'Sand', value: 'sand'},
   {title: 'Black', value: 'black'},
+  {title: 'Berry', value: 'berry'},
+  {title: 'Chocolate', value: 'chocolate'},
+  {title: 'Beige', value: 'beige'},
 ]
 
 export const SIZE_OPTIONS = [
