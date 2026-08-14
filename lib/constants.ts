@@ -33,7 +33,7 @@ export const CONTACT = {
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/collections" },
-  { label: "Rent", href: "/rent" },
+  // Rent temporarily removed — bring back once ready (see app/(site)/rent/*)
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
 ] as const;
