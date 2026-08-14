@@ -55,8 +55,6 @@ export type Collection = {
   description: string;
   featuredOnHome: boolean;
   order: number;
-  /** Optional linked products (e.g. Abaya) */
-  products: Product[];
 };
 
 export type HomePage = {

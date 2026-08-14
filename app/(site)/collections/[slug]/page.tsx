@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/Section";
-import { ProductCard } from "@/components/shop/ProductCard";
 import { CollectionDetailClient } from "@/components/collections/CollectionDetailClient";
 import {
   getCollectionBySlug,
@@ -59,19 +58,6 @@ export default async function CollectionPage({
       </nav>
 
       <CollectionDetailClient collection={collection} />
-
-      {collection.products.length > 0 && (
-        <div className="mt-20 sm:mt-28">
-          <h2 className="mb-8 font-heading text-3xl text-charcoal sm:text-4xl">
-            Pieces in this collection
-          </h2>
-          <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-8 lg:grid-cols-3">
-            {collection.products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      )}
     </Section>
   );
 }

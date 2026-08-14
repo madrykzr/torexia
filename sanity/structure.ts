@@ -1,7 +1,6 @@
 import type {StructureResolver} from 'sanity/structure'
 import {
   CogIcon,
-  TagIcon,
   DocumentTextIcon,
   CalendarIcon,
   SparklesIcon,
@@ -21,7 +20,10 @@ export const structure: StructureResolver = (S) =>
         .child(S.document().schemaType('homePage').documentId('homePage')),
       S.divider(),
       S.documentTypeListItem('collection').title('Collections').icon(SparklesIcon),
-      S.documentTypeListItem('product').title('Products').icon(TagIcon),
+      // "Products" (individual abaya SKUs) is retired — Abaya is now a single
+      // collection like Kaftan/Jubah. The `product` schema type stays
+      // registered (so any lingering documents don't error in Studio) but is
+      // no longer listed here.
       // Rental Products are managed independently from Products (for /rent).
       S.documentTypeListItem('rentalProduct')
         .title('Rental Products')

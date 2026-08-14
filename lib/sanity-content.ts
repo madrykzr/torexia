@@ -116,7 +116,6 @@ type RawCollection = {
   description?: string;
   featuredOnHome?: boolean;
   order?: number;
-  products?: RawProduct[];
 };
 
 function mapCollection(raw: RawCollection): Collection {
@@ -146,7 +145,6 @@ function mapCollection(raw: RawCollection): Collection {
     description: raw.description ?? "",
     featuredOnHome: Boolean(raw.featuredOnHome),
     order: typeof raw.order === "number" ? raw.order : 100,
-    products: (raw.products ?? []).map(mapProduct),
   };
 }
 
@@ -275,8 +273,7 @@ const COLLECTION_FIELDS = `
   "id": _id, name, "slug": slug.current, category, price,
   coverImage, gallery, colours, sizes, fabric,
   sizeChartCol1Label, sizeChartCol2Label, sizeChart, sizeChartNote,
-  description, featuredOnHome, order,
-  "products": products[]->{${PRODUCT_FIELDS}}
+  description, featuredOnHome, order
 `;
 
 export async function getAllCollections(): Promise<Collection[]> {

@@ -147,14 +147,6 @@ export const collection = defineType({
       description: 'Lower numbers show first.',
       initialValue: 100,
     }),
-    defineField({
-      name: 'products',
-      title: 'Products',
-      type: 'array',
-      description:
-        'Optional — link individual products to this collection (e.g. Abaya).',
-      of: [defineArrayMember({type: 'reference', to: [{type: 'product'}]})],
-    }),
   ],
   preview: {
     select: {title: 'name', category: 'category', media: 'coverImage'},
