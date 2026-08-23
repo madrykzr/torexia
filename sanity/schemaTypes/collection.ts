@@ -1,6 +1,6 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {SparklesIcon} from '@sanity/icons'
-import {COLOUR_OPTIONS, SIZE_OPTIONS} from './product'
+import {SIZE_OPTIONS} from './product'
 
 // Product categories the catalogue is organised around.
 export const CATEGORY_OPTIONS = [
@@ -70,10 +70,41 @@ export const collection = defineType({
       name: 'colours',
       title: 'Colours',
       type: 'array',
-      description: 'Colourways available in this collection.',
-      of: [defineArrayMember({type: 'string'})],
-      options: {list: COLOUR_OPTIONS},
-      validation: (rule) => rule.unique(),
+      description:
+        'Colourways available in this collection — add, edit or remove any time.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'colour',
+          fields: [
+            defineField({
+              name: 'name',
+              title: 'Name',
+              type: 'string',
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'hex',
+              title: 'Hex colour',
+              type: 'string',
+              description: 'e.g. #8E0045',
+              validation: (rule) =>
+                rule
+                  .required()
+                  .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, {
+                    name: 'hex colour',
+                  })
+                  .error('Enter a valid hex colour, e.g. #8E0045'),
+            }),
+          ],
+          preview: {
+            select: {title: 'name', hex: 'hex'},
+            prepare({title, hex}) {
+              return {title, subtitle: hex}
+            },
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'sizes',

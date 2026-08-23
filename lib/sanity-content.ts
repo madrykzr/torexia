@@ -80,6 +80,29 @@ function mapColours(slugs: string[] = []): Colour[] {
   return slugs.map((s) => COLOURS[s]).filter(Boolean);
 }
 
+/** Slugify a free-typed colour name for use as a React key / aria value. */
+function slugifyColourName(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+/** Collections store colours as free-form {name, hex} objects (owner-editable
+ * in Studio), not the fixed slug list products/rentalProducts use. */
+function mapCollectionColours(
+  raw: { name?: string; hex?: string }[] = [],
+): Colour[] {
+  return raw
+    .filter((c) => c?.name && c?.hex)
+    .map((c) => ({
+      name: c.name!,
+      slug: slugifyColourName(c.name!),
+      hex: c.hex!,
+    }));
+}
+
 function mapProduct(raw: RawProduct): Product {
   return {
     id: raw.id,
@@ -106,7 +129,7 @@ type RawCollection = {
   price?: number;
   coverImage?: unknown;
   gallery?: unknown[];
-  colours?: string[];
+  colours?: { name?: string; hex?: string }[];
   sizes?: string[];
   fabric?: string;
   sizeChartCol1Label?: string;
@@ -129,7 +152,7 @@ function mapCollection(raw: RawCollection): Collection {
     gallery: (raw.gallery ?? [])
       .map((g) => imageUrl(g))
       .filter((u): u is string => Boolean(u)),
-    colours: mapColours(raw.colours),
+    colours: mapCollectionColours(raw.colours),
     sizes: (raw.sizes ?? []) as Size[],
     fabric: raw.fabric ?? "",
     sizeChartCol1Label: raw.sizeChartCol1Label ?? "S / M",
