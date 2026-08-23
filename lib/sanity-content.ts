@@ -185,6 +185,10 @@ type RawCollectionItem = {
   images?: unknown[];
   price?: number;
   salePrice?: number;
+  sizeChartCol1Label?: string;
+  sizeChartCol2Label?: string;
+  sizeChart?: { label?: string; col1?: string; col2?: string }[];
+  sizeChartNote?: string;
   description?: string;
   order?: number;
 };
@@ -203,6 +207,16 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
       .filter((u): u is string => Boolean(u)),
     price: typeof raw.price === "number" ? raw.price : null,
     salePrice: typeof raw.salePrice === "number" ? raw.salePrice : null,
+    sizeChartCol1Label: raw.sizeChartCol1Label ?? "S / M",
+    sizeChartCol2Label: raw.sizeChartCol2Label ?? "L / XL",
+    sizeChart: (raw.sizeChart ?? [])
+      .filter((r) => r?.label)
+      .map((r) => ({
+        label: r.label ?? "",
+        col1: r.col1 ?? "",
+        col2: r.col2 ?? "",
+      })),
+    sizeChartNote: raw.sizeChartNote ?? null,
     description: raw.description ?? "",
     order: typeof raw.order === "number" ? raw.order : 100,
   };
@@ -371,7 +385,9 @@ export async function getCollectionSlugs(): Promise<string[]> {
 const COLLECTION_ITEM_FIELDS = `
   "id": _id, name, "slug": slug.current,
   "collectionSlug": collection->slug.current,
-  colour, sizes, price, salePrice, description, order, images
+  colour, sizes, price, salePrice,
+  sizeChartCol1Label, sizeChartCol2Label, sizeChart, sizeChartNote,
+  description, order, images
 `;
 
 export async function getCollectionItemsByCollectionSlug(

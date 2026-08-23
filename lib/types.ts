@@ -73,6 +73,11 @@ export type CollectionItem = {
   price: number | null;
   /** Discounted price in RM, or null when not on sale */
   salePrice: number | null;
+  /** Per-item size guide — empty rows means inherit the collection's */
+  sizeChartCol1Label: string;
+  sizeChartCol2Label: string;
+  sizeChart: SizeChartRow[];
+  sizeChartNote: string | null;
   description: string;
   order: number;
 };

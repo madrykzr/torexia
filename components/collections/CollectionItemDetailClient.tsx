@@ -30,6 +30,19 @@ export function CollectionItemDetailClient({
     item.salePrice ?? (item.price == null ? collection.salePrice : null);
   const needsSize = item.sizes.length > 0 && !size;
 
+  // The item's own size guide when it has rows; otherwise the collection's.
+  const hasOwnSizeChart = item.sizeChart.length > 0;
+  const sizeChartRows = hasOwnSizeChart ? item.sizeChart : collection.sizeChart;
+  const sizeChartCol1Label = hasOwnSizeChart
+    ? item.sizeChartCol1Label
+    : collection.sizeChartCol1Label;
+  const sizeChartCol2Label = hasOwnSizeChart
+    ? item.sizeChartCol2Label
+    : collection.sizeChartCol2Label;
+  const sizeChartNote = hasOwnSizeChart
+    ? item.sizeChartNote
+    : collection.sizeChartNote;
+
   const enquiry = `Hi Torexia! I'm interested in the ${item.name} (${item.colour.name}${
     size ? `, size ${size}` : ""
   }). Could you share more details?`;
@@ -129,13 +142,13 @@ export function CollectionItemDetailClient({
 
         {/* Accordions */}
         <div className="mt-8">
-          {collection.sizeChart.length > 0 && (
+          {sizeChartRows.length > 0 && (
             <Accordion title="Size Guide">
               <SizeChart
-                rows={collection.sizeChart}
-                col1Label={collection.sizeChartCol1Label}
-                col2Label={collection.sizeChartCol2Label}
-                note={collection.sizeChartNote}
+                rows={sizeChartRows}
+                col1Label={sizeChartCol1Label}
+                col2Label={sizeChartCol2Label}
+                note={sizeChartNote}
               />
             </Accordion>
           )}

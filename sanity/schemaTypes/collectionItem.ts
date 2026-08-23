@@ -111,6 +111,48 @@ export const collectionItem = defineType({
         }),
     }),
     defineField({
+      name: 'sizeChartCol1Label',
+      title: 'Size chart — first column label',
+      type: 'string',
+      description: 'Leave the size chart blank to use the collection’s size guide.',
+      initialValue: 'S / M',
+    }),
+    defineField({
+      name: 'sizeChartCol2Label',
+      title: 'Size chart — second column label',
+      type: 'string',
+      initialValue: 'L / XL',
+    }),
+    defineField({
+      name: 'sizeChart',
+      title: 'Size chart',
+      type: 'array',
+      description:
+        'Measurement rows, in inches. Leave empty to use the parent collection’s size guide.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({name: 'label', title: 'Measurement', type: 'string'}),
+            defineField({name: 'col1', title: 'First column', type: 'string'}),
+            defineField({name: 'col2', title: 'Second column', type: 'string'}),
+          ],
+          preview: {
+            select: {title: 'label', col1: 'col1', col2: 'col2'},
+            prepare({title, col1, col2}) {
+              return {title, subtitle: [col1, col2].filter(Boolean).join('  ·  ')}
+            },
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'sizeChartNote',
+      title: 'Size chart note',
+      type: 'string',
+      description: 'Optional line under the chart — e.g. “Cuff: 1 inch”.',
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
