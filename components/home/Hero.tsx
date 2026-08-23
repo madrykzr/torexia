@@ -32,21 +32,27 @@ export function Hero({
       {/* Soft warm-white veil — keeps the hero light and airy while holding text legible */}
       <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/85 to-cream/40 sm:bg-gradient-to-r sm:from-cream sm:via-cream/80 sm:to-transparent" />
 
+      {/* Tagline pinned just under the fixed navbar, directly below the logo */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="absolute inset-x-0 top-20 z-10 sm:top-24"
+      >
+        <p className="mx-auto max-w-6xl px-5 text-xs font-medium uppercase tracking-[0.15em] text-blush-300 sm:px-8">
+          {SITE.tagline}
+        </p>
+      </motion.div>
+
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
         className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-28 sm:px-8 sm:py-0"
       >
-        <motion.p
-          variants={item}
-          className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300"
-        >
-          {SITE.tagline}
-        </motion.p>
         <motion.h1
           variants={item}
-          className="mt-6 max-w-3xl font-heading text-5xl leading-[1.08] text-charcoal sm:text-7xl"
+          className="max-w-3xl font-heading text-5xl leading-[1.08] text-charcoal sm:text-7xl"
         >
           {heading || "Designed for Comfort & Confidence"}
         </motion.h1>
