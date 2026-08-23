@@ -42,7 +42,7 @@ export default function AboutPage() {
           className="object-cover object-[60%_top]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/85 to-cream/40" />
-        <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-28 sm:px-8 sm:pb-20">
+        <div className="relative mx-auto w-full max-w-6xl px-5 pb-14 pt-36 sm:px-8 sm:pb-20">
           <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush-300">
             Our Story
           </p>

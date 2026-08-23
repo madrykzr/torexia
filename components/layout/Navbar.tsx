@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, ShoppingBag } from "lucide-react";
-import { NAV_LINKS } from "@/lib/constants";
+import { NAV_LINKS, SITE } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 import { useCart } from "@/lib/cart";
 import { MobileDrawer } from "./MobileDrawer";
@@ -84,6 +84,10 @@ export function Navbar() {
             </button>
           </div>
         </div>
+
+        <p className="mx-auto max-w-6xl px-5 pb-2 text-[10px] font-medium uppercase tracking-[0.15em] text-blush-300 sm:px-8">
+          {SITE.tagline}
+        </p>
       </header>
 
       <MobileDrawer open={open} onClose={() => setOpen(false)} />

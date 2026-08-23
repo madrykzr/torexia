@@ -49,7 +49,7 @@ export default async function CollectionPage({
   if (!collection) notFound();
 
   return (
-    <Section tone="cream" className="pt-28 sm:pt-32">
+    <Section tone="cream" className="pt-36 sm:pt-40">
       <nav className="mb-8 text-xs tracking-wide text-charcoal-600">
         <Link href="/" className="transition-colors hover:text-coffee">
           Home
