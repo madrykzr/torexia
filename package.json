@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "prep-images": "node scripts/prep-images.mjs",
-    "seed": "node --env-file=.env.local scripts/seed-sanity.mjs"
+    "seed": "node --env-file=.env.local scripts/seed-sanity.mjs",
+    "migrate:abaya-items": "node --env-file=.env.local scripts/migrate-legacy-abaya-items.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",
