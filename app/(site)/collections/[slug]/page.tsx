@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { CollectionDetailClient } from "@/components/collections/CollectionDetailClient";
+import { CollectionItemsGrid } from "@/components/collections/CollectionItemsGrid";
 import {
   getCollectionBySlug,
   getCollectionItemsByCollectionSlug,
@@ -61,7 +62,11 @@ export default async function CollectionPage({
         <span className="text-charcoal">{collection.name}</span>
       </nav>
 
-      <CollectionDetailClient collection={collection} items={items} />
+      {items.length > 0 ? (
+        <CollectionItemsGrid collection={collection} items={items} />
+      ) : (
+        <CollectionDetailClient collection={collection} />
+      )}
     </Section>
   );
 }

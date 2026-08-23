@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
-import type { Collection, CollectionItem, Colour, Size } from "@/lib/types";
+import type { Collection, Colour, Size } from "@/lib/types";
 import { formatPrice, whatsappUrl } from "@/lib/constants";
 import { useCart } from "@/lib/cart";
 import { ProductGallery } from "@/components/shop/ProductGallery";
@@ -21,10 +20,8 @@ const CATEGORY_LABEL: Record<string, string> = {
 
 export function CollectionDetailClient({
   collection,
-  items,
 }: {
   collection: Collection;
-  items: CollectionItem[];
 }) {
   const { add } = useCart();
   const [colour, setColour] = useState<Colour | null>(
@@ -132,36 +129,6 @@ export function CollectionDetailClient({
             Enquire via WhatsApp
           </a>
         </div>
-
-        {items.length > 0 && (
-          <div className="mt-9 border-t border-line pt-8">
-            <p className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
-              Shop this piece
-            </p>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {items.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/collections/${collection.slug}/${item.slug}`}
-                  className="group block"
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-cream-200">
-                    <Image
-                      src={item.images[0] ?? collection.cover}
-                      alt={item.name}
-                      fill
-                      sizes="30vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <p className="mt-2 truncate text-xs text-charcoal">
-                    {item.name}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
 
         {collection.description && (
           <p className="mt-9 text-sm leading-loose text-charcoal-600">
