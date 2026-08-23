@@ -43,6 +43,23 @@ export const collection = defineType({
       validation: (rule) => rule.min(0),
     }),
     defineField({
+      name: 'salePrice',
+      title: 'Sale price (RM)',
+      type: 'number',
+      description:
+        'Optional — set a discounted price. The original price shows with a line through it, the sale price below. Leave blank for no discount.',
+      validation: (rule) =>
+        rule.min(0).custom((salePrice, context) => {
+          if (salePrice == null) return true
+          const price = (context.document as {price?: number} | undefined)?.price
+          if (typeof price !== 'number')
+            return 'Set the Price first before adding a sale price.'
+          if (salePrice >= price)
+            return 'Sale price must be lower than the original price.'
+          return true
+        }),
+    }),
+    defineField({
       name: 'coverImage',
       title: 'Cover image',
       type: 'image',

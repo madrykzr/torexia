@@ -4,15 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, ShoppingBag } from "lucide-react";
+import { Menu, Search, ShoppingBag } from "lucide-react";
 import { NAV_LINKS, SITE } from "@/lib/constants";
+import type { SearchEntry } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { useCart } from "@/lib/cart";
 import { MobileDrawer } from "./MobileDrawer";
+import { SearchModal } from "./SearchModal";
 
-export function Navbar() {
+export function Navbar({ searchIndex = [] }: { searchIndex?: SearchEntry[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { count, ready } = useCart();
 
   useEffect(() => {
@@ -62,6 +65,23 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center gap-1">
+            {/* Glass search pill (desktop) — icon only on mobile */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search products"
+              className="hidden items-center gap-2 rounded-full border border-line bg-white/40 px-4 py-2 text-sm text-charcoal-600 backdrop-blur-md transition-colors hover:border-coffee hover:text-coffee md:flex"
+            >
+              <Search className="h-4 w-4" />
+              <span>Search</span>
+            </button>
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search products"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-charcoal transition-colors hover:text-coffee md:hidden"
+            >
+              <Search className="h-5 w-5" strokeWidth={1.6} />
+            </button>
+
             <Link
               href="/cart"
               aria-label={`Cart${ready && count > 0 ? ` (${count} items)` : ""}`}
@@ -91,6 +111,11 @@ export function Navbar() {
       </header>
 
       <MobileDrawer open={open} onClose={() => setOpen(false)} />
+      <SearchModal
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        index={searchIndex}
+      />
     </>
   );
 }

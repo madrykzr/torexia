@@ -4,13 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Collection, Colour, Size } from "@/lib/types";
-import { formatPrice, whatsappUrl } from "@/lib/constants";
+import { effectivePrice, whatsappUrl } from "@/lib/constants";
 import { useCart } from "@/lib/cart";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { ColourSelector } from "@/components/shop/ColourSelector";
 import { SizeSelector } from "@/components/shop/SizeSelector";
 import { Accordion } from "@/components/shop/Accordion";
 import { SizeChart } from "@/components/ui/SizeChart";
+import { PriceTag } from "@/components/ui/PriceTag";
 
 const CATEGORY_LABEL: Record<string, string> = {
   kaftan: "Kaftan",
@@ -48,7 +49,7 @@ export function CollectionDetailClient({
       slug: collection.slug,
       name: collection.name,
       image: collection.cover,
-      price: collection.price,
+      price: effectivePrice(collection.price, collection.salePrice),
       size: size ?? null,
       colour: colour?.name ?? null,
     });
@@ -69,11 +70,9 @@ export function CollectionDetailClient({
         <h1 className="mt-2 font-heading text-4xl text-charcoal sm:text-5xl">
           {collection.name}
         </h1>
-        <p className="mt-3 text-xl text-coffee">
-          {collection.price != null
-            ? formatPrice(collection.price)
-            : "Price on enquiry"}
-        </p>
+        <div className="mt-3 text-xl">
+          <PriceTag price={collection.price} salePrice={collection.salePrice} />
+        </div>
 
         {/* Selectors */}
         <div className="mt-8 space-y-7">

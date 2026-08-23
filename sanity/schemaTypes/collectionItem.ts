@@ -96,6 +96,21 @@ export const collectionItem = defineType({
       validation: (rule) => rule.min(0),
     }),
     defineField({
+      name: 'salePrice',
+      title: 'Sale price (RM)',
+      type: 'number',
+      description:
+        'Optional — a discounted price. The original price shows with a line through it, the sale price below. Leave blank for no discount.',
+      validation: (rule) =>
+        rule.min(0).custom((salePrice, context) => {
+          if (salePrice == null) return true
+          const price = (context.document as {price?: number} | undefined)?.price
+          if (typeof price === 'number' && salePrice >= price)
+            return 'Sale price must be lower than the price.'
+          return true
+        }),
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',

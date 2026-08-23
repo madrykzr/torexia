@@ -40,6 +40,8 @@ export type Collection = {
   category: string;
   /** Price in RM, or null when "on enquiry" */
   price: number | null;
+  /** Discounted price in RM, or null when not on sale */
+  salePrice: number | null;
   /** Resolved cover image URL */
   cover: string;
   /** Resolved gallery image URLs */
@@ -69,8 +71,18 @@ export type CollectionItem = {
   images: string[];
   /** Price in RM, or null to inherit the parent collection's price */
   price: number | null;
+  /** Discounted price in RM, or null when not on sale */
+  salePrice: number | null;
   description: string;
   order: number;
+};
+
+/** A flat, searchable entry — a collection or an individual item. */
+export type SearchEntry = {
+  name: string;
+  href: string;
+  image: string;
+  category: string;
 };
 
 export type HomePage = {

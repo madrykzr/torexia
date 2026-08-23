@@ -29,8 +29,9 @@ export function Hero({
         sizes="100vw"
         className="object-cover object-[70%_top]"
       />
-      {/* Soft warm-white veil — keeps the hero light and airy while holding text legible */}
-      <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/85 to-cream/40 sm:bg-gradient-to-r sm:from-cream sm:via-cream/80 sm:to-transparent" />
+      {/* Soft warm-white veil — lighter now so more of the photo shows, while
+          still holding the bottom-left text legible */}
+      <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/55 to-transparent sm:bg-gradient-to-r sm:from-cream/95 sm:via-cream/35 sm:to-transparent" />
 
       <motion.div
         variants={container}

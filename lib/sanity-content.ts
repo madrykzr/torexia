@@ -10,6 +10,7 @@ import type {
   HomePage,
   Product,
   RentalProduct,
+  SearchEntry,
   Size,
   SiteSettings,
 } from "@/lib/types";
@@ -128,6 +129,7 @@ type RawCollection = {
   slug: string | null;
   category?: string;
   price?: number;
+  salePrice?: number;
   coverImage?: unknown;
   gallery?: unknown[];
   colours?: { name?: string; hex?: string }[];
@@ -149,6 +151,7 @@ function mapCollection(raw: RawCollection): Collection {
     name: raw.name,
     category: raw.category ?? "",
     price: typeof raw.price === "number" ? raw.price : null,
+    salePrice: typeof raw.salePrice === "number" ? raw.salePrice : null,
     cover: imageUrl(raw.coverImage) ?? "/images/og.jpg",
     gallery: (raw.gallery ?? [])
       .map((g) => imageUrl(g))
@@ -181,6 +184,7 @@ type RawCollectionItem = {
   sizes?: string[];
   images?: unknown[];
   price?: number;
+  salePrice?: number;
   description?: string;
   order?: number;
 };
@@ -198,6 +202,7 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
       .map((img) => imageUrl(img))
       .filter((u): u is string => Boolean(u)),
     price: typeof raw.price === "number" ? raw.price : null,
+    salePrice: typeof raw.salePrice === "number" ? raw.salePrice : null,
     description: raw.description ?? "",
     order: typeof raw.order === "number" ? raw.order : 100,
   };
@@ -325,7 +330,7 @@ export async function getRentalProductSlugs(): Promise<string[]> {
 // --- Collections ---------------------------------------------------------
 
 const COLLECTION_FIELDS = `
-  "id": _id, name, "slug": slug.current, category, price,
+  "id": _id, name, "slug": slug.current, category, price, salePrice,
   coverImage, gallery, colours, sizes, fabric,
   sizeChartCol1Label, sizeChartCol2Label, sizeChart, sizeChartNote,
   description, featuredOnHome, order
@@ -366,7 +371,7 @@ export async function getCollectionSlugs(): Promise<string[]> {
 const COLLECTION_ITEM_FIELDS = `
   "id": _id, name, "slug": slug.current,
   "collectionSlug": collection->slug.current,
-  colour, sizes, price, description, order, images
+  colour, sizes, price, salePrice, description, order, images
 `;
 
 export async function getCollectionItemsByCollectionSlug(
@@ -398,6 +403,62 @@ export async function getCollectionItemSlugPairs(): Promise<
       "slug": collection->slug.current, "itemSlug": slug.current
     }`,
   );
+}
+
+// --- Search --------------------------------------------------------------
+
+type RawSearchCollection = {
+  name: string;
+  slug: string | null;
+  category?: string;
+  coverImage?: unknown;
+};
+type RawSearchItem = {
+  name: string;
+  slug: string | null;
+  collectionSlug: string | null;
+  image?: unknown;
+};
+
+/**
+ * A flat, lightweight index of everything shoppable (individual items first,
+ * then collections) — powers the navbar search. Filtered client-side.
+ */
+export async function getSearchIndex(): Promise<SearchEntry[]> {
+  const [collections, items] = await Promise.all([
+    query<RawSearchCollection[]>(
+      `*[_type == "collection" && defined(slug.current)] | order(order asc, name asc){
+        name, "slug": slug.current, category, coverImage
+      }`,
+    ),
+    query<RawSearchItem[]>(
+      `*[_type == "collectionItem" && defined(slug.current) && defined(collection->slug.current)] | order(order asc, name asc){
+        name, "slug": slug.current, "collectionSlug": collection->slug.current, "image": images[0]
+      }`,
+    ),
+  ]);
+
+  const itemEntries: SearchEntry[] = items
+    .filter((i) => i.slug && i.collectionSlug)
+    .map((i) => ({
+      name: i.name,
+      href: `/collections/${i.collectionSlug}/${i.slug}`,
+      image: imageUrl(i.image, 200) ?? "/images/og.jpg",
+      category: "Product",
+    }));
+
+  const collectionEntries: SearchEntry[] = collections
+    .filter((c) => c.slug)
+    .map((c) => ({
+      name: c.name,
+      href: `/collections/${c.slug}`,
+      image: imageUrl(c.coverImage, 200) ?? "/images/og.jpg",
+      category: c.category
+        ? c.category.charAt(0).toUpperCase() + c.category.slice(1)
+        : "Collection",
+    }));
+
+  return [...itemEntries, ...collectionEntries];
 }
 
 // --- Home page -----------------------------------------------------------

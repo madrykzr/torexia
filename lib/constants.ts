@@ -36,6 +36,7 @@ export const NAV_LINKS = [
   // Rent temporarily removed — bring back once ready (see app/(site)/rent/*)
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
 ] as const;
 
 /**
@@ -49,6 +50,19 @@ export function whatsappUrl(message?: string): string {
 /** Format a Ringgit price, e.g. 199 -> "RM199" */
 export function formatPrice(price: number): string {
   return `RM${price}`;
+}
+
+/**
+ * The price a customer actually pays — the sale price when a valid discount
+ * is set (lower than the original), otherwise the original price.
+ */
+export function effectivePrice(
+  price: number | null,
+  salePrice?: number | null,
+): number | null {
+  if (price == null) return null;
+  if (salePrice != null && salePrice < price) return salePrice;
+  return price;
 }
 
 /** Pre-filled WhatsApp enquiry for a rental piece. Unset fields show as "___". */

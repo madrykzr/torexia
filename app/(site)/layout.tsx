@@ -3,10 +3,13 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { CartProvider } from "@/lib/cart";
+import { getSearchIndex } from "@/lib/sanity-content";
 
-export default function SiteLayout({
+export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const searchIndex = await getSearchIndex();
+
   return (
     <CartProvider>
       <div className="flex min-h-svh flex-col">
@@ -21,7 +24,7 @@ export default function SiteLayout({
           }}
         />
         <SmoothScroll />
-        <Navbar />
+        <Navbar searchIndex={searchIndex} />
         <main className="flex-1">{children}</main>
         <Footer />
         <WhatsAppButton />

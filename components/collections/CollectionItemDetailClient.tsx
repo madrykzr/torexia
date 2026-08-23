@@ -4,12 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Collection, CollectionItem, Size } from "@/lib/types";
-import { formatPrice, whatsappUrl } from "@/lib/constants";
+import { effectivePrice, whatsappUrl } from "@/lib/constants";
 import { useCart } from "@/lib/cart";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { SizeSelector } from "@/components/shop/SizeSelector";
 import { Accordion } from "@/components/shop/Accordion";
 import { SizeChart } from "@/components/ui/SizeChart";
+import { PriceTag } from "@/components/ui/PriceTag";
 
 export function CollectionItemDetailClient({
   collection,
@@ -22,7 +23,11 @@ export function CollectionItemDetailClient({
   const [size, setSize] = useState<Size | null>(item.sizes[0] ?? null);
   const [added, setAdded] = useState(false);
 
-  const price = item.price ?? collection.price;
+  // Item shows its own price/sale when set; otherwise inherits both from the
+  // parent collection.
+  const basePrice = item.price ?? collection.price;
+  const salePrice =
+    item.salePrice ?? (item.price == null ? collection.salePrice : null);
   const needsSize = item.sizes.length > 0 && !size;
 
   const enquiry = `Hi Torexia! I'm interested in the ${item.name} (${item.colour.name}${
@@ -36,7 +41,7 @@ export function CollectionItemDetailClient({
       slug: item.slug,
       name: item.name,
       image: item.images[0] ?? collection.cover,
-      price,
+      price: effectivePrice(basePrice, salePrice),
       size: size ?? null,
       colour: item.colour.name,
     });
@@ -55,9 +60,9 @@ export function CollectionItemDetailClient({
         <h1 className="font-heading text-3xl text-charcoal sm:text-4xl">
           {item.name}
         </h1>
-        <p className="mt-3 text-xl text-coffee">
-          {price != null ? formatPrice(price) : "Price on enquiry"}
-        </p>
+        <div className="mt-3 text-xl">
+          <PriceTag price={basePrice} salePrice={salePrice} />
+        </div>
 
         <div className="mt-8 space-y-7">
           {/* Single colourway — static label, not an interactive selector. */}

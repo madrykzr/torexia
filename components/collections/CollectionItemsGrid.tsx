@@ -36,14 +36,24 @@ export function CollectionItemsGrid({
       )}
 
       <div className="mt-10 grid grid-cols-2 gap-x-5 gap-y-8 sm:gap-x-8 lg:grid-cols-3">
-        {items.map((item, i) => (
-          <CollectionItemCard
-            key={item.id}
-            collectionSlug={collection.slug}
-            item={item}
-            priority={i < 3}
-          />
-        ))}
+        {items.map((item, i) => {
+          // Item shows its own price/sale when set; otherwise inherits the
+          // collection's.
+          const price = item.price ?? collection.price;
+          const salePrice =
+            item.salePrice ??
+            (item.price == null ? collection.salePrice : null);
+          return (
+            <CollectionItemCard
+              key={item.id}
+              collectionSlug={collection.slug}
+              item={item}
+              price={price}
+              salePrice={salePrice}
+              priority={i < 3}
+            />
+          );
+        })}
       </div>
     </div>
   );
