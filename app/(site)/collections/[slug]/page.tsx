@@ -5,6 +5,7 @@ import { Section } from "@/components/ui/Section";
 import { CollectionDetailClient } from "@/components/collections/CollectionDetailClient";
 import {
   getCollectionBySlug,
+  getCollectionItemsByCollectionSlug,
   getCollectionSlugs,
 } from "@/lib/sanity-content";
 
@@ -40,7 +41,10 @@ export default async function CollectionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const collection = await getCollectionBySlug(slug);
+  const [collection, items] = await Promise.all([
+    getCollectionBySlug(slug),
+    getCollectionItemsByCollectionSlug(slug),
+  ]);
   if (!collection) notFound();
 
   return (
@@ -57,7 +61,7 @@ export default async function CollectionPage({
         <span className="text-charcoal">{collection.name}</span>
       </nav>
 
-      <CollectionDetailClient collection={collection} />
+      <CollectionDetailClient collection={collection} items={items} />
     </Section>
   );
 }

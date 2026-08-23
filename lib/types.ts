@@ -57,6 +57,22 @@ export type Collection = {
   order: number;
 };
 
+export type CollectionItem = {
+  id: string;
+  slug: string;
+  name: string;
+  /** Parent collection's slug, e.g. "kaftan" */
+  collectionSlug: string;
+  colour: Colour;
+  sizes: Size[];
+  /** Resolved image URLs (Sanity CDN), ordered */
+  images: string[];
+  /** Price in RM, or null to inherit the parent collection's price */
+  price: number | null;
+  description: string;
+  order: number;
+};
+
 export type HomePage = {
   heroImage: string | null;
   heroHeading: string | null;

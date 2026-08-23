@@ -5,6 +5,7 @@ import {
   CalendarIcon,
   SparklesIcon,
   HomeIcon,
+  TagIcon,
 } from '@sanity/icons'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
@@ -20,6 +21,7 @@ export const structure: StructureResolver = (S) =>
         .child(S.document().schemaType('homePage').documentId('homePage')),
       S.divider(),
       S.documentTypeListItem('collection').title('Collections').icon(SparklesIcon),
+      S.documentTypeListItem('collectionItem').title('Collection Items').icon(TagIcon),
       // "Products" (individual abaya SKUs) is retired — Abaya is now a single
       // collection like Kaftan/Jubah. The `product` schema type stays
       // registered (so any lingering documents don't error in Studio) but is

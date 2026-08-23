@@ -1,59 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
-import type { Collection, CollectionItem, Colour, Size } from "@/lib/types";
+import type { Collection, CollectionItem, Size } from "@/lib/types";
 import { formatPrice, whatsappUrl } from "@/lib/constants";
 import { useCart } from "@/lib/cart";
 import { ProductGallery } from "@/components/shop/ProductGallery";
-import { ColourSelector } from "@/components/shop/ColourSelector";
 import { SizeSelector } from "@/components/shop/SizeSelector";
 import { Accordion } from "@/components/shop/Accordion";
 import { SizeChart } from "@/components/ui/SizeChart";
 
-const CATEGORY_LABEL: Record<string, string> = {
-  kaftan: "Kaftan",
-  jubah: "Jubah",
-  abaya: "Abaya",
-};
-
-export function CollectionDetailClient({
+export function CollectionItemDetailClient({
   collection,
-  items,
+  item,
 }: {
   collection: Collection;
-  items: CollectionItem[];
+  item: CollectionItem;
 }) {
   const { add } = useCart();
-  const [colour, setColour] = useState<Colour | null>(
-    collection.colours[0] ?? null,
-  );
-  const [size, setSize] = useState<Size | null>(collection.sizes[0] ?? null);
+  const [size, setSize] = useState<Size | null>(item.sizes[0] ?? null);
   const [added, setAdded] = useState(false);
 
-  const images = [collection.cover, ...collection.gallery].filter(Boolean);
+  const price = item.price ?? collection.price;
+  const needsSize = item.sizes.length > 0 && !size;
 
-  // Only block the purchase when an option exists but hasn't been chosen.
-  const needsSize = collection.sizes.length > 0 && !size;
-  const needsColour = collection.colours.length > 0 && !colour;
-  const canAdd = !needsSize && !needsColour;
-
-  const enquiry = `Hi Torexia! I'm interested in the ${collection.name} collection${
-    colour ? ` (${colour.name}` : ""
-  }${colour && size ? `, size ${size})` : colour ? ")" : ""}. Could you share more details?`;
+  const enquiry = `Hi Torexia! I'm interested in the ${item.name} (${item.colour.name}${
+    size ? `, size ${size}` : ""
+  }). Could you share more details?`;
 
   function handleAdd() {
-    if (!canAdd) return;
+    if (needsSize) return;
     add({
-      kind: "collection",
-      slug: collection.slug,
-      name: collection.name,
-      image: collection.cover,
-      price: collection.price,
+      kind: "product",
+      slug: item.slug,
+      name: item.name,
+      image: item.images[0] ?? collection.cover,
+      price,
       size: size ?? null,
-      colour: colour?.name ?? null,
+      colour: item.colour.name,
     });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 2000);
@@ -61,38 +46,36 @@ export function CollectionDetailClient({
 
   return (
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
-      <ProductGallery images={images} alt={collection.name} />
+      <ProductGallery
+        images={item.images.length ? item.images : [collection.cover]}
+        alt={item.name}
+      />
 
       <div className="lg:pt-4">
-        {collection.category && (
-          <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush">
-            {CATEGORY_LABEL[collection.category] ?? collection.category}
-          </p>
-        )}
-        <h1 className="mt-2 font-heading text-4xl text-charcoal sm:text-5xl">
-          {collection.name}
+        <h1 className="font-heading text-3xl text-charcoal sm:text-4xl">
+          {item.name}
         </h1>
         <p className="mt-3 text-xl text-coffee">
-          {collection.price != null
-            ? formatPrice(collection.price)
-            : "Price on enquiry"}
+          {price != null ? formatPrice(price) : "Price on enquiry"}
         </p>
 
-        {/* Selectors */}
         <div className="mt-8 space-y-7">
-          {collection.colours.length > 0 && colour && (
-            <ColourSelector
-              colours={collection.colours}
-              selected={colour}
-              onSelect={setColour}
-            />
-          )}
-          {collection.sizes.length > 0 && size && (
-            <SizeSelector
-              sizes={collection.sizes}
-              selected={size}
-              onSelect={setSize}
-            />
+          {/* Single colourway — static label, not an interactive selector. */}
+          <div>
+            <span className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
+              Colour
+            </span>
+            <div className="mt-3 flex items-center gap-2.5">
+              <span
+                className="h-8 w-8 rounded-full ring-1 ring-line"
+                style={{ backgroundColor: item.colour.hex }}
+              />
+              <span className="text-sm text-charcoal">{item.colour.name}</span>
+            </div>
+          </div>
+
+          {item.sizes.length > 0 && size && (
+            <SizeSelector sizes={item.sizes} selected={size} onSelect={setSize} />
           )}
         </div>
 
@@ -100,7 +83,7 @@ export function CollectionDetailClient({
         <div className="mt-9 flex flex-col gap-3">
           <button
             onClick={handleAdd}
-            disabled={!canAdd}
+            disabled={needsSize}
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-coffee text-sm font-medium tracking-wide text-white transition-colors hover:bg-coffee-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {added ? (
@@ -133,39 +116,9 @@ export function CollectionDetailClient({
           </a>
         </div>
 
-        {items.length > 0 && (
-          <div className="mt-9 border-t border-line pt-8">
-            <p className="text-xs font-medium uppercase tracking-[0.15em] text-charcoal-600">
-              Shop this piece
-            </p>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {items.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/collections/${collection.slug}/${item.slug}`}
-                  className="group block"
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-cream-200">
-                    <Image
-                      src={item.images[0] ?? collection.cover}
-                      alt={item.name}
-                      fill
-                      sizes="30vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <p className="mt-2 truncate text-xs text-charcoal">
-                    {item.name}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {collection.description && (
+        {item.description && (
           <p className="mt-9 text-sm leading-loose text-charcoal-600">
-            {collection.description}
+            {item.description}
           </p>
         )}
 

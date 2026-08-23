@@ -5,6 +5,7 @@ import { COLOURS } from "@/data/products";
 import type {
   BlogPost,
   Collection,
+  CollectionItem,
   Colour,
   HomePage,
   Product,
@@ -171,6 +172,37 @@ function mapCollection(raw: RawCollection): Collection {
   };
 }
 
+type RawCollectionItem = {
+  id: string;
+  name: string;
+  slug: string | null;
+  collectionSlug: string | null;
+  colour?: { name?: string; hex?: string };
+  sizes?: string[];
+  images?: unknown[];
+  price?: number;
+  description?: string;
+  order?: number;
+};
+
+function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
+  const [colour] = mapCollectionColours(raw.colour ? [raw.colour] : []);
+  return {
+    id: raw.id,
+    slug: raw.slug ?? raw.id,
+    name: raw.name,
+    collectionSlug: raw.collectionSlug ?? "",
+    colour: colour ?? { name: "", slug: "", hex: "#000000" },
+    sizes: (raw.sizes ?? []) as Size[],
+    images: (raw.images ?? [])
+      .map((img) => imageUrl(img))
+      .filter((u): u is string => Boolean(u)),
+    price: typeof raw.price === "number" ? raw.price : null,
+    description: raw.description ?? "",
+    order: typeof raw.order === "number" ? raw.order : 100,
+  };
+}
+
 function mapRentalProduct(raw: RawRentalProduct): RentalProduct {
   return {
     id: raw.id,
@@ -326,6 +358,45 @@ export async function getCollectionBySlug(
 export async function getCollectionSlugs(): Promise<string[]> {
   return query<string[]>(
     `*[_type == "collection" && defined(slug.current)].slug.current`,
+  );
+}
+
+// --- Collection items (per-colourway pages) -------------------------------
+
+const COLLECTION_ITEM_FIELDS = `
+  "id": _id, name, "slug": slug.current,
+  "collectionSlug": collection->slug.current,
+  colour, sizes, price, description, order, images
+`;
+
+export async function getCollectionItemsByCollectionSlug(
+  collectionSlug: string,
+): Promise<CollectionItem[]> {
+  const raw = await query<RawCollectionItem[]>(
+    `*[_type == "collectionItem" && collection->slug.current == $collectionSlug && defined(slug.current)] | order(order asc, name asc){${COLLECTION_ITEM_FIELDS}}`,
+    { collectionSlug },
+  );
+  return raw.map(mapCollectionItem);
+}
+
+export async function getCollectionItemBySlug(
+  collectionSlug: string,
+  itemSlug: string,
+): Promise<CollectionItem | null> {
+  const raw = await query<RawCollectionItem | null>(
+    `*[_type == "collectionItem" && collection->slug.current == $collectionSlug && slug.current == $itemSlug][0]{${COLLECTION_ITEM_FIELDS}}`,
+    { collectionSlug, itemSlug },
+  );
+  return raw ? mapCollectionItem(raw) : null;
+}
+
+export async function getCollectionItemSlugPairs(): Promise<
+  { slug: string; itemSlug: string }[]
+> {
+  return query<{ slug: string; itemSlug: string }[]>(
+    `*[_type == "collectionItem" && defined(slug.current) && defined(collection->slug.current)]{
+      "slug": collection->slug.current, "itemSlug": slug.current
+    }`,
   );
 }
 
