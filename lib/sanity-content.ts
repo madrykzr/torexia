@@ -78,8 +78,8 @@ function imageUrl(source: unknown, width = 1200): string | null {
   }
 }
 
-function mapColours(slugs: string[] = []): Colour[] {
-  return slugs.map((s) => COLOURS[s]).filter(Boolean);
+function mapColours(slugs: string[] | null | undefined): Colour[] {
+  return (slugs ?? []).map((s) => COLOURS[s]).filter(Boolean);
 }
 
 /** Slugify a free-typed colour name for use as a React key / aria value. */
@@ -94,9 +94,11 @@ function slugifyColourName(name: string): string {
 /** Collections store colours as free-form {name, hex} objects (owner-editable
  * in Studio), not the fixed slug list products/rentalProducts use. */
 function mapCollectionColours(
-  raw: { name?: string; hex?: string }[] = [],
+  raw: { name?: string; hex?: string }[] | null | undefined,
 ): Colour[] {
-  return raw
+  // GROQ returns null (not undefined) for a field the document never set —
+  // a default parameter alone doesn't catch that, so normalize explicitly.
+  return (raw ?? [])
     .filter((c) => c?.name && c?.hex)
     .map((c) => ({
       name: c.name!,
