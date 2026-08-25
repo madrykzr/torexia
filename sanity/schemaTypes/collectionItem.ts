@@ -1,6 +1,5 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {TagIcon} from '@sanity/icons'
-import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {SIZE_OPTIONS} from './product'
 
 // A single colourway of a collection (e.g. "Kaftan Berry") with its own photo
@@ -159,7 +158,13 @@ export const collectionItem = defineType({
       type: 'text',
       rows: 4,
     }),
-    orderRankField({type: 'collectionItem'}),
+    defineField({
+      name: 'order',
+      title: 'Order',
+      type: 'number',
+      description: 'Lower numbers show first among this collection’s items.',
+      initialValue: 100,
+    }),
   ],
   preview: {
     select: {title: 'name', colour: 'colour.name', media: 'images.0'},
@@ -172,7 +177,11 @@ export const collectionItem = defineType({
     },
   },
   orderings: [
-    orderRankOrdering,
+    {
+      title: 'Display order',
+      name: 'orderAsc',
+      by: [{field: 'order', direction: 'asc'}],
+    },
     {
       title: 'Name, A–Z',
       name: 'nameAsc',
