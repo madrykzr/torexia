@@ -10,7 +10,8 @@
     "prep-images": "node scripts/prep-images.mjs",
     "seed": "node --env-file=.env.local scripts/seed-sanity.mjs",
     "migrate:abaya-items": "node --env-file=.env.local scripts/migrate-legacy-abaya-items.mjs",
-    "create:collection-items": "node --env-file=.env.local scripts/create-collection-items-from-colours.mjs"
+    "create:collection-items": "node --env-file=.env.local scripts/create-collection-items-from-colours.mjs",
+    "create:hatije-items": "node --env-file=.env.local scripts/create-hatije-items.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",
