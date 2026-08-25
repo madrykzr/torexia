@@ -479,6 +479,7 @@ type RawHomePage = {
   heroCtaLabel?: string;
   heroCtaHref?: string;
   featuredCollections?: RawCollection[];
+  newArrivals?: RawCollectionItem[];
   promoEnabled?: boolean;
   promoText?: string;
   promoHref?: string;
@@ -489,6 +490,7 @@ export async function getHomePage(): Promise<HomePage | null> {
     `*[_type == "homePage"][0]{
       heroImage, heroHeading, heroSubheading, heroCtaLabel, heroCtaHref,
       "featuredCollections": featuredCollections[]->{${COLLECTION_FIELDS}},
+      "newArrivals": newArrivals[]->{${COLLECTION_ITEM_FIELDS}},
       promoEnabled, promoText, promoHref
     }`,
   );
@@ -500,6 +502,7 @@ export async function getHomePage(): Promise<HomePage | null> {
     heroCtaLabel: raw.heroCtaLabel ?? "Shop Now",
     heroCtaHref: raw.heroCtaHref ?? "/collections",
     featuredCollections: (raw.featuredCollections ?? []).map(mapCollection),
+    newArrivals: (raw.newArrivals ?? []).map(mapCollectionItem),
     promoEnabled: Boolean(raw.promoEnabled),
     promoText: raw.promoText ?? null,
     promoHref: raw.promoHref ?? null,

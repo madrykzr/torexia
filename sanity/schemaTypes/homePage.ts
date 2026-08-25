@@ -48,6 +48,14 @@ export const homePage = defineType({
       of: [defineArrayMember({type: 'reference', to: [{type: 'collection'}]})],
     }),
     defineField({
+      name: 'newArrivals',
+      title: 'New arrivals',
+      type: 'array',
+      description:
+        'Garment photos shown in the homepage "New Arrivals" section, directly below "Shop by collection". Pick specific colourway items (each already has its own photo set) as new pieces launch.',
+      of: [defineArrayMember({type: 'reference', to: [{type: 'collectionItem'}]})],
+    }),
+    defineField({
       name: 'promoEnabled',
       title: 'Show promo banner',
       type: 'boolean',

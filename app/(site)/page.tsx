@@ -1,8 +1,8 @@
 import { Hero } from "@/components/home/Hero";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { FeaturedCollections } from "@/components/home/FeaturedCollections";
+import { NewArrivals } from "@/components/home/NewArrivals";
 import { StylingInspiration } from "@/components/home/StylingInspiration";
-import { ColourShowcase } from "@/components/home/ColourShowcase";
 import { CustomerReviews } from "@/components/home/CustomerReviews";
 import { Faq } from "@/components/home/Faq";
 import { BrandQuote } from "@/components/home/BrandQuote";
@@ -26,8 +26,8 @@ export default async function HomePage() {
         image={home?.heroImage}
       />
       <FeaturedCollections collections={home?.featuredCollections ?? []} />
+      <NewArrivals items={home?.newArrivals ?? []} />
       <StylingInspiration />
-      <ColourShowcase />
       <CustomerReviews />
       <Faq />
       <BrandQuote />

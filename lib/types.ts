@@ -96,6 +96,7 @@ export type HomePage = {
   heroCtaLabel: string;
   heroCtaHref: string;
   featuredCollections: Collection[];
+  newArrivals: CollectionItem[];
   promoEnabled: boolean;
   promoText: string | null;
   promoHref: string | null;
