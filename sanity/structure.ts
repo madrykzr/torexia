@@ -7,9 +7,10 @@ import {
   HomeIcon,
   TagIcon,
 } from '@sanity/icons'
+import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
-export const structure: StructureResolver = (S) =>
+export const structure: StructureResolver = (S, context) =>
   S.list()
     .title('Content')
     .items([
@@ -20,8 +21,34 @@ export const structure: StructureResolver = (S) =>
         .id('homePage')
         .child(S.document().schemaType('homePage').documentId('homePage')),
       S.divider(),
-      S.documentTypeListItem('collection').title('Collections').icon(SparklesIcon),
-      S.documentTypeListItem('collectionItem').title('Collection Items').icon(TagIcon),
+      // Clicking a Collection drills into that collection's own doc plus a
+      // drag-to-reorder list of its Items — reordering only ever makes sense
+      // within one collection, so items are scoped here rather than a flat
+      // cross-collection list.
+      S.documentTypeListItem('collection')
+        .title('Collections')
+        .icon(SparklesIcon)
+        .child((collectionId) =>
+          S.list()
+            .title('Collection')
+            .items([
+              S.listItem()
+                .title('Edit Collection')
+                .icon(SparklesIcon)
+                .child(
+                  S.document().schemaType('collection').documentId(collectionId),
+                ),
+              orderableDocumentListDeskItem({
+                type: 'collectionItem',
+                title: 'Items — drag to reorder',
+                icon: TagIcon,
+                filter: 'collection._ref == $collectionId',
+                params: {collectionId},
+                context,
+                S,
+              }),
+            ]),
+        ),
       // "Products" (individual abaya SKUs) is retired — Abaya is now a single
       // collection like Kaftan/Jubah. The `product` schema type stays
       // registered (so any lingering documents don't error in Studio) but is

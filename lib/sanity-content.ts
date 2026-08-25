@@ -188,7 +188,6 @@ type RawCollectionItem = {
   sizeChart?: { label?: string; col1?: string; col2?: string }[];
   sizeChartNote?: string;
   description?: string;
-  order?: number;
 };
 
 function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
@@ -216,7 +215,6 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
       })),
     sizeChartNote: raw.sizeChartNote ?? null,
     description: raw.description ?? "",
-    order: typeof raw.order === "number" ? raw.order : 100,
   };
 }
 
@@ -378,14 +376,14 @@ const COLLECTION_ITEM_FIELDS = `
   "collectionSlug": collection->slug.current,
   colour, sizes, price, salePrice,
   sizeChartCol1Label, sizeChartCol2Label, sizeChart, sizeChartNote,
-  description, order, images
+  description, images
 `;
 
 export async function getCollectionItemsByCollectionSlug(
   collectionSlug: string,
 ): Promise<CollectionItem[]> {
   const raw = await query<RawCollectionItem[]>(
-    `*[_type == "collectionItem" && collection->slug.current == $collectionSlug && defined(slug.current)] | order(order asc, name asc){${COLLECTION_ITEM_FIELDS}}`,
+    `*[_type == "collectionItem" && collection->slug.current == $collectionSlug && defined(slug.current)] | order(orderRank asc){${COLLECTION_ITEM_FIELDS}}`,
     { collectionSlug },
   );
   return raw.map(mapCollectionItem);
@@ -439,7 +437,7 @@ export async function getSearchIndex(): Promise<SearchEntry[]> {
       }`,
     ),
     query<RawSearchItem[]>(
-      `*[_type == "collectionItem" && defined(slug.current) && defined(collection->slug.current)] | order(order asc, name asc){
+      `*[_type == "collectionItem" && defined(slug.current) && defined(collection->slug.current)] | order(orderRank asc){
         name, "slug": slug.current, "collectionSlug": collection->slug.current, "image": images[0]
       }`,
     ),

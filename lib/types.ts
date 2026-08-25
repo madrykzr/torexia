@@ -78,7 +78,6 @@ export type CollectionItem = {
   sizeChart: SizeChartRow[];
   sizeChartNote: string | null;
   description: string;
-  order: number;
 };
 
 /** A flat, searchable entry — a collection or an individual item. */
