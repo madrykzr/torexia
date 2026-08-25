@@ -17,7 +17,10 @@ const shots = [
 
 export function StylingInspiration() {
   return (
-    <Section tone="alt">
+    // Top padding trimmed to match FeaturedCollections' reduced bottom
+    // padding above — same background tone, so together they read as one
+    // comfortable gap instead of two stacked full section margins.
+    <Section tone="alt" spacing={false} className="pb-20 pt-10 sm:pb-32 sm:pt-14">
       <SectionHeading
         eyebrow="Lookbook"
         title="Styling inspiration"

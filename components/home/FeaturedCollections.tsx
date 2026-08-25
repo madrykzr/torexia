@@ -12,7 +12,10 @@ export function FeaturedCollections({
   if (collections.length === 0) return null;
 
   return (
-    <Section tone="alt">
+    // Bottom padding trimmed — StylingInspiration follows with the same
+    // "alt" background, so their full py-20/32 would otherwise stack into
+    // one big gap with no colour break to justify it.
+    <Section tone="alt" spacing={false} className="pb-10 pt-20 sm:pb-14 sm:pt-32">
       <SectionHeading
         align="left"
         eyebrow="Collections"
