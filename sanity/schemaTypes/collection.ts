@@ -183,12 +183,6 @@ export const collection = defineType({
       rows: 4,
     }),
     defineField({
-      name: 'featuredOnHome',
-      title: 'Featured on homepage',
-      type: 'boolean',
-      initialValue: false,
-    }),
-    defineField({
       name: 'order',
       title: 'Order',
       type: 'number',

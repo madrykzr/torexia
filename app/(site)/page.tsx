@@ -25,8 +25,7 @@ export default async function HomePage() {
         ctaHref={home?.heroCtaHref}
         image={home?.heroImage}
       />
-      {/* Focus: Kaftan + Jubah collections */}
-      <FeaturedCollections />
+      <FeaturedCollections collections={home?.featuredCollections ?? []} />
       <StylingInspiration />
       <ColourShowcase />
       <CustomerReviews />

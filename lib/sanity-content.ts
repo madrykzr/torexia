@@ -140,7 +140,6 @@ type RawCollection = {
   sizeChart?: { label?: string; col1?: string; col2?: string }[];
   sizeChartNote?: string;
   description?: string;
-  featuredOnHome?: boolean;
   order?: number;
 };
 
@@ -170,7 +169,6 @@ function mapCollection(raw: RawCollection): Collection {
       })),
     sizeChartNote: raw.sizeChartNote ?? null,
     description: raw.description ?? "",
-    featuredOnHome: Boolean(raw.featuredOnHome),
     order: typeof raw.order === "number" ? raw.order : 100,
   };
 }
@@ -347,19 +345,12 @@ const COLLECTION_FIELDS = `
   "id": _id, name, "slug": slug.current, category, price, salePrice,
   coverImage, gallery, colours, sizes, fabric,
   sizeChartCol1Label, sizeChartCol2Label, sizeChart, sizeChartNote,
-  description, featuredOnHome, order
+  description, order
 `;
 
 export async function getAllCollections(): Promise<Collection[]> {
   const raw = await query<RawCollection[]>(
     `*[_type == "collection" && defined(slug.current)] | order(order asc, name asc){${COLLECTION_FIELDS}}`,
-  );
-  return raw.map(mapCollection);
-}
-
-export async function getFeaturedCollections(): Promise<Collection[]> {
-  const raw = await query<RawCollection[]>(
-    `*[_type == "collection" && featuredOnHome == true && defined(slug.current)] | order(order asc, name asc){${COLLECTION_FIELDS}}`,
   );
   return raw.map(mapCollection);
 }

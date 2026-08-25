@@ -2,10 +2,13 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { CollectionCard } from "@/components/collections/CollectionCard";
-import { getFeaturedCollections } from "@/lib/sanity-content";
+import type { Collection } from "@/lib/types";
 
-export async function FeaturedCollections() {
-  const collections = await getFeaturedCollections();
+export function FeaturedCollections({
+  collections,
+}: {
+  collections: Collection[];
+}) {
   if (collections.length === 0) return null;
 
   return (

@@ -55,7 +55,6 @@ export type Collection = {
   sizeChart: SizeChartRow[];
   sizeChartNote: string | null;
   description: string;
-  featuredOnHome: boolean;
   order: number;
 };
 
