@@ -5,25 +5,34 @@ import type { Collection } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { CollectionCard } from "./CollectionCard";
 
-const TABS = [
-  { value: "all", label: "All" },
-  { value: "kaftan", label: "Kaftan" },
-  { value: "jubah", label: "Jubah" },
-  { value: "abaya", label: "Abaya" },
-];
-
 export function CollectionsBrowser({
   collections,
 }: {
   collections: Collection[];
 }) {
+  // Tabs are derived from whatever categories are actually in use — adding a
+  // new category in Studio and assigning a collection to it shows up here
+  // automatically, no code change needed.
+  const tabs = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const c of collections) {
+      if (c.category.slug && !seen.has(c.category.slug)) {
+        seen.set(c.category.slug, c.category.title);
+      }
+    }
+    return [
+      { value: "all", label: "All" },
+      ...Array.from(seen, ([value, label]) => ({ value, label })),
+    ];
+  }, [collections]);
+
   const [category, setCategory] = useState("all");
 
   const filtered = useMemo(
     () =>
       category === "all"
         ? collections
-        : collections.filter((c) => c.category === category),
+        : collections.filter((c) => c.category.slug === category),
     [collections, category],
   );
 
@@ -31,7 +40,7 @@ export function CollectionsBrowser({
     <div>
       {/* Category tabs — scroll horizontally on mobile, never wrap */}
       <div className="mb-10 flex gap-2 overflow-x-auto no-scrollbar pb-1">
-        {TABS.map((t) => {
+        {tabs.map((t) => {
           const active = category === t.value;
           return (
             <button

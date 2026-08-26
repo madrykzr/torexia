@@ -1,5 +1,6 @@
 import {type SchemaTypeDefinition} from 'sanity'
 
+import {category} from './category'
 import {collection} from './collection'
 import {collectionItem} from './collectionItem'
 import {homePage} from './homePage'
@@ -9,5 +10,14 @@ import {blogPost} from './blogPost'
 import {siteSettings} from './siteSettings'
 
 export const schema: {types: SchemaTypeDefinition[]} = {
-  types: [collection, collectionItem, product, rentalProduct, blogPost, homePage, siteSettings],
+  types: [
+    category,
+    collection,
+    collectionItem,
+    product,
+    rentalProduct,
+    blogPost,
+    homePage,
+    siteSettings,
+  ],
 }

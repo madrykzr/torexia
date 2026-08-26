@@ -33,12 +33,9 @@ export function CollectionItemDetailClient({
   // The item's own size guide when it has rows; otherwise the collection's.
   const hasOwnSizeChart = item.sizeChart.length > 0;
   const sizeChartRows = hasOwnSizeChart ? item.sizeChart : collection.sizeChart;
-  const sizeChartCol1Label = hasOwnSizeChart
-    ? item.sizeChartCol1Label
-    : collection.sizeChartCol1Label;
-  const sizeChartCol2Label = hasOwnSizeChart
-    ? item.sizeChartCol2Label
-    : collection.sizeChartCol2Label;
+  const sizeChartColumns = hasOwnSizeChart
+    ? item.sizeChartColumns
+    : collection.sizeChartColumns;
   const sizeChartNote = hasOwnSizeChart
     ? item.sizeChartNote
     : collection.sizeChartNote;
@@ -145,9 +142,8 @@ export function CollectionItemDetailClient({
           {sizeChartRows.length > 0 && (
             <Accordion title="Size Guide">
               <SizeChart
+                columns={sizeChartColumns}
                 rows={sizeChartRows}
-                col1Label={sizeChartCol1Label}
-                col2Label={sizeChartCol2Label}
                 note={sizeChartNote}
               />
             </Accordion>

@@ -13,12 +13,6 @@ import { Accordion } from "@/components/shop/Accordion";
 import { SizeChart } from "@/components/ui/SizeChart";
 import { PriceTag } from "@/components/ui/PriceTag";
 
-const CATEGORY_LABEL: Record<string, string> = {
-  kaftan: "Kaftan",
-  jubah: "Jubah",
-  abaya: "Abaya",
-};
-
 export function CollectionDetailClient({
   collection,
 }: {
@@ -62,9 +56,9 @@ export function CollectionDetailClient({
       <ProductGallery images={images} alt={collection.name} />
 
       <div className="lg:pt-4">
-        {collection.category && (
+        {collection.category.title && (
           <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush">
-            {CATEGORY_LABEL[collection.category] ?? collection.category}
+            {collection.category.title}
           </p>
         )}
         <h1 className="mt-2 font-heading text-4xl text-charcoal sm:text-5xl">
@@ -140,9 +134,8 @@ export function CollectionDetailClient({
           {collection.sizeChart.length > 0 && (
             <Accordion title="Size Guide">
               <SizeChart
+                columns={collection.sizeChartColumns}
                 rows={collection.sizeChart}
-                col1Label={collection.sizeChartCol1Label}
-                col2Label={collection.sizeChartCol2Label}
                 note={collection.sizeChartNote}
               />
             </Accordion>

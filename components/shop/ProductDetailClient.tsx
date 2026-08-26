@@ -14,10 +14,11 @@ import { SizeChart } from "@/components/ui/SizeChart";
 import { InstagramIcon } from "@/components/ui/BrandIcons";
 
 // Abaya measurements, in inches (converted from the cm spec).
+const SIZE_GUIDE_COLUMNS = ["S / M", "L / XL"];
 const SIZE_GUIDE: SizeChartRow[] = [
-  { label: "Dada", col1: '39" – 42"', col2: '44" – 46"' },
-  { label: "Labuh Baju", col1: '53" – 54"', col2: '55" – 56"' },
-  { label: "Panjang Lengan", col1: '22" – 22½"', col2: '23" – 23½"' },
+  { label: "Dada", values: ['39" – 42"', '44" – 46"'] },
+  { label: "Labuh Baju", values: ['53" – 54"', '55" – 56"'] },
+  { label: "Panjang Lengan", values: ['22" – 22½"', '23" – 23½"'] },
 ];
 
 export function ProductDetailClient({ product }: { product: Product }) {
@@ -105,7 +106,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
         {/* Accordions */}
         <div className="mt-8">
           <Accordion title="Size Guide">
-            <SizeChart rows={SIZE_GUIDE} col1Label="S / M" col2Label="L / XL" />
+            <SizeChart columns={SIZE_GUIDE_COLUMNS} rows={SIZE_GUIDE} />
           </Accordion>
 
           <Accordion title="Fabric & Care">

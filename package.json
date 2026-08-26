@@ -11,7 +11,10 @@
     "seed": "node --env-file=.env.local scripts/seed-sanity.mjs",
     "migrate:abaya-items": "node --env-file=.env.local scripts/migrate-legacy-abaya-items.mjs",
     "create:collection-items": "node --env-file=.env.local scripts/create-collection-items-from-colours.mjs",
-    "create:hatije-items": "node --env-file=.env.local scripts/create-hatije-items.mjs"
+    "create:hatije-items": "node --env-file=.env.local scripts/create-hatije-items.mjs",
+    "fix:hatije-images": "node --env-file=.env.local scripts/fix-hatije-item-images.mjs",
+    "migrate:category": "node --env-file=.env.local scripts/migrate-category-to-reference.mjs",
+    "patch:size-charts": "node --env-file=.env.local scripts/patch-size-charts.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

@@ -13,6 +13,7 @@ import type {
   SearchEntry,
   Size,
   SiteSettings,
+  SizeChartRow,
 } from "@/lib/types";
 
 const REVALIDATE = 60; // ISR: published content appears within ~60s
@@ -125,11 +126,19 @@ function mapProduct(raw: RawProduct): Product {
   };
 }
 
+type RawSizeChartRow = { label?: string; values?: string[] };
+
+function mapSizeChart(raw: RawSizeChartRow[] | undefined): SizeChartRow[] {
+  return (raw ?? [])
+    .filter((r) => r?.label)
+    .map((r) => ({ label: r.label ?? "", values: r.values ?? [] }));
+}
+
 type RawCollection = {
   id: string;
   name: string;
   slug: string | null;
-  category?: string;
+  category?: { title?: string; slug?: string };
   price?: number;
   salePrice?: number;
   coverImage?: unknown;
@@ -137,9 +146,8 @@ type RawCollection = {
   colours?: { name?: string; hex?: string }[];
   sizes?: string[];
   fabric?: string;
-  sizeChartCol1Label?: string;
-  sizeChartCol2Label?: string;
-  sizeChart?: { label?: string; col1?: string; col2?: string }[];
+  sizeChartColumns?: string[];
+  sizeChart?: RawSizeChartRow[];
   sizeChartNote?: string;
   description?: string;
   order?: number;
@@ -150,7 +158,10 @@ function mapCollection(raw: RawCollection): Collection {
     id: raw.id,
     slug: raw.slug ?? raw.id,
     name: raw.name,
-    category: raw.category ?? "",
+    category: {
+      title: raw.category?.title ?? "",
+      slug: raw.category?.slug ?? "",
+    },
     price: typeof raw.price === "number" ? raw.price : null,
     salePrice: typeof raw.salePrice === "number" ? raw.salePrice : null,
     cover: imageUrl(raw.coverImage) ?? "/images/og.jpg",
@@ -160,15 +171,8 @@ function mapCollection(raw: RawCollection): Collection {
     colours: mapCollectionColours(raw.colours),
     sizes: (raw.sizes ?? []) as Size[],
     fabric: raw.fabric ?? "",
-    sizeChartCol1Label: raw.sizeChartCol1Label ?? "S / M",
-    sizeChartCol2Label: raw.sizeChartCol2Label ?? "L / XL",
-    sizeChart: (raw.sizeChart ?? [])
-      .filter((r) => r?.label)
-      .map((r) => ({
-        label: r.label ?? "",
-        col1: r.col1 ?? "",
-        col2: r.col2 ?? "",
-      })),
+    sizeChartColumns: raw.sizeChartColumns ?? [],
+    sizeChart: mapSizeChart(raw.sizeChart),
     sizeChartNote: raw.sizeChartNote ?? null,
     description: raw.description ?? "",
     order: typeof raw.order === "number" ? raw.order : 100,
@@ -185,9 +189,8 @@ type RawCollectionItem = {
   images?: unknown[];
   price?: number;
   salePrice?: number;
-  sizeChartCol1Label?: string;
-  sizeChartCol2Label?: string;
-  sizeChart?: { label?: string; col1?: string; col2?: string }[];
+  sizeChartColumns?: string[];
+  sizeChart?: RawSizeChartRow[];
   sizeChartNote?: string;
   description?: string;
   order?: number;
@@ -207,15 +210,8 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
       .filter((u): u is string => Boolean(u)),
     price: typeof raw.price === "number" ? raw.price : null,
     salePrice: typeof raw.salePrice === "number" ? raw.salePrice : null,
-    sizeChartCol1Label: raw.sizeChartCol1Label ?? "S / M",
-    sizeChartCol2Label: raw.sizeChartCol2Label ?? "L / XL",
-    sizeChart: (raw.sizeChart ?? [])
-      .filter((r) => r?.label)
-      .map((r) => ({
-        label: r.label ?? "",
-        col1: r.col1 ?? "",
-        col2: r.col2 ?? "",
-      })),
+    sizeChartColumns: raw.sizeChartColumns ?? [],
+    sizeChart: mapSizeChart(raw.sizeChart),
     sizeChartNote: raw.sizeChartNote ?? null,
     description: raw.description ?? "",
     order: typeof raw.order === "number" ? raw.order : 100,
@@ -344,9 +340,11 @@ export async function getRentalProductSlugs(): Promise<string[]> {
 // --- Collections ---------------------------------------------------------
 
 const COLLECTION_FIELDS = `
-  "id": _id, name, "slug": slug.current, category, price, salePrice,
+  "id": _id, name, "slug": slug.current,
+  "category": category->{title, "slug": slug.current},
+  price, salePrice,
   coverImage, gallery, colours, sizes, fabric,
-  sizeChartCol1Label, sizeChartCol2Label, sizeChart, sizeChartNote,
+  sizeChartColumns, sizeChart, sizeChartNote,
   description, order
 `;
 
@@ -379,7 +377,7 @@ const COLLECTION_ITEM_FIELDS = `
   "id": _id, name, "slug": slug.current,
   "collectionSlug": collection->slug.current,
   colour, sizes, price, salePrice,
-  sizeChartCol1Label, sizeChartCol2Label, sizeChart, sizeChartNote,
+  sizeChartColumns, sizeChart, sizeChartNote,
   description, order, images
 `;
 
@@ -419,7 +417,7 @@ export async function getCollectionItemSlugPairs(): Promise<
 type RawSearchCollection = {
   name: string;
   slug: string | null;
-  category?: string;
+  category?: { title?: string };
   coverImage?: unknown;
 };
 type RawSearchItem = {
@@ -437,7 +435,7 @@ export async function getSearchIndex(): Promise<SearchEntry[]> {
   const [collections, items] = await Promise.all([
     query<RawSearchCollection[]>(
       `*[_type == "collection" && defined(slug.current)] | order(order asc, name asc){
-        name, "slug": slug.current, category, coverImage
+        name, "slug": slug.current, "category": category->{title}, coverImage
       }`,
     ),
     query<RawSearchItem[]>(
@@ -462,9 +460,7 @@ export async function getSearchIndex(): Promise<SearchEntry[]> {
       name: c.name,
       href: `/collections/${c.slug}`,
       image: imageUrl(c.coverImage, 200) ?? "/images/og.jpg",
-      category: c.category
-        ? c.category.charAt(0).toUpperCase() + c.category.slice(1)
-        : "Collection",
+      category: c.category?.title ?? "Collection",
     }));
 
   return [...itemEntries, ...collectionEntries];

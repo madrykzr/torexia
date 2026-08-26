@@ -28,16 +28,15 @@ export type Product = {
 
 export type SizeChartRow = {
   label: string;
-  col1: string;
-  col2: string;
+  /** One value per column, same order as the parent's sizeChartColumns */
+  values: string[];
 };
 
 export type Collection = {
   id: string;
   slug: string;
   name: string;
-  /** kaftan | jubah | abaya */
-  category: string;
+  category: { title: string; slug: string };
   /** Price in RM, or null when "on enquiry" */
   price: number | null;
   /** Discounted price in RM, or null when not on sale */
@@ -49,9 +48,8 @@ export type Collection = {
   colours: Colour[];
   sizes: Size[];
   fabric: string;
-  /** Size-chart column headers and measurement rows (inches) */
-  sizeChartCol1Label: string;
-  sizeChartCol2Label: string;
+  /** Size-chart column headers (e.g. ["S","M","L"]) and measurement rows (inches) */
+  sizeChartColumns: string[];
   sizeChart: SizeChartRow[];
   sizeChartNote: string | null;
   description: string;
@@ -73,8 +71,7 @@ export type CollectionItem = {
   /** Discounted price in RM, or null when not on sale */
   salePrice: number | null;
   /** Per-item size guide — empty rows means inherit the collection's */
-  sizeChartCol1Label: string;
-  sizeChartCol2Label: string;
+  sizeChartColumns: string[];
   sizeChart: SizeChartRow[];
   sizeChartNote: string | null;
   description: string;

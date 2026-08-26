@@ -1,12 +1,6 @@
 import type { Collection, CollectionItem } from "@/lib/types";
 import { CollectionItemCard } from "./CollectionItemCard";
 
-const CATEGORY_LABEL: Record<string, string> = {
-  kaftan: "Kaftan",
-  jubah: "Jubah",
-  abaya: "Abaya",
-};
-
 /**
  * Shown instead of CollectionDetailClient once a collection has individual
  * colour items configured — browsing moves from "one page, pick a colour"
@@ -21,9 +15,9 @@ export function CollectionItemsGrid({
 }) {
   return (
     <div>
-      {collection.category && (
+      {collection.category.title && (
         <p className="text-xs font-medium uppercase tracking-[0.15em] text-blush">
-          {CATEGORY_LABEL[collection.category] ?? collection.category}
+          {collection.category.title}
         </p>
       )}
       <h1 className="mt-2 font-heading text-4xl text-charcoal sm:text-5xl">

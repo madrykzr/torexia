@@ -2,20 +2,19 @@ import type { SizeChartRow } from "@/lib/types";
 
 /**
  * Brand-styled measurement table. Replaces the photographed size-chart image
- * so every collection reads the same, at any screen size.
+ * so every collection reads the same, at any screen size. Supports any
+ * number of size columns (e.g. 2 for M/L, 4 for S/M/L/XL).
  */
 export function SizeChart({
+  columns,
   rows,
-  col1Label = "S / M",
-  col2Label = "L / XL",
   note,
 }: {
+  columns: string[];
   rows: SizeChartRow[];
-  col1Label?: string;
-  col2Label?: string;
   note?: string | null;
 }) {
-  if (rows.length === 0) return null;
+  if (rows.length === 0 || columns.length === 0) return null;
 
   return (
     <div>
@@ -30,12 +29,14 @@ export function SizeChart({
               <th className="py-3 pr-4 text-[10px] font-medium uppercase tracking-[0.15em] text-charcoal-600">
                 Measurement
               </th>
-              <th className="py-3 pr-4 text-right text-[10px] font-medium uppercase tracking-[0.15em] text-charcoal-600 sm:text-center">
-                {col1Label}
-              </th>
-              <th className="py-3 text-right text-[10px] font-medium uppercase tracking-[0.15em] text-charcoal-600 sm:text-center">
-                {col2Label}
-              </th>
+              {columns.map((col, i) => (
+                <th
+                  key={`${col}-${i}`}
+                  className="py-3 pr-4 text-right text-[10px] font-medium uppercase tracking-[0.15em] text-charcoal-600 last:pr-0 sm:text-center"
+                >
+                  {col}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -44,12 +45,14 @@ export function SizeChart({
                 <td className="py-3.5 pr-4 text-sm text-charcoal">
                   {row.label}
                 </td>
-                <td className="py-3.5 pr-4 text-right font-heading text-base text-charcoal sm:text-center">
-                  {row.col1}
-                </td>
-                <td className="py-3.5 text-right font-heading text-base text-charcoal sm:text-center">
-                  {row.col2}
-                </td>
+                {columns.map((_, i) => (
+                  <td
+                    key={i}
+                    className="py-3.5 pr-4 text-right font-heading text-base text-charcoal last:pr-0 sm:text-center"
+                  >
+                    {row.values[i] ?? ""}
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>

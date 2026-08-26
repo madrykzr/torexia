@@ -111,38 +111,48 @@ export const collectionItem = defineType({
         }),
     }),
     defineField({
-      name: 'sizeChartCol1Label',
-      title: 'Size chart — first column label',
-      type: 'string',
-      description: 'Leave the size chart blank to use the collection’s size guide.',
-      initialValue: 'S / M',
-    }),
-    defineField({
-      name: 'sizeChartCol2Label',
-      title: 'Size chart — second column label',
-      type: 'string',
-      initialValue: 'L / XL',
+      name: 'sizeChartColumns',
+      title: 'Size chart — column headers',
+      type: 'array',
+      description:
+        'One entry per size column, e.g. "S", "M", "L". Leave the size chart blank to use the collection’s size guide.',
+      of: [defineArrayMember({type: 'string'})],
     }),
     defineField({
       name: 'sizeChart',
       title: 'Size chart',
       type: 'array',
       description:
-        'Measurement rows, in inches. Leave empty to use the parent collection’s size guide.',
+        'Measurement rows, in inches. Each row needs one value per column above, in the same order. Leave empty to use the parent collection’s size guide.',
       of: [
         defineArrayMember({
           type: 'object',
           fields: [
             defineField({name: 'label', title: 'Measurement', type: 'string'}),
-            defineField({name: 'col1', title: 'First column', type: 'string'}),
-            defineField({name: 'col2', title: 'Second column', type: 'string'}),
+            defineField({
+              name: 'values',
+              title: 'Values',
+              type: 'array',
+              of: [defineArrayMember({type: 'string'})],
+            }),
           ],
           preview: {
-            select: {title: 'label', col1: 'col1', col2: 'col2'},
-            prepare({title, col1, col2}) {
-              return {title, subtitle: [col1, col2].filter(Boolean).join('  ·  ')}
+            select: {title: 'label', values: 'values'},
+            prepare({title, values}) {
+              return {title, subtitle: (values ?? []).filter(Boolean).join('  ·  ')}
             },
           },
+          validation: (rule) =>
+            rule.custom((row, context) => {
+              const columns = (context.document as {sizeChartColumns?: string[]} | undefined)
+                ?.sizeChartColumns
+              if (!columns?.length) return true
+              const values = (row as {values?: string[]} | undefined)?.values ?? []
+              if (values.length !== columns.length) {
+                return `This row has ${values.length} value(s) but there are ${columns.length} column(s) — add or remove a value to match.`
+              }
+              return true
+            }),
         }),
       ],
     }),

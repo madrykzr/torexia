@@ -67,7 +67,7 @@ const COLLECTIONS = [
   {
     slug: 'kaftan',
     name: 'Kaftan',
-    category: 'kaftan',
+    category: 'category.kaftan',
     featured: true,
     order: 1,
     description:
@@ -76,7 +76,7 @@ const COLLECTIONS = [
   {
     slug: 'jubah-linea',
     name: 'Jubah Linea',
-    category: 'jubah',
+    category: 'category.jubah',
     featured: true,
     order: 2,
     description:
@@ -85,7 +85,7 @@ const COLLECTIONS = [
   {
     slug: 'jubah-saira',
     name: 'Jubah Saira',
-    category: 'jubah',
+    category: 'category.jubah',
     featured: true,
     order: 3,
     description:
@@ -314,6 +314,22 @@ async function seed() {
     console.log(`  ✓ ${prod.name}`)
   }
 
+  console.log('Seeding categories…')
+  for (const cat of [
+    {slug: 'kaftan', title: 'Kaftan', order: 1},
+    {slug: 'jubah', title: 'Jubah', order: 2},
+    {slug: 'abaya', title: 'Abaya', order: 3},
+  ]) {
+    await client.createIfNotExists({
+      _id: `category.${cat.slug}`,
+      _type: 'category',
+      title: cat.title,
+      slug: {_type: 'slug', current: cat.slug},
+      order: cat.order,
+    })
+    console.log(`  ✓ ${cat.title}`)
+  }
+
   console.log('Seeding collections…')
   for (const c of COLLECTIONS) {
     const _id = `collection.${c.slug}`
@@ -332,7 +348,7 @@ async function seed() {
       _type: 'collection',
       name: c.name,
       slug: {_type: 'slug', current: c.slug},
-      category: c.category,
+      category: {_type: 'reference', _ref: c.category},
       coverImage,
       gallery,
       colours: d.colours,
@@ -363,7 +379,7 @@ async function seed() {
       _type: 'collection',
       name: 'Abaya',
       slug: {_type: 'slug', current: 'abaya'},
-      category: 'abaya',
+      category: {_type: 'reference', _ref: 'category.abaya'},
       coverImage,
       gallery,
       colours: COLLECTION_DETAILS.abaya.colours,

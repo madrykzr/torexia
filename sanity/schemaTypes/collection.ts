@@ -2,13 +2,6 @@ import {defineType, defineField, defineArrayMember} from 'sanity'
 import {SparklesIcon} from '@sanity/icons'
 import {SIZE_OPTIONS} from './product'
 
-// Product categories the catalogue is organised around.
-export const CATEGORY_OPTIONS = [
-  {title: 'Kaftan', value: 'kaftan'},
-  {title: 'Jubah', value: 'jubah'},
-  {title: 'Abaya', value: 'abaya'},
-]
-
 export const collection = defineType({
   name: 'collection',
   title: 'Collection',
@@ -31,8 +24,9 @@ export const collection = defineType({
     defineField({
       name: 'category',
       title: 'Category',
-      type: 'string',
-      options: {list: CATEGORY_OPTIONS, layout: 'dropdown'},
+      type: 'reference',
+      to: [{type: 'category'}],
+      description: 'Add a new one anytime from the "Categories" section — no code needed.',
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -137,36 +131,47 @@ export const collection = defineType({
       type: 'string',
     }),
     defineField({
-      name: 'sizeChartCol1Label',
-      title: 'Size chart — first column label',
-      type: 'string',
-      initialValue: 'S / M',
-    }),
-    defineField({
-      name: 'sizeChartCol2Label',
-      title: 'Size chart — second column label',
-      type: 'string',
-      initialValue: 'L / XL',
+      name: 'sizeChartColumns',
+      title: 'Size chart — column headers',
+      type: 'array',
+      description: 'One entry per size column, e.g. "S", "M", "L" — any number of columns.',
+      of: [defineArrayMember({type: 'string'})],
     }),
     defineField({
       name: 'sizeChart',
       title: 'Size chart',
       type: 'array',
-      description: 'Measurement rows, in inches.',
+      description:
+        'Measurement rows, in inches. Each row needs one value per column above, in the same order.',
       of: [
         defineArrayMember({
           type: 'object',
           fields: [
             defineField({name: 'label', title: 'Measurement', type: 'string'}),
-            defineField({name: 'col1', title: 'First column', type: 'string'}),
-            defineField({name: 'col2', title: 'Second column', type: 'string'}),
+            defineField({
+              name: 'values',
+              title: 'Values',
+              type: 'array',
+              of: [defineArrayMember({type: 'string'})],
+            }),
           ],
           preview: {
-            select: {title: 'label', col1: 'col1', col2: 'col2'},
-            prepare({title, col1, col2}) {
-              return {title, subtitle: [col1, col2].filter(Boolean).join('  ·  ')}
+            select: {title: 'label', values: 'values'},
+            prepare({title, values}) {
+              return {title, subtitle: (values ?? []).filter(Boolean).join('  ·  ')}
             },
           },
+          validation: (rule) =>
+            rule.custom((row, context) => {
+              const columns = (context.document as {sizeChartColumns?: string[]} | undefined)
+                ?.sizeChartColumns
+              if (!columns?.length) return true
+              const values = (row as {values?: string[]} | undefined)?.values ?? []
+              if (values.length !== columns.length) {
+                return `This row has ${values.length} value(s) but there are ${columns.length} column(s) — add or remove a value to match.`
+              }
+              return true
+            }),
         }),
       ],
     }),
@@ -191,13 +196,11 @@ export const collection = defineType({
     }),
   ],
   preview: {
-    select: {title: 'name', category: 'category', media: 'coverImage'},
-    prepare({title, category, media}) {
+    select: {title: 'name', categoryTitle: 'category.title', media: 'coverImage'},
+    prepare({title, categoryTitle, media}) {
       return {
         title,
-        subtitle: category
-          ? category.charAt(0).toUpperCase() + category.slice(1)
-          : undefined,
+        subtitle: categoryTitle,
         media,
       }
     },
