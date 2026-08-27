@@ -14,7 +14,8 @@
     "create:hatije-items": "node --env-file=.env.local scripts/create-hatije-items.mjs",
     "fix:hatije-images": "node --env-file=.env.local scripts/fix-hatije-item-images.mjs",
     "migrate:category": "node --env-file=.env.local scripts/migrate-category-to-reference.mjs",
-    "patch:size-charts": "node --env-file=.env.local scripts/patch-size-charts.mjs"
+    "patch:size-charts": "node --env-file=.env.local scripts/patch-size-charts.mjs",
+    "patch:size-charts-2": "node --env-file=.env.local scripts/patch-size-charts-2.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",
