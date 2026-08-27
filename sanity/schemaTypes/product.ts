@@ -19,6 +19,10 @@ export const SIZE_OPTIONS = [
   {title: 'M', value: 'M'},
   {title: 'L', value: 'L'},
   {title: 'XL', value: 'XL'},
+  // Some designs are cut in only two sizes, each covering a size cluster —
+  // e.g. one cut fits both S and M bodies, another fits both L and XL.
+  {title: 'S/M', value: 'S/M'},
+  {title: 'L/XL', value: 'L/XL'},
 ]
 
 export const product = defineType({

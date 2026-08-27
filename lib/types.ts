@@ -1,6 +1,6 @@
 import type { PortableTextBlock } from "@portabletext/types";
 
-export type Size = "S" | "M" | "L" | "XL";
+export type Size = "S" | "M" | "L" | "XL" | "S/M" | "L/XL";
 
 export type Colour = {
   name: string;
