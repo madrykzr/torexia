@@ -7,6 +7,7 @@ import {
   HomeIcon,
   TagIcon,
   FolderIcon,
+  PackageIcon,
 } from '@sanity/icons'
 
 // Collection Items, grouped Category -> Collection -> Items, so colourways
@@ -57,6 +58,16 @@ export const structure: StructureResolver = (S, context) =>
         .icon(HomeIcon)
         .id('homePage')
         .child(S.document().schemaType('homePage').documentId('homePage')),
+      // Orders — checked daily, so it sits right up top.
+      S.listItem()
+        .title('Orders')
+        .icon(PackageIcon)
+        .child(
+          S.documentList()
+            .title('Orders')
+            .schemaType('order')
+            .defaultOrdering([{field: '_createdAt', direction: 'desc'}]),
+        ),
       S.divider(),
       // Categories are their own top-level section (like Collections) so the
       // client has an explicit place to add/rename/reorder them — not just an

@@ -119,14 +119,23 @@ export function CartClient() {
             Shipping is arranged after we confirm your order.
           </p>
 
-          <a
-            href={whatsappUrl(cartOrderMessage(items, subtotal))}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 flex min-h-12 w-full items-center justify-center rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
-          >
-            Checkout via WhatsApp
-          </a>
+          {hasEnquiryOnly ? (
+            <a
+              href={whatsappUrl(cartOrderMessage(items, subtotal))}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 flex min-h-12 w-full items-center justify-center rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
+            >
+              Checkout via WhatsApp
+            </a>
+          ) : (
+            <Link
+              href="/checkout"
+              className="mt-6 flex min-h-12 w-full items-center justify-center rounded-full border border-coffee bg-coffee text-sm font-medium tracking-wide text-white transition-colors hover:bg-coffee/90"
+            >
+              Proceed to Checkout
+            </Link>
+          )}
 
           <Link
             href="/collections"
