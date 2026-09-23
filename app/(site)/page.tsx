@@ -5,7 +5,6 @@ import { NewArrivals } from "@/components/home/NewArrivals";
 import { StylingInspiration } from "@/components/home/StylingInspiration";
 import { CustomerReviews } from "@/components/home/CustomerReviews";
 import { Faq } from "@/components/home/Faq";
-import { BrandQuote } from "@/components/home/BrandQuote";
 import { Newsletter } from "@/components/home/Newsletter";
 import { CtaBanner } from "@/components/home/CtaBanner";
 import { getHomePage } from "@/lib/sanity-content";
@@ -30,7 +29,6 @@ export default async function HomePage() {
       <StylingInspiration />
       <CustomerReviews />
       <Faq />
-      <BrandQuote />
       <Newsletter />
       <CtaBanner />
     </>
