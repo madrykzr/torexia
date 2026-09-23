@@ -102,7 +102,10 @@ export function CheckoutClient() {
 
   return (
     <div className="grid gap-12 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-16">
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 rounded-2xl border border-line bg-white p-7 shadow-[0_2px_16px_rgba(0,0,0,0.05)]"
+      >
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Full name">
             <input
