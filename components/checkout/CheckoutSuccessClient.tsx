@@ -52,10 +52,10 @@ export function CheckoutSuccessClient() {
       <div className="py-16 text-center">
         <p className="text-charcoal-600">Missing order reference.</p>
         <Link
-          href="/cart"
+          href="/collections"
           className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full border border-coffee px-8 text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
         >
-          Back to cart
+          Continue shopping
         </Link>
       </div>
     );
@@ -70,10 +70,10 @@ export function CheckoutSuccessClient() {
       <div className="py-16 text-center">
         <p className="text-charcoal-600">{result.error ?? "Order not found."}</p>
         <Link
-          href="/cart"
+          href="/collections"
           className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full border border-coffee px-8 text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
         >
-          Back to cart
+          Continue shopping
         </Link>
       </div>
     );

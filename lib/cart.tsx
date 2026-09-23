@@ -38,6 +38,10 @@ type CartContextValue = {
   /** Total of priced items only; "on enquiry" lines are excluded */
   subtotal: number;
   hasEnquiryOnly: boolean;
+  /** Cart drawer visibility — add() opens it automatically. */
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
 };
 
 const STORAGE_KEY = "torexia.cart.v1";
@@ -51,6 +55,7 @@ function itemKey(item: NewCartItem): string {
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [ready, setReady] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Load once on mount — server render and first client render both start empty.
   useEffect(() => {
@@ -88,7 +93,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, key, qty }];
     });
+    setIsOpen(true);
   }, []);
+
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
 
   const remove = useCallback((key: string) => {
     setItems((prev) => prev.filter((i) => i.key !== key));
@@ -120,8 +129,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       count,
       subtotal,
       hasEnquiryOnly: items.some((i) => i.price == null),
+      isOpen,
+      open,
+      close,
     };
-  }, [items, ready, add, remove, setQty, clear]);
+  }, [items, ready, add, remove, setQty, clear, isOpen, open, close]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

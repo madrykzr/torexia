@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Collection, Colour, Size } from "@/lib/types";
 import { effectivePrice, whatsappUrl } from "@/lib/constants";
@@ -103,15 +102,6 @@ export function CollectionDetailClient({
               </>
             )}
           </button>
-
-          {added && (
-            <Link
-              href="/cart"
-              className="text-center text-xs font-medium uppercase tracking-[0.15em] text-blush transition-colors hover:text-coffee"
-            >
-              View cart →
-            </Link>
-          )}
 
           <a
             href={whatsappUrl(enquiry)}

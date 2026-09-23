@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Product, Size, Colour, SizeChartRow } from "@/lib/types";
 import { formatPrice, whatsappUrl } from "@/lib/constants";
@@ -78,15 +77,6 @@ export function ProductDetailClient({ product }: { product: Product }) {
               </>
             )}
           </button>
-
-          {added && (
-            <Link
-              href="/cart"
-              className="text-center text-xs font-medium uppercase tracking-[0.15em] text-blush transition-colors hover:text-coffee"
-            >
-              View cart →
-            </Link>
-          )}
 
           <a
             href={whatsappUrl(message)}

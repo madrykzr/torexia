@@ -1,20 +1,7 @@
-import type { Metadata } from "next";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Section } from "@/components/ui/Section";
-import { CartClient } from "@/components/cart/CartClient";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Cart",
-  description: "Review your Torexia order and check out via WhatsApp.",
-};
-
+// The cart is now a slide-out drawer (components/cart/CartDrawer.tsx),
+// available from every page — this route only exists to catch old links.
 export default function CartPage() {
-  return (
-    <>
-      <PageHeader eyebrow="Your order" title="Cart" />
-      <Section tone="cream">
-        <CartClient />
-      </Section>
-    </>
-  );
+  redirect("/");
 }

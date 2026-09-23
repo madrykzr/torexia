@@ -2,6 +2,7 @@ import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 import { CartProvider } from "@/lib/cart";
 import { getSearchIndex } from "@/lib/sanity-content";
 
@@ -28,6 +29,7 @@ export default async function SiteLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <WhatsAppButton />
+        <CartDrawer />
       </div>
     </CartProvider>
   );

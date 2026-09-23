@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useCart } from "@/lib/cart";
 import { formatPrice, MALAYSIA_STATES, whatsappUrl } from "@/lib/constants";
 import { cartOrderMessage } from "@/lib/cart";
@@ -43,14 +44,14 @@ export function CheckoutClient() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (ready && items.length === 0) router.replace("/cart");
+    if (ready && items.length === 0) router.replace("/collections");
   }, [ready, items.length, router]);
 
   if (!ready || items.length === 0) return null;
 
   if (hasEnquiryOnly) {
     return (
-      <div className="mx-auto max-w-lg py-10 text-center">
+      <div className="mx-auto max-w-lg px-6 py-16 text-center">
         <p className="text-charcoal-600">
           Some pieces in your cart are priced on enquiry, so we can&apos;t take
           online payment for this order yet.
@@ -101,141 +102,167 @@ export function CheckoutClient() {
   }
 
   return (
-    <div className="grid gap-12 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-16">
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 rounded-2xl border border-line bg-white p-7 shadow-[0_2px_16px_rgba(0,0,0,0.05)]"
-      >
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="Full name">
+    <div className="grid lg:grid-cols-2">
+      {/* Form panel */}
+      <div className="px-6 py-10 sm:px-12 sm:py-14 lg:py-16">
+        <h1 className="font-heading text-3xl text-charcoal">Checkout</h1>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field label="Full name">
+              <input
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="Phone">
+              <input
+                required
+                type="tel"
+                placeholder="e.g. 0132209408"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          <Field label="Email">
             <input
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className={inputClass}
             />
           </Field>
-          <Field label="Phone">
+
+          <Field label="Address line 1">
             <input
               required
-              type="tel"
-              placeholder="e.g. 0132209408"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={line1}
+              onChange={(e) => setLine1(e.target.value)}
               className={inputClass}
             />
           </Field>
-        </div>
 
-        <Field label="Email">
-          <input
-            required
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={inputClass}
-          />
-        </Field>
-
-        <Field label="Address line 1">
-          <input
-            required
-            value={line1}
-            onChange={(e) => setLine1(e.target.value)}
-            className={inputClass}
-          />
-        </Field>
-
-        <Field label="Address line 2 (optional)">
-          <input
-            value={line2}
-            onChange={(e) => setLine2(e.target.value)}
-            className={inputClass}
-          />
-        </Field>
-
-        <div className="grid gap-5 sm:grid-cols-3">
-          <Field label="City">
+          <Field label="Address line 2 (optional)">
             <input
-              required
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              value={line2}
+              onChange={(e) => setLine2(e.target.value)}
               className={inputClass}
             />
           </Field>
-          <Field label="State">
-            <select
-              required
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-              className={inputClass}
-            >
-              <option value="" disabled>
-                Select
-              </option>
-              {MALAYSIA_STATES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
+
+          <div className="grid gap-5 sm:grid-cols-3">
+            <Field label="City">
+              <input
+                required
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+            <Field label="State">
+              <select
+                required
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                className={inputClass}
+              >
+                <option value="" disabled>
+                  Select
                 </option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Postcode">
-            <input
-              required
-              value={postcode}
-              onChange={(e) => setPostcode(e.target.value)}
-              className={inputClass}
-            />
-          </Field>
-        </div>
+                {MALAYSIA_STATES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Postcode">
+              <input
+                required
+                value={postcode}
+                onChange={(e) => setPostcode(e.target.value)}
+                className={inputClass}
+              />
+            </Field>
+          </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="flex min-h-12 w-full items-center justify-center rounded-full border border-coffee bg-coffee text-sm font-medium tracking-wide text-white transition-colors hover:bg-coffee/90 disabled:opacity-50"
-        >
-          {submitting ? "Redirecting to payment…" : `Pay ${formatPrice(subtotal)} with HitPay`}
-        </button>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex min-h-12 w-full items-center justify-center rounded-full border border-coffee bg-coffee text-sm font-medium tracking-wide text-white transition-colors hover:bg-coffee/90 disabled:opacity-50"
+          >
+            {submitting ? "Redirecting to payment…" : `Pay ${formatPrice(subtotal)} with HitPay`}
+          </button>
 
-        <p className="text-center text-xs text-charcoal-600">
-          You&apos;ll be redirected to HitPay&apos;s secure checkout to pay by FPX or card.
-        </p>
-      </form>
+          <p className="text-center text-xs text-charcoal-600">
+            You&apos;ll be redirected to HitPay&apos;s secure checkout to pay by FPX or card.
+          </p>
+        </form>
+      </div>
 
-      <div className="lg:w-80">
-        <div className="rounded-2xl border border-line bg-white p-7 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
-          <h2 className="font-heading text-2xl text-charcoal">Order summary</h2>
-          <ul className="mt-6 space-y-3 border-t border-line pt-5">
-            {items.map((item) => (
-              <li key={item.key} className="flex justify-between text-sm">
-                <span className="text-charcoal-600">
-                  {item.name} × {item.qty}
+      {/* Order summary panel */}
+      <div className="border-t border-line bg-cream-200 px-6 py-10 sm:px-12 sm:py-14 lg:sticky lg:top-0 lg:h-svh lg:overflow-y-auto lg:border-l lg:border-t-0 lg:py-16">
+        <h2 className="font-heading text-2xl text-charcoal">Order summary</h2>
+        <ul className="mt-8 space-y-5">
+          {items.map((item) => (
+            <li key={item.key} className="flex gap-4">
+              <div className="relative h-16 w-13 shrink-0 overflow-hidden rounded-lg bg-white">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  sizes="52px"
+                  className="object-cover"
+                />
+                <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-charcoal px-1 text-[10px] font-medium text-white">
+                  {item.qty}
                 </span>
-                <span className="text-charcoal">
+              </div>
+              <div className="flex flex-1 items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm text-charcoal">{item.name}</p>
+                  <p className="text-xs text-charcoal-600">
+                    {[item.size && `Size ${item.size}`, item.colour]
+                      .filter(Boolean)
+                      .join("  ·  ")}
+                  </p>
+                </div>
+                <p className="whitespace-nowrap text-sm text-charcoal">
                   {formatPrice((item.price ?? 0) * item.qty)}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-5 flex items-center justify-between border-t border-line pt-5 text-sm">
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-8 space-y-2 border-t border-line/70 pt-5 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-charcoal-600">Subtotal</span>
+            <span className="text-charcoal">{formatPrice(subtotal)}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-charcoal-600">Shipping</span>
+            <span className="text-charcoal">Free</span>
+          </div>
+          <div className="flex items-center justify-between border-t border-line/70 pt-3">
             <span className="text-charcoal-600">Total</span>
             <span className="font-heading text-lg text-coffee">
               {formatPrice(subtotal)}
             </span>
           </div>
-          <p className="mt-3 text-xs leading-relaxed text-charcoal-600">
-            Free shipping — arranged after your order is placed.
-          </p>
-          <Link
-            href="/cart"
-            className="mt-4 block text-center text-xs font-medium uppercase tracking-[0.15em] text-blush transition-colors hover:text-coffee"
-          >
-            Back to cart
-          </Link>
         </div>
+        <Link
+          href="/collections"
+          className="mt-6 block text-center text-xs font-medium uppercase tracking-[0.15em] text-blush transition-colors hover:text-coffee"
+        >
+          Continue shopping
+        </Link>
       </div>
     </div>
   );

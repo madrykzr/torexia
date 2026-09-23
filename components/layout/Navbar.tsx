@@ -16,7 +16,7 @@ export function Navbar({ searchIndex = [] }: { searchIndex?: SearchEntry[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const { count, ready } = useCart();
+  const { count, ready, open: openCart } = useCart();
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -82,8 +82,8 @@ export function Navbar({ searchIndex = [] }: { searchIndex?: SearchEntry[] }) {
               <Search className="h-5 w-5" strokeWidth={1.6} />
             </button>
 
-            <Link
-              href="/cart"
+            <button
+              onClick={openCart}
               aria-label={`Cart${ready && count > 0 ? ` (${count} items)` : ""}`}
               className="relative flex h-11 w-11 items-center justify-center rounded-full text-charcoal transition-colors hover:text-coffee"
             >
@@ -93,7 +93,7 @@ export function Navbar({ searchIndex = [] }: { searchIndex?: SearchEntry[] }) {
                   {count}
                 </span>
               )}
-            </Link>
+            </button>
 
             <button
               onClick={() => setOpen(true)}
