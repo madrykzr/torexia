@@ -5,6 +5,7 @@ import { CheckoutSuccessClient } from "@/components/checkout/CheckoutSuccessClie
 export const metadata: Metadata = {
   title: "Order Confirmation",
   description: "Your Torexia order confirmation.",
+  robots: { index: false, follow: false },
 };
 
 export default function CheckoutSuccessPage() {

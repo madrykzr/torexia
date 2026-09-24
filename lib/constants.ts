@@ -8,7 +8,8 @@ export const SITE = {
   description:
     "Torexia is a Malaysian modest fashion brand crafting timeless, elegant and practical apparel for the modern Muslimah — designed for comfort, modesty and effortless elegance.",
   // Canonical/Open Graph base URL — the live domain (feeds metadataBase).
-  url: "https://ladytorexia.my",
+  // www, because the bare domain 308-redirects to it on Vercel.
+  url: "https://www.ladytorexia.my",
 } as const;
 
 export const CONTACT = {

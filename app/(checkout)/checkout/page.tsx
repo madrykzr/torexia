@@ -5,6 +5,7 @@ import { getShippingSettings } from "@/lib/sanity-content";
 export const metadata: Metadata = {
   title: "Checkout",
   description: "Complete your Torexia order.",
+  robots: { index: false, follow: false },
 };
 
 export default async function CheckoutPage() {

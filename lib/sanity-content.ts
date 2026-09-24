@@ -206,9 +206,15 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
     collectionSlug: raw.collectionSlug ?? "",
     colour: colour ?? { name: "", slug: "", hex: "#000000" },
     sizes: (raw.sizes ?? []) as Size[],
-    images: (raw.images ?? [])
-      .map((img) => imageUrl(img))
-      .filter((u): u is string => Boolean(u)),
+    // De-duplicated: the same photo added twice in Studio would otherwise show
+    // twice in the gallery (and break React's unique-key rule).
+    images: [
+      ...new Set(
+        (raw.images ?? [])
+          .map((img) => imageUrl(img))
+          .filter((u): u is string => Boolean(u)),
+      ),
+    ],
     price: typeof raw.price === "number" ? raw.price : null,
     salePrice: typeof raw.salePrice === "number" ? raw.salePrice : null,
     sizeChartColumns: raw.sizeChartColumns ?? [],

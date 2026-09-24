@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { CollectionItemDetailClient } from "@/components/collections/CollectionItemDetailClient";
 import { RelatedCollectionItems } from "@/components/collections/RelatedCollectionItems";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { effectivePrice, SITE } from "@/lib/constants";
 import {
   getCollectionBySlug,
   getCollectionItemBySlug,
@@ -26,6 +28,7 @@ export async function generateMetadata({
   return {
     title: item.name,
     description: item.description || `${item.name} — a Torexia piece.`,
+    alternates: { canonical: `/collections/${slug}/${itemSlug}` },
     openGraph: {
       title: `${item.name} | Torexia`,
       description: item.description,
@@ -46,8 +49,37 @@ export default async function CollectionItemPage({
   ]);
   if (!collection || !item) notFound();
 
+  // Same price rules as the product page: the item's own price/sale, else the
+  // parent collection's.
+  const basePrice = item.price ?? collection.price;
+  const salePrice =
+    item.salePrice ?? (item.price == null ? collection.salePrice : null);
+  const price = effectivePrice(basePrice, salePrice);
+  const images = item.images.length ? item.images : [collection.cover];
+
   return (
     <Section tone="cream" className="pt-36 sm:pt-40">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: item.name,
+          image: images,
+          description: item.description || `${item.name} — a Torexia piece.`,
+          brand: { "@type": "Brand", name: SITE.name },
+          color: item.colour.name,
+          url: `${SITE.url}/collections/${collection.slug}/${item.slug}`,
+          ...(price != null && {
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "MYR",
+              price,
+              availability: "https://schema.org/InStock",
+              url: `${SITE.url}/collections/${collection.slug}/${item.slug}`,
+            },
+          }),
+        }}
+      />
       <nav className="mb-8 text-xs tracking-wide text-charcoal-600">
         <Link href="/" className="transition-colors hover:text-coffee">
           Home
