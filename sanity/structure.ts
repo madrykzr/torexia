@@ -49,10 +49,15 @@ function collectionItemsByCategory(
 
 // One filtered, newest-first list of orders — so paid orders to ship don't get
 // buried under a pile of unpaid (pending) ones.
-function orderList(S: StructureBuilder, title: string, condition: string) {
+function orderList(
+  S: StructureBuilder,
+  id: string,
+  title: string,
+  condition: string,
+) {
   return S.listItem()
     .title(title)
-    .id(`orders-${title}`)
+    .id(id)
     .child(
       S.documentList()
         .title(title)
@@ -81,16 +86,17 @@ export const structure: StructureResolver = (S, context) =>
           S.list()
             .title('Orders')
             .items([
-              orderList(S, 'To ship (paid)', 'status == "paid"'),
-              orderList(S, 'Shipped', 'status == "shipped"'),
-              orderList(S, 'Awaiting payment', 'status == "pending"'),
+              orderList(S, 'orders-to-ship', 'To ship (paid)', 'status == "paid"'),
+              orderList(S, 'orders-shipped', 'Shipped', 'status == "shipped"'),
+              orderList(S, 'orders-pending', 'Awaiting payment', 'status == "pending"'),
               orderList(
                 S,
+                'orders-failed',
                 'Failed / cancelled',
                 'status in ["failed", "cancelled"]',
               ),
               S.divider(),
-              orderList(S, 'All orders', 'true'),
+              orderList(S, 'orders-all', 'All orders', 'true'),
             ]),
         ),
       S.divider(),
