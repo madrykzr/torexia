@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useCart } from "@/lib/cart";
 import { formatPrice, MALAYSIA_STATES, whatsappUrl } from "@/lib/constants";
 import { cartOrderMessage } from "@/lib/cart";
+import { shippingFee, type ShippingSettings } from "@/lib/shipping";
 
 const inputClass =
   "min-h-12 w-full rounded-xl border border-line bg-cream px-4 text-sm text-charcoal outline-none transition-colors placeholder:text-charcoal/40 focus:border-coffee";
@@ -28,7 +29,7 @@ function Field({
   );
 }
 
-export function CheckoutClient() {
+export function CheckoutClient({ shipping }: { shipping: ShippingSettings }) {
   const router = useRouter();
   const { items, ready, subtotal, hasEnquiryOnly } = useCart();
 
@@ -48,6 +49,12 @@ export function CheckoutClient() {
   }, [ready, items.length, router]);
 
   if (!ready || items.length === 0) return null;
+
+  const fee = shippingFee(state, subtotal, shipping);
+  const total = subtotal + fee;
+  // Until a state is chosen we can't know the fee, so don't claim "Free".
+  const feeMayApply =
+    !state && (shipping.feeWest != null || shipping.feeEast != null);
 
   if (hasEnquiryOnly) {
     return (
@@ -198,7 +205,7 @@ export function CheckoutClient() {
             disabled={submitting}
             className="flex min-h-12 w-full items-center justify-center rounded-full border border-coffee bg-coffee text-sm font-medium tracking-wide text-white transition-colors hover:bg-coffee/90 disabled:opacity-50"
           >
-            {submitting ? "Redirecting to payment…" : `Pay ${formatPrice(subtotal)} with HitPay`}
+            {submitting ? "Redirecting to payment…" : `Pay ${formatPrice(total)} with HitPay`}
           </button>
 
           <p className="text-center text-xs text-charcoal-600">
@@ -248,12 +255,18 @@ export function CheckoutClient() {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-charcoal-600">Shipping</span>
-            <span className="text-charcoal">Free</span>
+            <span className="text-charcoal">
+              {feeMayApply
+                ? "Choose your state"
+                : fee > 0
+                  ? formatPrice(fee)
+                  : "Free"}
+            </span>
           </div>
           <div className="flex items-center justify-between border-t border-line/70 pt-3">
             <span className="text-charcoal-600">Total</span>
             <span className="font-heading text-lg text-coffee">
-              {formatPrice(subtotal)}
+              {formatPrice(total)}
             </span>
           </div>
         </div>

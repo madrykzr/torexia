@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getPaymentRequestStatus, mapHitPayStatus } from "@/lib/hitpay";
 import { getOrderByReference, patchOrder } from "@/lib/orders";
+import { notifyOrderPaid } from "@/lib/order-notify";
 
 // Authoritative status check for the success page — never trust the redirect
 // alone. Also self-heals the order status if the webhook hasn't arrived yet.
@@ -24,6 +25,7 @@ export async function GET(req: NextRequest) {
       if (mapped !== "pending") {
         await patchOrder(order.id, { status: mapped });
         status = mapped;
+        if (mapped === "paid") await notifyOrderPaid(order.id);
       }
     } catch {
       // Leave it pending — the webhook (or a later page load) can still catch up.

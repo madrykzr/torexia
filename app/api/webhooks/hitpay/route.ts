@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { mapHitPayStatus, verifyWebhookSignature } from "@/lib/hitpay";
 import { getOrderByReference, patchOrder } from "@/lib/orders";
+import { notifyOrderPaid } from "@/lib/order-notify";
 
 type HitPayEventPayload = {
   status?: string;
@@ -42,6 +43,7 @@ export async function POST(req: NextRequest) {
       status: mapped,
       hitpayPaymentId: hitpayPaymentId ?? undefined,
     });
+    if (mapped === "paid") await notifyOrderPaid(order.id);
   }
 
   return NextResponse.json({ received: true });

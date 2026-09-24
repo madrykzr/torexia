@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { createPaymentRequest } from "@/lib/hitpay";
 import { createOrder, patchOrder, type OrderItemInput } from "@/lib/orders";
+import { getShippingSettings } from "@/lib/sanity-content";
+import { shippingFee } from "@/lib/shipping";
 
 type CheckoutBody = {
   customerName?: string;
@@ -76,7 +78,12 @@ export async function POST(req: NextRequest) {
   // Recomputed server-side — never trust a client-supplied total for the
   // amount actually charged.
   const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.qty, 0);
-  const total = subtotal; // free shipping for now
+  const fee = shippingFee(
+    shippingAddress.state,
+    subtotal,
+    await getShippingSettings(),
+  );
+  const total = subtotal + fee;
 
   if (subtotal < 0.3) {
     return NextResponse.json({ error: "Order total is too small." }, { status: 400 });
@@ -96,6 +103,7 @@ export async function POST(req: NextRequest) {
     },
     items: orderItems,
     subtotal,
+    shippingFee: fee,
     total,
   });
 

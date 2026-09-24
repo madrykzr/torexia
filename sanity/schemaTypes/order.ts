@@ -112,10 +112,24 @@ export const order = defineType({
       validation: (rule) => rule.required().min(0),
     }),
     defineField({
+      name: 'shippingFee',
+      title: 'Shipping fee (RM)',
+      type: 'number',
+      description: 'Charged to the customer at checkout (0 = free shipping).',
+      validation: (rule) => rule.min(0),
+    }),
+    defineField({
+      name: 'paidNotifiedAt',
+      title: 'Paid alert sent at',
+      type: 'datetime',
+      description: 'Set automatically once the "new paid order" emails go out.',
+      readOnly: true,
+    }),
+    defineField({
       name: 'total',
       title: 'Total (RM)',
       type: 'number',
-      description: 'Equal to the subtotal for now — shipping is free.',
+      description: 'Subtotal + shipping fee — the amount charged through HitPay.',
       validation: (rule) => rule.required().min(0),
     }),
     defineField({

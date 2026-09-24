@@ -2,6 +2,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { COLOURS } from "@/data/products";
+import type { ShippingSettings } from "@/lib/shipping";
 import type {
   BlogPost,
   Collection,
@@ -539,4 +540,30 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
   return query<SiteSettings | null>(
     `*[_type == "siteSettings"][0]{whatsapp, instagram, tiktok, email, phone}`,
   );
+}
+
+export async function getShippingSettings(): Promise<ShippingSettings> {
+  const raw = await query<{
+    feeWest?: number | null;
+    feeEast?: number | null;
+    freeAbove?: number | null;
+  } | null>(
+    `*[_type == "siteSettings"][0]{
+      "feeWest": shippingFeeWest,
+      "feeEast": shippingFeeEast,
+      "freeAbove": freeShippingAbove
+    }`,
+  );
+  return {
+    feeWest: raw?.feeWest ?? null,
+    feeEast: raw?.feeEast ?? null,
+    freeAbove: raw?.freeAbove ?? null,
+  };
+}
+
+export async function getOrderAlertEmails(): Promise<string[]> {
+  const emails = await query<string[] | null>(
+    `*[_type == "siteSettings"][0].orderAlertEmails`,
+  );
+  return (emails ?? []).filter(Boolean);
 }

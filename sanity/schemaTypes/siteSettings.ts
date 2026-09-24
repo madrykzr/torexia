@@ -1,4 +1,4 @@
-import {defineType, defineField} from 'sanity'
+import {defineType, defineField, defineArrayMember} from 'sanity'
 import {CogIcon} from '@sanity/icons'
 
 export const siteSettings = defineType({
@@ -36,6 +36,38 @@ export const siteSettings = defineType({
       name: 'phone',
       title: 'Phone',
       type: 'string',
+    }),
+    defineField({
+      name: 'shippingFeeWest',
+      title: 'Shipping fee — West Malaysia (RM)',
+      type: 'number',
+      description:
+        'Charged at checkout for the peninsula. Leave blank for free shipping.',
+      validation: (rule) => rule.min(0),
+    }),
+    defineField({
+      name: 'shippingFeeEast',
+      title: 'Shipping fee — East Malaysia (RM)',
+      type: 'number',
+      description:
+        'Charged for Sabah, Sarawak and Labuan. Leave blank for free shipping.',
+      validation: (rule) => rule.min(0),
+    }),
+    defineField({
+      name: 'freeShippingAbove',
+      title: 'Free shipping for orders above (RM)',
+      type: 'number',
+      description:
+        'Optional — orders with a subtotal at or above this amount ship free. Leave blank to always charge the fee.',
+      validation: (rule) => rule.min(0),
+    }),
+    defineField({
+      name: 'orderAlertEmails',
+      title: 'Order alert emails',
+      type: 'array',
+      description:
+        'Everyone here gets an email the moment a customer pays, with the delivery address ready to copy.',
+      of: [defineArrayMember({type: 'string', validation: (rule) => rule.email()})],
     }),
   ],
   preview: {

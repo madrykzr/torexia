@@ -31,6 +31,7 @@ export type OrderInput = {
   shippingAddress: OrderAddress;
   items: OrderItemInput[];
   subtotal: number;
+  shippingFee: number;
   total: number;
 };
 
@@ -45,7 +46,7 @@ export type Order = OrderInput & {
 const ORDER_FIELDS = `
   "id": _id, reference, status,
   customerName, customerEmail, customerPhone,
-  shippingAddress, items, subtotal, total,
+  shippingAddress, items, subtotal, "shippingFee": coalesce(shippingFee, 0), total,
   hitpayPaymentRequestId, hitpayPaymentId
 `;
 
