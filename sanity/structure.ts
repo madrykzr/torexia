@@ -66,6 +66,7 @@ export const structure: StructureResolver = (S, context) =>
           S.documentList()
             .title('Orders')
             .schemaType('order')
+            .filter('_type == "order"')
             .defaultOrdering([{field: '_createdAt', direction: 'desc'}]),
         ),
       S.divider(),
