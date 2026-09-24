@@ -3,7 +3,8 @@ import {PackageIcon} from '@sanity/icons'
 
 export const ORDER_STATUS_OPTIONS = [
   {title: 'Pending', value: 'pending'},
-  {title: 'Paid', value: 'paid'},
+  {title: 'Paid — to ship', value: 'paid'},
+  {title: 'Shipped', value: 'shipped'},
   {title: 'Failed', value: 'failed'},
   {title: 'Cancelled', value: 'cancelled'},
 ]
@@ -32,7 +33,21 @@ export const order = defineType({
       type: 'string',
       options: {list: ORDER_STATUS_OPTIONS, layout: 'radio'},
       initialValue: 'pending',
+      description:
+        'Paid orders appear under "To ship". After posting the parcel, set this to Shipped.',
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'courier',
+      title: 'Courier',
+      type: 'string',
+      description: 'Optional — e.g. J&T, Pos Laju, Ninja Van.',
+    }),
+    defineField({
+      name: 'trackingNumber',
+      title: 'Tracking number',
+      type: 'string',
+      description: 'Optional — fill in when you ship.',
     }),
     defineField({
       name: 'customerName',

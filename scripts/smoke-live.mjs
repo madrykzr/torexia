@@ -61,6 +61,11 @@ try {
 
     const after = await sanity.fetch(`*[_id==$id][0]{status}`, {id: order._id});
     check("order flips to paid after webhook", after?.status === "paid");
+
+    await sanity.patch(order._id).set({status: "shipped"}).commit();
+    await post(sig);
+    const shipped = await sanity.fetch(`*[_id==$id][0]{status}`, {id: order._id});
+    check("repeated webhook does not undo a shipped order", shipped?.status === "shipped");
   }
 } catch (err) {
   check("no unexpected error", false, err.message);

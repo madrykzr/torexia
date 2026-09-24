@@ -31,8 +31,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
+  // Never overwrite an order the shop has already moved on (paid/shipped) —
+  // HitPay can redeliver webhooks. A failed order may still become paid.
   const mapped = mapHitPayStatus(payload.status);
-  if (mapped !== "pending") {
+  const canUpdate =
+    order.status === "pending" || (order.status === "failed" && mapped === "paid");
+  if (mapped !== "pending" && canUpdate) {
     const hitpayPaymentId = payload.payments?.[0]?.id ?? payload.id ?? order.hitpayPaymentId;
     await patchOrder(order.id, {
       status: mapped,

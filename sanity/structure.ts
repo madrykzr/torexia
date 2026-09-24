@@ -47,6 +47,21 @@ function collectionItemsByCategory(
     )
 }
 
+// One filtered, newest-first list of orders — so paid orders to ship don't get
+// buried under a pile of unpaid (pending) ones.
+function orderList(S: StructureBuilder, title: string, condition: string) {
+  return S.listItem()
+    .title(title)
+    .id(`orders-${title}`)
+    .child(
+      S.documentList()
+        .title(title)
+        .schemaType('order')
+        .filter(`_type == "order" && ${condition}`)
+        .defaultOrdering([{field: '_createdAt', direction: 'desc'}]),
+    )
+}
+
 // https://www.sanity.io/docs/structure-builder-cheat-sheet
 export const structure: StructureResolver = (S, context) =>
   S.list()
@@ -63,11 +78,20 @@ export const structure: StructureResolver = (S, context) =>
         .title('Orders')
         .icon(PackageIcon)
         .child(
-          S.documentList()
+          S.list()
             .title('Orders')
-            .schemaType('order')
-            .filter('_type == "order"')
-            .defaultOrdering([{field: '_createdAt', direction: 'desc'}]),
+            .items([
+              orderList(S, 'To ship (paid)', 'status == "paid"'),
+              orderList(S, 'Shipped', 'status == "shipped"'),
+              orderList(S, 'Awaiting payment', 'status == "pending"'),
+              orderList(
+                S,
+                'Failed / cancelled',
+                'status in ["failed", "cancelled"]',
+              ),
+              S.divider(),
+              orderList(S, 'All orders', 'true'),
+            ]),
         ),
       S.divider(),
       // Categories are their own top-level section (like Collections) so the

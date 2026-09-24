@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { client } from "@/sanity/lib/client";
 import { writeClient } from "@/sanity/lib/writeClient";
 
-export type OrderStatus = "pending" | "paid" | "failed" | "cancelled";
+export type OrderStatus = "pending" | "paid" | "shipped" | "failed" | "cancelled";
 
 export type OrderItemInput = {
   name: string;
