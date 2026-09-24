@@ -56,6 +56,8 @@ export async function createOrder(input: OrderInput): Promise<Order> {
     reference,
     status: "pending" as OrderStatus,
     ...input,
+    // Sanity needs a unique _key on every array item, or Studio can't edit the list.
+    items: input.items.map((item) => ({ ...item, _key: crypto.randomUUID().slice(0, 12) })),
   });
   return {
     id: created._id,
