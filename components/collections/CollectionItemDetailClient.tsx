@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Collection, CollectionItem, Size } from "@/lib/types";
 import { effectivePrice, whatsappUrl } from "@/lib/constants";
+import { remainingStock, soldOutSizes } from "@/lib/stock";
 import { useCart } from "@/lib/cart";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { SizeSelector } from "@/components/shop/SizeSelector";
@@ -19,10 +20,9 @@ export function CollectionItemDetailClient({
   item: CollectionItem;
 }) {
   const { add } = useCart();
+  const soldOut = soldOutSizes(item.stock);
   const [size, setSize] = useState<Size | null>(
-    item.sizes.find((s) => !item.soldOutSizes.includes(s)) ??
-      item.sizes[0] ??
-      null,
+    item.sizes.find((s) => !soldOut.includes(s)) ?? item.sizes[0] ?? null,
   );
   const [added, setAdded] = useState(false);
 
@@ -31,8 +31,10 @@ export function CollectionItemDetailClient({
   const basePrice = item.price ?? collection.price;
   const salePrice =
     item.salePrice ?? (item.price == null ? collection.salePrice : null);
+  const remaining = remainingStock(item.stock, size);
   const needsSize = item.sizes.length > 0 && !size;
-  const sizeSoldOut = size != null && item.soldOutSizes.includes(size);
+  const sizeSoldOut = size != null && remaining != null && remaining <= 0;
+  const lowStock = remaining != null && remaining > 0 && remaining <= 3;
 
   // The item's own size guide when it has rows; otherwise the collection's.
   const hasOwnSizeChart = item.sizeChart.length > 0;
@@ -96,10 +98,15 @@ export function CollectionItemDetailClient({
           {item.sizes.length > 0 && size && (
             <SizeSelector
               sizes={item.sizes}
-              soldOut={item.soldOutSizes}
+              soldOut={soldOut}
               selected={size}
               onSelect={setSize}
             />
+          )}
+          {lowStock && (
+            <p className="text-xs font-medium text-coffee">
+              Only {remaining} left in size {size}
+            </p>
           )}
         </div>
 

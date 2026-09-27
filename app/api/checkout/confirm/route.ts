@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPaymentRequestStatus, mapHitPayStatus } from "@/lib/hitpay";
 import { getOrderByReference, patchOrder } from "@/lib/orders";
 import { notifyOrderPaid } from "@/lib/order-notify";
+import { deductStockForOrder } from "@/lib/inventory";
 
 // Authoritative status check for the success page — never trust the redirect
 // alone. Also self-heals the order status if the webhook hasn't arrived yet.
@@ -33,7 +34,11 @@ export async function GET(req: NextRequest) {
 
   // Retries safely: notifyOrderPaid is a no-op once paidNotifiedAt is set, so
   // this also recovers an order whose email failed on a previous visit.
-  if (status === "paid") await notifyOrderPaid(order.id);
+  // deductStockForOrder is the same shape (claims via stockDeductedAt).
+  if (status === "paid") {
+    await notifyOrderPaid(order.id);
+    await deductStockForOrder(order.id);
+  }
 
   return NextResponse.json({
     status,

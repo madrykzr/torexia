@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { createPaymentRequest } from "@/lib/hitpay";
 import { createOrder, patchOrder, type OrderItemInput } from "@/lib/orders";
-import { getShippingSettings, getSoldOutSizesForItems } from "@/lib/sanity-content";
+import { getShippingSettings, getStockForItems } from "@/lib/sanity-content";
+import { remainingStock } from "@/lib/stock";
 import { shippingFee } from "@/lib/shipping";
 
 type CheckoutBody = {
@@ -65,19 +66,27 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const soldOutSizes = await getSoldOutSizesForItems(
+  const stockBySlug = await getStockForItems(
     items.map((i) => ({
       slug: i.slug ?? "",
       kind: i.kind === "product" ? "product" : "collection",
     })),
   );
-  const soldOutItem = items.find(
-    (i) => i.size && soldOutSizes[i.slug ?? ""]?.includes(i.size),
-  );
-  if (soldOutItem) {
+  const outOfStockItem = items.find((i) => {
+    if (!i.size) return false;
+    const remaining = remainingStock(stockBySlug[i.slug ?? ""] ?? [], i.size);
+    return remaining != null && remaining < (i.qty ?? 1);
+  });
+  if (outOfStockItem) {
+    const remaining = remainingStock(
+      stockBySlug[outOfStockItem.slug ?? ""] ?? [],
+      outOfStockItem.size as string,
+    );
+    const stockNote =
+      remaining && remaining > 0 ? ` Only ${remaining} left.` : " It just sold out.";
     return NextResponse.json(
       {
-        error: `${soldOutItem.name ?? "That item"} in size ${soldOutItem.size} just sold out — please remove it from your cart and pick another size.`,
+        error: `${outOfStockItem.name ?? "That item"} in size ${outOfStockItem.size} doesn't have enough stock.${stockNote} Please adjust your cart.`,
       },
       { status: 400 },
     );

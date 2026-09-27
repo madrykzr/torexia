@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Collection, Colour, Size } from "@/lib/types";
 import { effectivePrice, whatsappUrl } from "@/lib/constants";
+import { remainingStock, soldOutSizes } from "@/lib/stock";
 import { useCart } from "@/lib/cart";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { ColourSelector } from "@/components/shop/ColourSelector";
@@ -18,11 +19,12 @@ export function CollectionDetailClient({
   collection: Collection;
 }) {
   const { add } = useCart();
+  const soldOut = soldOutSizes(collection.stock);
   const [colour, setColour] = useState<Colour | null>(
     collection.colours[0] ?? null,
   );
   const [size, setSize] = useState<Size | null>(
-    collection.sizes.find((s) => !collection.soldOutSizes.includes(s)) ??
+    collection.sizes.find((s) => !soldOut.includes(s)) ??
       collection.sizes[0] ??
       null,
   );
@@ -32,8 +34,10 @@ export function CollectionDetailClient({
 
   // Only block the purchase when an option exists but hasn't been chosen —
   // or the chosen size has since sold out.
+  const remaining = remainingStock(collection.stock, size);
   const needsSize = collection.sizes.length > 0 && !size;
-  const sizeSoldOut = size != null && collection.soldOutSizes.includes(size);
+  const sizeSoldOut = size != null && remaining != null && remaining <= 0;
+  const lowStock = remaining != null && remaining > 0 && remaining <= 3;
   const needsColour = collection.colours.length > 0 && !colour;
   const canAdd = !needsSize && !needsColour && !sizeSoldOut;
 
@@ -85,10 +89,15 @@ export function CollectionDetailClient({
           {collection.sizes.length > 0 && size && (
             <SizeSelector
               sizes={collection.sizes}
-              soldOut={collection.soldOutSizes}
+              soldOut={soldOut}
               selected={size}
               onSelect={setSize}
             />
+          )}
+          {lowStock && (
+            <p className="text-xs font-medium text-coffee">
+              Only {remaining} left in size {size}
+            </p>
           )}
         </div>
 

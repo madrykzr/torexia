@@ -2,6 +2,14 @@ import type { PortableTextBlock } from "@portabletext/types";
 
 export type Size = "S" | "M" | "L" | "XL" | "S/M" | "L/XL";
 
+export const ALL_SIZES: Size[] = ["S", "M", "L", "XL", "S/M", "L/XL"];
+
+/** One size's stock count. A size with no row is untracked (always buyable). */
+export type SizeStock = {
+  size: Size;
+  quantity: number;
+};
+
 export type Colour = {
   name: string;
   slug: string;
@@ -47,8 +55,8 @@ export type Collection = {
   gallery: string[];
   colours: Colour[];
   sizes: Size[];
-  /** Sizes ticked "sold out" in Studio — still shown, but can't be bought */
-  soldOutSizes: Size[];
+  /** Per-size stock counts — a size missing here is untracked (unlimited) */
+  stock: SizeStock[];
   fabric: string;
   /** Size-chart column headers (e.g. ["S","M","L"]) and measurement rows (inches) */
   sizeChartColumns: string[];
@@ -66,8 +74,8 @@ export type CollectionItem = {
   collectionSlug: string;
   colour: Colour;
   sizes: Size[];
-  /** Sizes ticked "sold out" in Studio — still shown, but can't be bought */
-  soldOutSizes: Size[];
+  /** Per-size stock counts — a size missing here is untracked (unlimited) */
+  stock: SizeStock[];
   /** Resolved image URLs (Sanity CDN), ordered */
   images: string[];
   /** Price in RM, or null to inherit the parent collection's price */

@@ -25,26 +25,59 @@ export const SIZE_OPTIONS = [
   {title: 'L/XL', value: 'L/XL'},
 ]
 
-// Manual stock switch: ticked sizes stay visible on the site but can't be
-// added to the cart, and checkout rejects them server-side.
-export function soldOutSizesField() {
+// Per-size stock count. Add a row per size and set how many are in stock —
+// the site hides purchase of a size once its count hits 0, and every paid
+// order deducts automatically, so nobody needs to check or update it by hand.
+// A size in "Sizes" above with no row here is treated as untracked/unlimited,
+// so existing content keeps working until stock is actually filled in.
+export function stockField() {
   return defineField({
-    name: 'soldOutSizes',
-    title: 'Sold out sizes',
+    name: 'stock',
+    title: 'Stock',
     type: 'array',
     description:
-      'Tick a size when it runs out — customers will see it crossed out and can’t buy it. Untick when restocked, then Publish.',
-    of: [defineArrayMember({type: 'string'})],
-    options: {list: SIZE_OPTIONS, layout: 'grid'},
+      'How many of each size you have. Add a row per size and set the quantity — it goes down automatically as orders are paid, and that size can’t be bought once it reaches 0. Leave a size out of this list to not track its stock (always buyable).',
+    of: [
+      defineArrayMember({
+        type: 'object',
+        name: 'sizeStock',
+        fields: [
+          defineField({
+            name: 'size',
+            title: 'Size',
+            type: 'string',
+            options: {list: SIZE_OPTIONS},
+            validation: (rule) => rule.required(),
+          }),
+          defineField({
+            name: 'quantity',
+            title: 'Quantity',
+            type: 'number',
+            initialValue: 0,
+            validation: (rule) => rule.required().min(0).integer(),
+          }),
+        ],
+        preview: {
+          select: {size: 'size', quantity: 'quantity'},
+          prepare({size, quantity}) {
+            return {
+              title: size ?? 'Size',
+              subtitle: quantity > 0 ? `${quantity} in stock` : 'Sold out',
+            }
+          },
+        },
+      }),
+    ],
     validation: (rule) =>
-      rule
-        .unique()
-        .warning()
-        .custom((soldOut, context) => {
-          const sizes = (context.document as {sizes?: string[]} | undefined)?.sizes ?? []
-          const stray = (soldOut as string[] | undefined)?.filter((s) => !sizes.includes(s)) ?? []
-          return stray.length ? `Not in Sizes above: ${stray.join(', ')}` : true
-        }),
+      rule.custom((stock, context) => {
+        const rows = (stock as {size?: string}[] | undefined) ?? []
+        const rowSizes = rows.map((r) => r.size).filter(Boolean) as string[]
+        const dupes = rowSizes.filter((s, i) => rowSizes.indexOf(s) !== i)
+        if (dupes.length) return `Duplicate size: ${[...new Set(dupes)].join(', ')}`
+        const sizes = (context.document as {sizes?: string[]} | undefined)?.sizes ?? []
+        const stray = rowSizes.filter((s) => !sizes.includes(s))
+        return stray.length ? `Not in Sizes above: ${stray.join(', ')}` : true
+      }),
   })
 }
 

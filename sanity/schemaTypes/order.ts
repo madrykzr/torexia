@@ -126,6 +126,20 @@ export const order = defineType({
       readOnly: true,
     }),
     defineField({
+      name: 'stockDeductedAt',
+      title: 'Stock deducted at',
+      type: 'datetime',
+      description: 'Set automatically once this order\'s items were deducted from stock.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'stockError',
+      title: 'Stock deduction error',
+      type: 'string',
+      description: 'Only set if deducting stock for this order failed — check stock counts by hand.',
+      readOnly: true,
+    }),
+    defineField({
       name: 'total',
       title: 'Total (RM)',
       type: 'number',

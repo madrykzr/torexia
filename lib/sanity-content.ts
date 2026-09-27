@@ -15,7 +15,9 @@ import type {
   Size,
   SiteSettings,
   SizeChartRow,
+  SizeStock,
 } from "@/lib/types";
+import { ALL_SIZES } from "@/lib/types";
 
 const REVALIDATE = 60; // ISR: published content appears within ~60s
 
@@ -135,6 +137,16 @@ function mapSizeChart(raw: RawSizeChartRow[] | undefined): SizeChartRow[] {
     .map((r) => ({ label: r.label ?? "", values: r.values ?? [] }));
 }
 
+type RawSizeStock = { size?: string; quantity?: number };
+
+function mapStock(raw: RawSizeStock[] | undefined): SizeStock[] {
+  return (raw ?? [])
+    .filter((r): r is Required<RawSizeStock> =>
+      Boolean(r?.size && ALL_SIZES.includes(r.size as Size)),
+    )
+    .map((r) => ({ size: r.size as Size, quantity: Math.max(0, r.quantity ?? 0) }));
+}
+
 type RawCollection = {
   id: string;
   name: string;
@@ -146,7 +158,7 @@ type RawCollection = {
   gallery?: unknown[];
   colours?: { name?: string; hex?: string }[];
   sizes?: string[];
-  soldOutSizes?: string[];
+  stock?: RawSizeStock[];
   fabric?: string;
   sizeChartColumns?: string[];
   sizeChart?: RawSizeChartRow[];
@@ -172,7 +184,7 @@ function mapCollection(raw: RawCollection): Collection {
       .filter((u): u is string => Boolean(u)),
     colours: mapCollectionColours(raw.colours),
     sizes: (raw.sizes ?? []) as Size[],
-    soldOutSizes: (raw.soldOutSizes ?? []) as Size[],
+    stock: mapStock(raw.stock),
     fabric: raw.fabric ?? "",
     sizeChartColumns: raw.sizeChartColumns ?? [],
     sizeChart: mapSizeChart(raw.sizeChart),
@@ -189,7 +201,7 @@ type RawCollectionItem = {
   collectionSlug: string | null;
   colour?: { name?: string; hex?: string };
   sizes?: string[];
-  soldOutSizes?: string[];
+  stock?: RawSizeStock[];
   images?: unknown[];
   price?: number;
   salePrice?: number;
@@ -209,7 +221,7 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
     collectionSlug: raw.collectionSlug ?? "",
     colour: colour ?? { name: "", slug: "", hex: "#000000" },
     sizes: (raw.sizes ?? []) as Size[],
-    soldOutSizes: (raw.soldOutSizes ?? []) as Size[],
+    stock: mapStock(raw.stock),
     // De-duplicated: the same photo added twice in Studio would otherwise show
     // twice in the gallery (and break React's unique-key rule).
     images: [
@@ -354,7 +366,7 @@ const COLLECTION_FIELDS = `
   "id": _id, name, "slug": slug.current,
   "category": category->{title, "slug": slug.current},
   price, salePrice,
-  coverImage, gallery, colours, sizes, soldOutSizes, fabric,
+  coverImage, gallery, colours, sizes, stock, fabric,
   sizeChartColumns, sizeChart, sizeChartNote,
   description, order
 `;
@@ -387,7 +399,7 @@ export async function getCollectionSlugs(): Promise<string[]> {
 const COLLECTION_ITEM_FIELDS = `
   "id": _id, name, "slug": slug.current,
   "collectionSlug": collection->slug.current,
-  colour, sizes, soldOutSizes, price, salePrice,
+  colour, sizes, stock, price, salePrice,
   sizeChartColumns, sizeChart, sizeChartNote,
   description, order, images
 `;
@@ -572,27 +584,27 @@ export async function getShippingSettings(): Promise<ShippingSettings> {
 }
 
 /**
- * Re-checks sold-out status server-side at checkout — the Add to Cart button
- * being disabled only protects a page that's still open; a cart line added
- * earlier, or a tampered request, must be caught here too.
+ * Re-checks stock server-side at checkout — the Add to Cart button being
+ * disabled only protects a page that's still open; a cart line added earlier
+ * (or a tampered request) must be caught here too, right before payment.
  */
-export async function getSoldOutSizesForItems(
+export async function getStockForItems(
   items: { slug: string; kind: "collection" | "product" }[],
-): Promise<Record<string, string[]>> {
+): Promise<Record<string, SizeStock[]>> {
   const collectionSlugs = items.filter((i) => i.kind === "collection").map((i) => i.slug);
   const itemSlugs = items.filter((i) => i.kind === "product").map((i) => i.slug);
   if (!collectionSlugs.length && !itemSlugs.length) return {};
 
-  const raw = await query<{ slug: string; soldOutSizes?: string[] }[]>(
+  const raw = await query<{ slug: string; stock?: RawSizeStock[] }[]>(
     `*[
       (_type == "collection" && slug.current in $collectionSlugs) ||
       (_type == "collectionItem" && slug.current in $itemSlugs)
-    ]{"slug": slug.current, soldOutSizes}`,
+    ]{"slug": slug.current, stock}`,
     { collectionSlugs, itemSlugs },
   );
 
-  const map: Record<string, string[]> = {};
-  for (const r of raw) map[r.slug] = r.soldOutSizes ?? [];
+  const map: Record<string, SizeStock[]> = {};
+  for (const r of raw) map[r.slug] = mapStock(r.stock);
   return map;
 }
 
