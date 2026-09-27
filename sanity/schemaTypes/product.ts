@@ -25,6 +25,29 @@ export const SIZE_OPTIONS = [
   {title: 'L/XL', value: 'L/XL'},
 ]
 
+// Manual stock switch: ticked sizes stay visible on the site but can't be
+// added to the cart, and checkout rejects them server-side.
+export function soldOutSizesField() {
+  return defineField({
+    name: 'soldOutSizes',
+    title: 'Sold out sizes',
+    type: 'array',
+    description:
+      'Tick a size when it runs out — customers will see it crossed out and can’t buy it. Untick when restocked, then Publish.',
+    of: [defineArrayMember({type: 'string'})],
+    options: {list: SIZE_OPTIONS, layout: 'grid'},
+    validation: (rule) =>
+      rule
+        .unique()
+        .warning()
+        .custom((soldOut, context) => {
+          const sizes = (context.document as {sizes?: string[]} | undefined)?.sizes ?? []
+          const stray = (soldOut as string[] | undefined)?.filter((s) => !sizes.includes(s)) ?? []
+          return stray.length ? `Not in Sizes above: ${stray.join(', ')}` : true
+        }),
+  })
+}
+
 export const product = defineType({
   name: 'product',
   title: 'Product',

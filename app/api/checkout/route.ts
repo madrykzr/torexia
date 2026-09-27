@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { createPaymentRequest } from "@/lib/hitpay";
 import { createOrder, patchOrder, type OrderItemInput } from "@/lib/orders";
-import { getShippingSettings } from "@/lib/sanity-content";
+import { getShippingSettings, getSoldOutSizesForItems } from "@/lib/sanity-content";
 import { shippingFee } from "@/lib/shipping";
 
 type CheckoutBody = {
@@ -60,6 +60,24 @@ export async function POST(req: NextRequest) {
       {
         error:
           "Some items don't have a fixed price yet — please check out via WhatsApp instead.",
+      },
+      { status: 400 },
+    );
+  }
+
+  const soldOutSizes = await getSoldOutSizesForItems(
+    items.map((i) => ({
+      slug: i.slug ?? "",
+      kind: i.kind === "product" ? "product" : "collection",
+    })),
+  );
+  const soldOutItem = items.find(
+    (i) => i.size && soldOutSizes[i.slug ?? ""]?.includes(i.size),
+  );
+  if (soldOutItem) {
+    return NextResponse.json(
+      {
+        error: `${soldOutItem.name ?? "That item"} in size ${soldOutItem.size} just sold out — please remove it from your cart and pick another size.`,
       },
       { status: 400 },
     );

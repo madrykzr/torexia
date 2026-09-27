@@ -146,6 +146,7 @@ type RawCollection = {
   gallery?: unknown[];
   colours?: { name?: string; hex?: string }[];
   sizes?: string[];
+  soldOutSizes?: string[];
   fabric?: string;
   sizeChartColumns?: string[];
   sizeChart?: RawSizeChartRow[];
@@ -171,6 +172,7 @@ function mapCollection(raw: RawCollection): Collection {
       .filter((u): u is string => Boolean(u)),
     colours: mapCollectionColours(raw.colours),
     sizes: (raw.sizes ?? []) as Size[],
+    soldOutSizes: (raw.soldOutSizes ?? []) as Size[],
     fabric: raw.fabric ?? "",
     sizeChartColumns: raw.sizeChartColumns ?? [],
     sizeChart: mapSizeChart(raw.sizeChart),
@@ -187,6 +189,7 @@ type RawCollectionItem = {
   collectionSlug: string | null;
   colour?: { name?: string; hex?: string };
   sizes?: string[];
+  soldOutSizes?: string[];
   images?: unknown[];
   price?: number;
   salePrice?: number;
@@ -206,6 +209,7 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
     collectionSlug: raw.collectionSlug ?? "",
     colour: colour ?? { name: "", slug: "", hex: "#000000" },
     sizes: (raw.sizes ?? []) as Size[],
+    soldOutSizes: (raw.soldOutSizes ?? []) as Size[],
     // De-duplicated: the same photo added twice in Studio would otherwise show
     // twice in the gallery (and break React's unique-key rule).
     images: [
@@ -350,7 +354,7 @@ const COLLECTION_FIELDS = `
   "id": _id, name, "slug": slug.current,
   "category": category->{title, "slug": slug.current},
   price, salePrice,
-  coverImage, gallery, colours, sizes, fabric,
+  coverImage, gallery, colours, sizes, soldOutSizes, fabric,
   sizeChartColumns, sizeChart, sizeChartNote,
   description, order
 `;
@@ -383,7 +387,7 @@ export async function getCollectionSlugs(): Promise<string[]> {
 const COLLECTION_ITEM_FIELDS = `
   "id": _id, name, "slug": slug.current,
   "collectionSlug": collection->slug.current,
-  colour, sizes, price, salePrice,
+  colour, sizes, soldOutSizes, price, salePrice,
   sizeChartColumns, sizeChart, sizeChartNote,
   description, order, images
 `;
@@ -565,6 +569,31 @@ export async function getShippingSettings(): Promise<ShippingSettings> {
     feeEast: raw?.feeEast ?? null,
     freeAbove: raw?.freeAbove ?? null,
   };
+}
+
+/**
+ * Re-checks sold-out status server-side at checkout — the Add to Cart button
+ * being disabled only protects a page that's still open; a cart line added
+ * earlier, or a tampered request, must be caught here too.
+ */
+export async function getSoldOutSizesForItems(
+  items: { slug: string; kind: "collection" | "product" }[],
+): Promise<Record<string, string[]>> {
+  const collectionSlugs = items.filter((i) => i.kind === "collection").map((i) => i.slug);
+  const itemSlugs = items.filter((i) => i.kind === "product").map((i) => i.slug);
+  if (!collectionSlugs.length && !itemSlugs.length) return {};
+
+  const raw = await query<{ slug: string; soldOutSizes?: string[] }[]>(
+    `*[
+      (_type == "collection" && slug.current in $collectionSlugs) ||
+      (_type == "collectionItem" && slug.current in $itemSlugs)
+    ]{"slug": slug.current, soldOutSizes}`,
+    { collectionSlugs, itemSlugs },
+  );
+
+  const map: Record<string, string[]> = {};
+  for (const r of raw) map[r.slug] = r.soldOutSizes ?? [];
+  return map;
 }
 
 export async function getOrderAlertEmails(): Promise<string[]> {

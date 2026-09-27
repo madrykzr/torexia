@@ -21,15 +21,21 @@ export function CollectionDetailClient({
   const [colour, setColour] = useState<Colour | null>(
     collection.colours[0] ?? null,
   );
-  const [size, setSize] = useState<Size | null>(collection.sizes[0] ?? null);
+  const [size, setSize] = useState<Size | null>(
+    collection.sizes.find((s) => !collection.soldOutSizes.includes(s)) ??
+      collection.sizes[0] ??
+      null,
+  );
   const [added, setAdded] = useState(false);
 
   const images = [collection.cover, ...collection.gallery].filter(Boolean);
 
-  // Only block the purchase when an option exists but hasn't been chosen.
+  // Only block the purchase when an option exists but hasn't been chosen —
+  // or the chosen size has since sold out.
   const needsSize = collection.sizes.length > 0 && !size;
+  const sizeSoldOut = size != null && collection.soldOutSizes.includes(size);
   const needsColour = collection.colours.length > 0 && !colour;
-  const canAdd = !needsSize && !needsColour;
+  const canAdd = !needsSize && !needsColour && !sizeSoldOut;
 
   const enquiry = `Hi Torexia! I'm interested in the ${collection.name} collection${
     colour ? ` (${colour.name}` : ""
@@ -79,6 +85,7 @@ export function CollectionDetailClient({
           {collection.sizes.length > 0 && size && (
             <SizeSelector
               sizes={collection.sizes}
+              soldOut={collection.soldOutSizes}
               selected={size}
               onSelect={setSize}
             />
@@ -96,6 +103,8 @@ export function CollectionDetailClient({
               <>
                 <Check className="h-4 w-4" /> Added to Cart
               </>
+            ) : sizeSoldOut ? (
+              "Sold Out"
             ) : (
               <>
                 <ShoppingBag className="h-4 w-4" /> Add to Cart

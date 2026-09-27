@@ -1,6 +1,6 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {TagIcon} from '@sanity/icons'
-import {SIZE_OPTIONS} from './product'
+import {SIZE_OPTIONS, soldOutSizesField} from './product'
 
 // A single colourway of a collection (e.g. "Kaftan Berry") with its own photo
 // set — reached by clicking through from the parent collection page.
@@ -88,6 +88,7 @@ export const collectionItem = defineType({
       options: {list: SIZE_OPTIONS, layout: 'grid'},
       validation: (rule) => rule.unique(),
     }),
+    soldOutSizesField(),
     defineField({
       name: 'price',
       title: 'Price (RM)',

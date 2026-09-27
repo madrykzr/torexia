@@ -1,6 +1,6 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {SparklesIcon} from '@sanity/icons'
-import {SIZE_OPTIONS} from './product'
+import {SIZE_OPTIONS, soldOutSizesField} from './product'
 
 export const collection = defineType({
   name: 'collection',
@@ -125,6 +125,7 @@ export const collection = defineType({
       options: {list: SIZE_OPTIONS, layout: 'grid'},
       validation: (rule) => rule.unique(),
     }),
+    soldOutSizesField(),
     defineField({
       name: 'fabric',
       title: 'Fabric',

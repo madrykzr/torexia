@@ -47,6 +47,8 @@ export type Collection = {
   gallery: string[];
   colours: Colour[];
   sizes: Size[];
+  /** Sizes ticked "sold out" in Studio — still shown, but can't be bought */
+  soldOutSizes: Size[];
   fabric: string;
   /** Size-chart column headers (e.g. ["S","M","L"]) and measurement rows (inches) */
   sizeChartColumns: string[];
@@ -64,6 +66,8 @@ export type CollectionItem = {
   collectionSlug: string;
   colour: Colour;
   sizes: Size[];
+  /** Sizes ticked "sold out" in Studio — still shown, but can't be bought */
+  soldOutSizes: Size[];
   /** Resolved image URLs (Sanity CDN), ordered */
   images: string[];
   /** Price in RM, or null to inherit the parent collection's price */

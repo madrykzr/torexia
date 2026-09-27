@@ -19,7 +19,11 @@ export function CollectionItemDetailClient({
   item: CollectionItem;
 }) {
   const { add } = useCart();
-  const [size, setSize] = useState<Size | null>(item.sizes[0] ?? null);
+  const [size, setSize] = useState<Size | null>(
+    item.sizes.find((s) => !item.soldOutSizes.includes(s)) ??
+      item.sizes[0] ??
+      null,
+  );
   const [added, setAdded] = useState(false);
 
   // Item shows its own price/sale when set; otherwise inherits both from the
@@ -28,6 +32,7 @@ export function CollectionItemDetailClient({
   const salePrice =
     item.salePrice ?? (item.price == null ? collection.salePrice : null);
   const needsSize = item.sizes.length > 0 && !size;
+  const sizeSoldOut = size != null && item.soldOutSizes.includes(size);
 
   // The item's own size guide when it has rows; otherwise the collection's.
   const hasOwnSizeChart = item.sizeChart.length > 0;
@@ -44,7 +49,7 @@ export function CollectionItemDetailClient({
   }). Could you share more details?`;
 
   function handleAdd() {
-    if (needsSize) return;
+    if (needsSize || sizeSoldOut) return;
     add({
       kind: "product",
       slug: item.slug,
@@ -89,7 +94,12 @@ export function CollectionItemDetailClient({
           </div>
 
           {item.sizes.length > 0 && size && (
-            <SizeSelector sizes={item.sizes} selected={size} onSelect={setSize} />
+            <SizeSelector
+              sizes={item.sizes}
+              soldOut={item.soldOutSizes}
+              selected={size}
+              onSelect={setSize}
+            />
           )}
         </div>
 
@@ -97,13 +107,15 @@ export function CollectionItemDetailClient({
         <div className="mt-9 flex flex-col gap-3">
           <button
             onClick={handleAdd}
-            disabled={needsSize}
+            disabled={needsSize || sizeSoldOut}
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-coffee text-sm font-medium tracking-wide text-white transition-colors hover:bg-coffee-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {added ? (
               <>
                 <Check className="h-4 w-4" /> Added to Cart
               </>
+            ) : sizeSoldOut ? (
+              "Sold Out"
             ) : (
               <>
                 <ShoppingBag className="h-4 w-4" /> Add to Cart
