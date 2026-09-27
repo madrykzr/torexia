@@ -3,6 +3,7 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { COLOURS } from "@/data/products";
 import type { ShippingSettings } from "@/lib/shipping";
+import { isFullySoldOut } from "@/lib/stock";
 import type {
   BlogPost,
   Collection,
@@ -159,6 +160,11 @@ type RawCollection = {
   colours?: { name?: string; hex?: string }[];
   sizes?: string[];
   stock?: RawSizeStock[];
+  // Lightweight projection of this collection's colourway items, fetched only
+  // to decide the aggregate "Sold Out" badge — a collection with items is
+  // fully sold out when every one of them is, regardless of its own
+  // (otherwise-unused) sizes/stock fields.
+  items?: { sizes?: string[]; stock?: RawSizeStock[] }[];
   fabric?: string;
   sizeChartColumns?: string[];
   sizeChart?: RawSizeChartRow[];
@@ -168,6 +174,11 @@ type RawCollection = {
 };
 
 function mapCollection(raw: RawCollection): Collection {
+  const items = raw.items ?? [];
+  const soldOut =
+    items.length > 0
+      ? items.every((i) => isFullySoldOut((i.sizes ?? []) as Size[], mapStock(i.stock)))
+      : isFullySoldOut((raw.sizes ?? []) as Size[], mapStock(raw.stock));
   return {
     id: raw.id,
     slug: raw.slug ?? raw.id,
@@ -185,6 +196,7 @@ function mapCollection(raw: RawCollection): Collection {
     colours: mapCollectionColours(raw.colours),
     sizes: (raw.sizes ?? []) as Size[],
     stock: mapStock(raw.stock),
+    soldOut,
     fabric: raw.fabric ?? "",
     sizeChartColumns: raw.sizeChartColumns ?? [],
     sizeChart: mapSizeChart(raw.sizeChart),
@@ -222,6 +234,7 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
     colour: colour ?? { name: "", slug: "", hex: "#000000" },
     sizes: (raw.sizes ?? []) as Size[],
     stock: mapStock(raw.stock),
+    soldOut: isFullySoldOut((raw.sizes ?? []) as Size[], mapStock(raw.stock)),
     // De-duplicated: the same photo added twice in Studio would otherwise show
     // twice in the gallery (and break React's unique-key rule).
     images: [
@@ -368,7 +381,8 @@ const COLLECTION_FIELDS = `
   price, salePrice,
   coverImage, gallery, colours, sizes, stock, fabric,
   sizeChartColumns, sizeChart, sizeChartNote,
-  description, order
+  description, order,
+  "items": *[_type == "collectionItem" && references(^._id)]{sizes, stock}
 `;
 
 export async function getAllCollections(): Promise<Collection[]> {

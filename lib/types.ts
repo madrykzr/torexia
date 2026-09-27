@@ -57,6 +57,9 @@ export type Collection = {
   sizes: Size[];
   /** Per-size stock counts — a size missing here is untracked (unlimited) */
   stock: SizeStock[];
+  /** True once every size is stock-tracked and at 0 — for a card's "Sold Out" badge.
+   *  For a collection with colourway items, this instead means every item is. */
+  soldOut: boolean;
   fabric: string;
   /** Size-chart column headers (e.g. ["S","M","L"]) and measurement rows (inches) */
   sizeChartColumns: string[];
@@ -76,6 +79,8 @@ export type CollectionItem = {
   sizes: Size[];
   /** Per-size stock counts — a size missing here is untracked (unlimited) */
   stock: SizeStock[];
+  /** True once every size is stock-tracked and at 0 — for a card's "Sold Out" badge */
+  soldOut: boolean;
   /** Resolved image URLs (Sanity CDN), ordered */
   images: string[];
   /** Price in RM, or null to inherit the parent collection's price */

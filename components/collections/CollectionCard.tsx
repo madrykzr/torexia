@@ -21,9 +21,18 @@ export function CollectionCard({
         fill
         sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
         priority={priority}
-        className="object-cover transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105"
+        className={`object-cover transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105 ${
+          collection.soldOut ? "grayscale-[40%]" : ""
+        }`}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/10 to-transparent" />
+
+      {collection.soldOut && (
+        <span className="absolute left-4 top-4 rounded-full bg-charcoal/80 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-white">
+          Sold Out
+        </span>
+      )}
+
       <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
         <h3 className="font-heading text-xl uppercase tracking-[0.15em] text-white sm:text-2xl">
           {collection.name}

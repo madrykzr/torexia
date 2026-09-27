@@ -15,3 +15,17 @@ export function remainingStock(stock: SizeStock[], size: Size | string | null): 
 export function soldOutSizes(stock: SizeStock[]): Size[] {
   return stock.filter((s) => s.quantity <= 0).map((s) => s.size);
 }
+
+/**
+ * True only when every size the piece comes in is stock-tracked AND at zero —
+ * an untracked size (no row) is always buyable, so it keeps this false. Used
+ * for the "Sold Out" badge on card thumbnails, one level above the size
+ * selector on the detail page.
+ */
+export function isFullySoldOut(sizes: Size[], stock: SizeStock[]): boolean {
+  if (sizes.length === 0) return false;
+  return sizes.every((size) => {
+    const row = stock.find((s) => s.size === size);
+    return row != null && row.quantity <= 0;
+  });
+}
