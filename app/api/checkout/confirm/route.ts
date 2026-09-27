@@ -25,12 +25,15 @@ export async function GET(req: NextRequest) {
       if (mapped !== "pending") {
         await patchOrder(order.id, { status: mapped });
         status = mapped;
-        if (mapped === "paid") await notifyOrderPaid(order.id);
       }
     } catch {
       // Leave it pending — the webhook (or a later page load) can still catch up.
     }
   }
+
+  // Retries safely: notifyOrderPaid is a no-op once paidNotifiedAt is set, so
+  // this also recovers an order whose email failed on a previous visit.
+  if (status === "paid") await notifyOrderPaid(order.id);
 
   return NextResponse.json({
     status,

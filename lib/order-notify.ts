@@ -118,9 +118,17 @@ export async function notifyOrderPaid(orderId: string): Promise<void> {
 ${htmlList(items)}<p>${money.map(escapeHtml).join("<br>")}</p>
 <p>We'll be in touch when it ships.<br>— Torexia</p>`,
     });
+    await writeClient.patch(orderId).unset(["notifyError"]).commit().catch(() => {});
   } catch (err) {
-    // Release the claim so a later call can retry the send.
-    await writeClient.patch(orderId).unset(["paidNotifiedAt"]).commit().catch(() => {});
+    // Release the claim so a later call can retry the send, and record why —
+    // visible on the order in Studio without needing to check server logs.
+    const message = err instanceof Error ? err.message : String(err);
+    await writeClient
+      .patch(orderId)
+      .unset(["paidNotifiedAt"])
+      .set({ notifyError: message.slice(0, 500) })
+      .commit()
+      .catch(() => {});
     console.error("Order alert failed:", err);
   }
 }
