@@ -35,6 +35,9 @@ export function PriceTag({
     );
   }
 
+  // Rounded to the nearest whole percent — e.g. RM149 -> RM100 reads "-33%".
+  const percentOff = Math.round(((price - salePrice) / price) * 100);
+
   return (
     <span className={cn("inline-flex items-baseline gap-2", className)}>
       <span
@@ -47,6 +50,14 @@ export function PriceTag({
       </span>
       <span className={tone === "light" ? "text-white" : "text-coffee"}>
         {formatPrice(salePrice)}
+      </span>
+      <span
+        className={cn(
+          "rounded-full px-2 py-0.5 text-[11px] font-medium",
+          tone === "light" ? "bg-white/20 text-white" : "bg-coffee/10 text-coffee",
+        )}
+      >
+        -{percentOff}%
       </span>
     </span>
   );
