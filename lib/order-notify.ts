@@ -100,6 +100,10 @@ export async function notifyOrderPaid(orderId: string): Promise<void> {
 
     await sendEmail({
       to: [order.customerEmail],
+      // So a customer who hits "Reply" reaches a real inbox — once
+      // ORDER_EMAIL_FROM sends from the verified domain, the from address
+      // itself may not have a working mailbox behind it.
+      replyTo: shopEmails[0],
       subject: `Thank you for your Torexia order (${short})`,
       text: [
         `Hi ${order.customerName},`,
