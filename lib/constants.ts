@@ -12,6 +12,8 @@ export const SITE = {
   url: "https://www.ladytorexia.my",
 } as const;
 
+// Fallback defaults — used until the owner fills in Site Settings in Studio,
+// and for any field Site Settings doesn't cover (website label/url).
 export const CONTACT = {
   email: "hello@torexiacom.biz",
   phone: "+60 13-220 9408",
@@ -30,6 +32,56 @@ export const CONTACT = {
     url: "https://torexiacom.biz",
   },
 } as const;
+
+export type ResolvedContact = {
+  email: string;
+  phone: string;
+  /** Digits only, for wa.me links */
+  whatsapp: string;
+  instagram: { handle: string; url: string };
+  tiktok: { handle: string; url: string };
+  website: { label: string; url: string };
+};
+
+function resolveInstagram(input: string | null | undefined): { handle: string; url: string } {
+  const value = input?.trim();
+  if (!value) return CONTACT.instagram;
+  if (/^https?:\/\//i.test(value)) {
+    const slug = value.replace(/\/+$/, "").split("/").pop();
+    return slug ? { handle: `@${slug}`, url: value } : CONTACT.instagram;
+  }
+  const handle = value.startsWith("@") ? value : `@${value}`;
+  return { handle, url: `https://www.instagram.com/${handle.slice(1)}/` };
+}
+
+function resolveTiktok(input: string | null | undefined): { handle: string; url: string } {
+  const value = input?.trim();
+  if (!value) return CONTACT.tiktok;
+  if (/^https?:\/\//i.test(value)) {
+    const slug = value.replace(/\/+$/, "").split("/").pop();
+    return slug ? { handle: `@${slug.replace(/^@/, "")}`, url: value } : CONTACT.tiktok;
+  }
+  const handle = value.startsWith("@") ? value : `@${value}`;
+  return { handle, url: `https://www.tiktok.com/${handle}` };
+}
+
+/**
+ * Merges Site Settings (owner-editable in Studio) over the CONTACT fallback
+ * defaults — an empty/missing field in Studio quietly falls back rather than
+ * showing blank. `settings` is whatever getSiteSettings() returned.
+ */
+export function resolveContact(
+  settings: { whatsapp?: string | null; instagram?: string | null; tiktok?: string | null; email?: string | null; phone?: string | null } | null,
+): ResolvedContact {
+  return {
+    email: settings?.email?.trim() || CONTACT.email,
+    phone: settings?.phone?.trim() || CONTACT.phone,
+    whatsapp: settings?.whatsapp?.trim() || CONTACT.whatsapp,
+    instagram: resolveInstagram(settings?.instagram),
+    tiktok: resolveTiktok(settings?.tiktok),
+    website: CONTACT.website,
+  };
+}
 
 export const MALAYSIA_STATES = [
   "Johor",
@@ -61,9 +113,11 @@ export const NAV_LINKS = [
 
 /**
  * Build a WhatsApp click-to-chat link with an optional pre-filled message.
+ * `number` is digits-only (e.g. from ResolvedContact.whatsapp) — pass
+ * CONTACT.whatsapp where no live Site Settings value is available.
  */
-export function whatsappUrl(message?: string): string {
-  const base = `https://wa.me/${CONTACT.whatsapp}`;
+export function whatsappUrl(number: string, message?: string): string {
+  const base = `https://wa.me/${number}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 

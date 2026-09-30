@@ -7,8 +7,8 @@ import { Reveal } from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 import { InstagramIcon, TikTokIcon } from "@/components/ui/BrandIcons";
 import { WhyTorexia } from "@/components/home/WhyTorexia";
-import { CONTACT } from "@/lib/constants";
-import { whatsappUrl } from "@/lib/constants";
+import { resolveContact, whatsappUrl } from "@/lib/constants";
+import { getSiteSettings } from "@/lib/sanity-content";
 
 export const metadata: Metadata = {
   title: "About",
@@ -28,7 +28,10 @@ const mission = [
 
 const coreValues = ["Quality", "Comfort", "Modesty", "Elegance", "Trust"];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const settings = await getSiteSettings();
+  const contact = resolveContact(settings);
+
   return (
     <>
       {/* Hero */}
@@ -167,13 +170,14 @@ export default function AboutPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink
                 href={whatsappUrl(
+                  contact.whatsapp,
                   "Hi Torexia! I'd love to explore a collaboration.",
                 )}
                 variant="primary"
               >
                 Collaborate via WhatsApp
               </ButtonLink>
-              <ButtonLink href={`mailto:${CONTACT.email}`} variant="outline">
+              <ButtonLink href={`mailto:${contact.email}`} variant="outline">
                 Email Us
               </ButtonLink>
             </div>
@@ -190,28 +194,28 @@ export default function AboutPage() {
         />
         <Reveal className="mx-auto mt-10 flex max-w-xl flex-col items-center gap-4 text-center text-charcoal">
           <a
-            href={`mailto:${CONTACT.email}`}
+            href={`mailto:${contact.email}`}
             className="text-lg transition-colors hover:text-coffee"
           >
-            {CONTACT.email}
+            {contact.email}
           </a>
           <a
-            href={`tel:${CONTACT.phone.replace(/[\s-]/g, "")}`}
+            href={`tel:${contact.phone.replace(/[\s-]/g, "")}`}
             className="text-lg transition-colors hover:text-coffee"
           >
-            {CONTACT.phone}
+            {contact.phone}
           </a>
           <a
-            href={CONTACT.website.url}
+            href={contact.website.url}
             target="_blank"
             rel="noopener noreferrer"
             className="text-lg transition-colors hover:text-coffee"
           >
-            {CONTACT.website.label}
+            {contact.website.label}
           </a>
           <div className="mt-3 flex items-center gap-5">
             <a
-              href={CONTACT.instagram.url}
+              href={contact.instagram.url}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -220,7 +224,7 @@ export default function AboutPage() {
               <InstagramIcon className="h-5 w-5" />
             </a>
             <a
-              href={CONTACT.tiktok.url}
+              href={contact.tiktok.url}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="TikTok"

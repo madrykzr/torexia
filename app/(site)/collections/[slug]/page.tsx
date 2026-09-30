@@ -4,10 +4,12 @@ import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { CollectionDetailClient } from "@/components/collections/CollectionDetailClient";
 import { CollectionItemsGrid } from "@/components/collections/CollectionItemsGrid";
+import { resolveContact } from "@/lib/constants";
 import {
   getCollectionBySlug,
   getCollectionItemsByCollectionSlug,
   getCollectionSlugs,
+  getSiteSettings,
 } from "@/lib/sanity-content";
 
 export async function generateStaticParams() {
@@ -42,11 +44,13 @@ export default async function CollectionPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [collection, items] = await Promise.all([
+  const [collection, items, settings] = await Promise.all([
     getCollectionBySlug(slug),
     getCollectionItemsByCollectionSlug(slug),
+    getSiteSettings(),
   ]);
   if (!collection) notFound();
+  const contact = resolveContact(settings);
 
   return (
     <Section tone="cream" className="pt-36 sm:pt-40">
@@ -65,7 +69,7 @@ export default async function CollectionPage({
       {items.length > 0 ? (
         <CollectionItemsGrid collection={collection} items={items} />
       ) : (
-        <CollectionDetailClient collection={collection} />
+        <CollectionDetailClient collection={collection} contact={contact} />
       )}
     </Section>
   );

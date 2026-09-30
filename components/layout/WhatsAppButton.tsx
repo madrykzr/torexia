@@ -1,12 +1,15 @@
-import { whatsappUrl } from "@/lib/constants";
+import { whatsappUrl, type ResolvedContact } from "@/lib/constants";
 
 /**
  * Floating WhatsApp button — fixed bottom-right, visible on every page.
  */
-export function WhatsAppButton() {
+export function WhatsAppButton({ contact }: { contact: ResolvedContact }) {
   return (
     <a
-      href={whatsappUrl("Hi Torexia! I'd like to know more about your abayas.")}
+      href={whatsappUrl(
+        contact.whatsapp,
+        "Hi Torexia! I'd like to know more about your abayas.",
+      )}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with Torexia on WhatsApp"

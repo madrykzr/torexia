@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Product, Size, Colour, SizeChartRow } from "@/lib/types";
-import { formatPrice, whatsappUrl } from "@/lib/constants";
+import { CONTACT, formatPrice, whatsappUrl } from "@/lib/constants";
 import { useCart } from "@/lib/cart";
 import { ProductGallery } from "./ProductGallery";
 import { ColourSelector } from "./ColourSelector";
@@ -79,7 +79,7 @@ export function ProductDetailClient({ product }: { product: Product }) {
           </button>
 
           <a
-            href={whatsappUrl(message)}
+            href={whatsappUrl(CONTACT.whatsapp, message)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"

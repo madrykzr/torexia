@@ -6,10 +6,10 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Minus, Plus, X } from "lucide-react";
 import { useCart, cartOrderMessage } from "@/lib/cart";
-import { formatPrice, whatsappUrl } from "@/lib/constants";
+import { formatPrice, whatsappUrl, type ResolvedContact } from "@/lib/constants";
 import { EASE } from "@/lib/motion";
 
-export function CartDrawer() {
+export function CartDrawer({ contact }: { contact: ResolvedContact }) {
   const { items, ready, isOpen, close, remove, setQty, subtotal, hasEnquiryOnly } =
     useCart();
 
@@ -174,7 +174,7 @@ export function CartDrawer() {
 
                   {hasEnquiryOnly ? (
                     <a
-                      href={whatsappUrl(cartOrderMessage(items, subtotal))}
+                      href={whatsappUrl(contact.whatsapp, cartOrderMessage(items, subtotal))}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-6 flex min-h-12 w-full items-center justify-center rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"

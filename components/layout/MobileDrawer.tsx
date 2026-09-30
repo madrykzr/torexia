@@ -4,16 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { NAV_LINKS, CONTACT, whatsappUrl } from "@/lib/constants";
+import { NAV_LINKS, whatsappUrl, type ResolvedContact } from "@/lib/constants";
 import { InstagramIcon, TikTokIcon } from "@/components/ui/BrandIcons";
 import { EASE } from "@/lib/motion";
 
 export function MobileDrawer({
   open,
   onClose,
+  contact,
 }: {
   open: boolean;
   onClose: () => void;
+  contact: ResolvedContact;
 }) {
   return (
     <AnimatePresence>
@@ -76,7 +78,7 @@ export function MobileDrawer({
 
             <div className="mt-auto">
               <a
-                href={whatsappUrl("Hi Torexia! I'd like to know more about your abayas.")}
+                href={whatsappUrl(contact.whatsapp, "Hi Torexia! I'd like to know more about your abayas.")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex min-h-12 w-full items-center justify-center rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
@@ -85,7 +87,7 @@ export function MobileDrawer({
               </a>
               <div className="mt-6 flex items-center gap-5 text-charcoal-600">
                 <a
-                  href={CONTACT.instagram.url}
+                  href={contact.instagram.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
@@ -94,7 +96,7 @@ export function MobileDrawer({
                   <InstagramIcon className="h-5 w-5" />
                 </a>
                 <a
-                  href={CONTACT.tiktok.url}
+                  href={contact.tiktok.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="TikTok"
@@ -103,10 +105,10 @@ export function MobileDrawer({
                   <TikTokIcon className="h-5 w-5" />
                 </a>
                 <a
-                  href={`mailto:${CONTACT.email}`}
+                  href={`mailto:${contact.email}`}
                   className="text-sm transition-colors hover:text-blush"
                 >
-                  {CONTACT.email}
+                  {contact.email}
                 </a>
               </div>
             </div>

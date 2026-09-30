@@ -3,7 +3,8 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
-import { CONTACT } from "@/lib/constants";
+import { resolveContact } from "@/lib/constants";
+import { getSiteSettings } from "@/lib/sanity-content";
 
 // Placeholder editorial grid — swap for curated lookbook shots later.
 const shots = [
@@ -15,7 +16,8 @@ const shots = [
   "/images/products/black/03.jpg",
 ];
 
-export function StylingInspiration() {
+export async function StylingInspiration() {
+  const contact = resolveContact(await getSiteSettings());
   return (
     // Top padding trimmed to match FeaturedCollections' reduced bottom
     // padding above — same background tone, so together they read as one
@@ -47,11 +49,11 @@ export function StylingInspiration() {
 
       <div className="mt-10 flex justify-center">
         <ButtonLink
-          href={CONTACT.instagram.url}
+          href={contact.instagram.url}
           variant="outline"
           className="min-h-12"
         >
-          Follow {CONTACT.instagram.handle}
+          Follow {contact.instagram.handle}
         </ButtonLink>
       </div>
     </Section>

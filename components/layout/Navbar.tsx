@@ -5,14 +5,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, Search, ShoppingBag } from "lucide-react";
-import { NAV_LINKS, SITE } from "@/lib/constants";
+import { NAV_LINKS, SITE, type ResolvedContact } from "@/lib/constants";
 import type { SearchEntry } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { useCart } from "@/lib/cart";
 import { MobileDrawer } from "./MobileDrawer";
 import { SearchModal } from "./SearchModal";
 
-export function Navbar({ searchIndex = [] }: { searchIndex?: SearchEntry[] }) {
+export function Navbar({
+  searchIndex = [],
+  contact,
+}: {
+  searchIndex?: SearchEntry[];
+  contact: ResolvedContact;
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -110,7 +116,7 @@ export function Navbar({ searchIndex = [] }: { searchIndex?: SearchEntry[] }) {
         </p>
       </header>
 
-      <MobileDrawer open={open} onClose={() => setOpen(false)} />
+      <MobileDrawer open={open} onClose={() => setOpen(false)} contact={contact} />
       <SearchModal
         open={searchOpen}
         onClose={() => setSearchOpen(false)}

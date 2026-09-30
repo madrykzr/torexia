@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Collection, CollectionItem, Size } from "@/lib/types";
-import { effectivePrice, whatsappUrl } from "@/lib/constants";
+import { effectivePrice, whatsappUrl, type ResolvedContact } from "@/lib/constants";
 import { remainingStock, soldOutSizes } from "@/lib/stock";
 import { useCart } from "@/lib/cart";
 import { ProductGallery } from "@/components/shop/ProductGallery";
@@ -15,9 +15,11 @@ import { PriceTag } from "@/components/ui/PriceTag";
 export function CollectionItemDetailClient({
   collection,
   item,
+  contact,
 }: {
   collection: Collection;
   item: CollectionItem;
+  contact: ResolvedContact;
 }) {
   const { add } = useCart();
   const soldOut = soldOutSizes(item.stock);
@@ -131,7 +133,7 @@ export function CollectionItemDetailClient({
           </button>
 
           <a
-            href={whatsappUrl(enquiry)}
+            href={whatsappUrl(contact.whatsapp, enquiry)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"

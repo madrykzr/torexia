@@ -5,7 +5,8 @@ import { Section } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { InstagramIcon, TikTokIcon } from "@/components/ui/BrandIcons";
-import { CONTACT, whatsappUrl } from "@/lib/constants";
+import { resolveContact, whatsappUrl } from "@/lib/constants";
+import { getSiteSettings } from "@/lib/sanity-content";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -13,52 +14,58 @@ export const metadata: Metadata = {
     "Get in touch with Torexia — message us on WhatsApp, email, or follow us on Instagram and TikTok. We're happy to help with sizing, styling and orders.",
 };
 
-const channels = [
-  {
-    label: "WhatsApp",
-    value: CONTACT.phone,
-    href: whatsappUrl("Hi Torexia! I'd like to ask about your collections."),
-    icon: MessageCircle,
-    external: true,
-  },
-  {
-    label: "Email",
-    value: CONTACT.email,
-    href: `mailto:${CONTACT.email}`,
-    icon: Mail,
-    external: false,
-  },
-  {
-    label: "Call us",
-    value: CONTACT.phone,
-    href: `tel:${CONTACT.phone.replace(/[\s-]/g, "")}`,
-    icon: Phone,
-    external: false,
-  },
-  {
-    label: "Instagram",
-    value: CONTACT.instagram.handle,
-    href: CONTACT.instagram.url,
-    icon: InstagramIcon,
-    external: true,
-  },
-  {
-    label: "TikTok",
-    value: CONTACT.tiktok.handle,
-    href: CONTACT.tiktok.url,
-    icon: TikTokIcon,
-    external: true,
-  },
-  {
-    label: "Website",
-    value: CONTACT.website.label,
-    href: CONTACT.website.url,
-    icon: Globe,
-    external: true,
-  },
-];
+export default async function ContactPage() {
+  const settings = await getSiteSettings();
+  const contact = resolveContact(settings);
 
-export default function ContactPage() {
+  const channels = [
+    {
+      label: "WhatsApp",
+      value: contact.phone,
+      href: whatsappUrl(
+        contact.whatsapp,
+        "Hi Torexia! I'd like to ask about your collections.",
+      ),
+      icon: MessageCircle,
+      external: true,
+    },
+    {
+      label: "Email",
+      value: contact.email,
+      href: `mailto:${contact.email}`,
+      icon: Mail,
+      external: false,
+    },
+    {
+      label: "Call us",
+      value: contact.phone,
+      href: `tel:${contact.phone.replace(/[\s-]/g, "")}`,
+      icon: Phone,
+      external: false,
+    },
+    {
+      label: "Instagram",
+      value: contact.instagram.handle,
+      href: contact.instagram.url,
+      icon: InstagramIcon,
+      external: true,
+    },
+    {
+      label: "TikTok",
+      value: contact.tiktok.handle,
+      href: contact.tiktok.url,
+      icon: TikTokIcon,
+      external: true,
+    },
+    {
+      label: "Website",
+      value: contact.website.label,
+      href: contact.website.url,
+      icon: Globe,
+      external: true,
+    },
+  ];
+
   return (
     <>
       <PageHeader
@@ -76,6 +83,7 @@ export default function ContactPage() {
             </p>
             <ButtonLink
               href={whatsappUrl(
+                contact.whatsapp,
                 "Hi Torexia! I'd like to ask about your collections.",
               )}
               variant="primary"

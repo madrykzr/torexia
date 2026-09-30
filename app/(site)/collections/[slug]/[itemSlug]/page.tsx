@@ -5,11 +5,12 @@ import { Section } from "@/components/ui/Section";
 import { CollectionItemDetailClient } from "@/components/collections/CollectionItemDetailClient";
 import { RelatedCollectionItems } from "@/components/collections/RelatedCollectionItems";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { effectivePrice, SITE } from "@/lib/constants";
+import { effectivePrice, resolveContact, SITE } from "@/lib/constants";
 import {
   getCollectionBySlug,
   getCollectionItemBySlug,
   getCollectionItemSlugPairs,
+  getSiteSettings,
 } from "@/lib/sanity-content";
 
 export async function generateStaticParams() {
@@ -43,11 +44,13 @@ export default async function CollectionItemPage({
   params: Promise<{ slug: string; itemSlug: string }>;
 }) {
   const { slug, itemSlug } = await params;
-  const [collection, item] = await Promise.all([
+  const [collection, item, settings] = await Promise.all([
     getCollectionBySlug(slug),
     getCollectionItemBySlug(slug, itemSlug),
+    getSiteSettings(),
   ]);
   if (!collection || !item) notFound();
+  const contact = resolveContact(settings);
 
   // Same price rules as the product page: the item's own price/sale, else the
   // parent collection's.
@@ -99,7 +102,7 @@ export default async function CollectionItemPage({
         <span className="text-charcoal">{item.name}</span>
       </nav>
 
-      <CollectionItemDetailClient collection={collection} item={item} />
+      <CollectionItemDetailClient collection={collection} item={item} contact={contact} />
 
       <div className="mt-20 sm:mt-28">
         <RelatedCollectionItems collectionSlug={collection.slug} currentSlug={item.slug} />

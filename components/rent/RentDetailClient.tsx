@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import type { RentalProduct, Size, Colour } from "@/lib/types";
-import { rentalMessage, whatsappUrl } from "@/lib/constants";
+import { CONTACT, rentalMessage, whatsappUrl } from "@/lib/constants";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { ColourSelector } from "@/components/shop/ColourSelector";
 import { SizeSelector } from "@/components/shop/SizeSelector";
@@ -127,7 +127,7 @@ export function RentDetailClient({ product }: { product: RentalProduct }) {
         {/* Book CTA — WhatsApp only, no purchase */}
         <div className="mt-6">
           <a
-            href={whatsappUrl(message)}
+            href={whatsappUrl(CONTACT.whatsapp, message)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"

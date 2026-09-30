@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, Phone, Globe } from "lucide-react";
-import { NAV_LINKS, CONTACT, SITE } from "@/lib/constants";
+import { CONTACT, NAV_LINKS, SITE, type ResolvedContact } from "@/lib/constants";
 import { InstagramIcon, TikTokIcon } from "@/components/ui/BrandIcons";
 
-export function Footer() {
+export function Footer({ contact }: { contact: ResolvedContact }) {
   return (
     <footer className="bg-cream text-charcoal">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:gap-8">
@@ -49,38 +49,38 @@ export function Footer() {
           <ul className="mt-4 space-y-3 text-sm text-charcoal-600">
             <li>
               <a
-                href={CONTACT.instagram.url}
+                href={contact.instagram.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 transition-colors hover:text-coffee"
               >
-                <InstagramIcon className="h-4 w-4" /> {CONTACT.instagram.handle}
+                <InstagramIcon className="h-4 w-4" /> {contact.instagram.handle}
               </a>
             </li>
             <li>
               <a
-                href={CONTACT.tiktok.url}
+                href={contact.tiktok.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 transition-colors hover:text-coffee"
               >
-                <TikTokIcon className="h-4 w-4" /> {CONTACT.tiktok.handle}
+                <TikTokIcon className="h-4 w-4" /> {contact.tiktok.handle}
               </a>
             </li>
             <li>
               <a
-                href={`mailto:${CONTACT.email}`}
+                href={`mailto:${contact.email}`}
                 className="inline-flex items-center gap-2 transition-colors hover:text-coffee"
               >
-                <Mail className="h-4 w-4" /> {CONTACT.email}
+                <Mail className="h-4 w-4" /> {contact.email}
               </a>
             </li>
             <li>
               <a
-                href={`tel:${CONTACT.phone.replace(/[\s-]/g, "")}`}
+                href={`tel:${contact.phone.replace(/[\s-]/g, "")}`}
                 className="inline-flex items-center gap-2 transition-colors hover:text-coffee"
               >
-                <Phone className="h-4 w-4" /> {CONTACT.phone}
+                <Phone className="h-4 w-4" /> {contact.phone}
               </a>
             </li>
             <li>

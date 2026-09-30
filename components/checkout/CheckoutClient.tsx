@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/lib/cart";
-import { formatPrice, MALAYSIA_STATES, whatsappUrl } from "@/lib/constants";
+import { formatPrice, MALAYSIA_STATES, whatsappUrl, type ResolvedContact } from "@/lib/constants";
 import { cartOrderMessage } from "@/lib/cart";
 import { shippingFee, type ShippingSettings } from "@/lib/shipping";
 
@@ -29,7 +29,7 @@ function Field({
   );
 }
 
-export function CheckoutClient({ shipping }: { shipping: ShippingSettings }) {
+export function CheckoutClient({ shipping, contact }: { shipping: ShippingSettings; contact: ResolvedContact }) {
   const router = useRouter();
   const { items, ready, subtotal, hasEnquiryOnly } = useCart();
 
@@ -64,7 +64,7 @@ export function CheckoutClient({ shipping }: { shipping: ShippingSettings }) {
           online payment for this order yet.
         </p>
         <a
-          href={whatsappUrl(cartOrderMessage(items, subtotal))}
+          href={whatsappUrl(contact.whatsapp, cartOrderMessage(items, subtotal))}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-6 inline-flex min-h-12 items-center justify-center rounded-full border border-coffee px-8 text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"

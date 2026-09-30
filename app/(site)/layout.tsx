@@ -4,12 +4,17 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { CartProvider } from "@/lib/cart";
-import { getSearchIndex } from "@/lib/sanity-content";
+import { resolveContact } from "@/lib/constants";
+import { getSearchIndex, getSiteSettings } from "@/lib/sanity-content";
 
 export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const searchIndex = await getSearchIndex();
+  const [searchIndex, settings] = await Promise.all([
+    getSearchIndex(),
+    getSiteSettings(),
+  ]);
+  const contact = resolveContact(settings);
 
   return (
     <CartProvider>
@@ -25,11 +30,11 @@ export default async function SiteLayout({
           }}
         />
         <SmoothScroll />
-        <Navbar searchIndex={searchIndex} />
+        <Navbar searchIndex={searchIndex} contact={contact} />
         <main className="flex-1">{children}</main>
-        <Footer />
-        <WhatsAppButton />
-        <CartDrawer />
+        <Footer contact={contact} />
+        <WhatsAppButton contact={contact} />
+        <CartDrawer contact={contact} />
       </div>
     </CartProvider>
   );

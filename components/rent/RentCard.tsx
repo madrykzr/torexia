@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { RentalProduct } from "@/lib/types";
-import { rentalMessage, whatsappUrl } from "@/lib/constants";
+import { CONTACT, rentalMessage, whatsappUrl } from "@/lib/constants";
 
 export function RentCard({
   product,
@@ -47,7 +47,7 @@ export function RentCard({
       </Link>
 
       <a
-        href={whatsappUrl(rentalMessage({ name: product.name }))}
+        href={whatsappUrl(CONTACT.whatsapp, rentalMessage({ name: product.name }))}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-4 flex min-h-11 w-full items-center justify-center rounded-full border border-coffee text-sm font-medium tracking-wide text-coffee transition-colors hover:bg-coffee hover:text-white"
