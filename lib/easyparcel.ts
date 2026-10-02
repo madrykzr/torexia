@@ -396,7 +396,11 @@ export async function bookCourier(orderId: string): Promise<void> {
     });
     const shipment = booked.data?.[0]?.shipments?.[0];
     const shipmentNo = shipment?.shipment_number;
-    if (!shipmentNo) throw new Error("EasyParcel did not return a shipment number.");
+    if (!shipmentNo) {
+      throw new Error(
+        `EasyParcel did not return a shipment number. Reply: ${JSON.stringify(booked).slice(0, 380)}`,
+      );
+    }
 
     // AWB / tracking are often empty straight after booking — ask for the truth.
     const details = await fetchShipmentDetails(shipmentNo).catch(() => null);
