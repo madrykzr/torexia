@@ -312,10 +312,8 @@ async function failBooking(order: StoredOrder, message: string) {
 /** Compact view of a booking reply: drops the address blocks so the reason fits. */
 function describeReply(reply: unknown): string {
   const r = reply as { message?: string; data?: { shipments?: Record<string, unknown>[] }[] };
-  const shipment = { ...(r.data?.[0]?.shipments?.[0] ?? {}) };
-  for (const k of ["sender", "receiver", "item", "items", "feature"]) delete shipment[k];
-  const empties = Object.entries(shipment).filter(([, v]) => v !== "" && v !== null);
-  return JSON.stringify({ message: r.message, shipment: Object.fromEntries(empties) }).slice(0, 380);
+  const s = r.data?.[0]?.shipments?.[0] ?? {};
+  return JSON.stringify({ message: r.message, status: s.status, errors: s.errors }).slice(0, 420);
 }
 
 /** Books one order with EasyParcel. Idempotent via a revision-checked claim. */
