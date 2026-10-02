@@ -53,6 +53,11 @@ const ORDER_FIELDS = `
 export async function createOrder(input: OrderInput): Promise<Order> {
   const reference = crypto.randomUUID();
   const created = await writeClient.create({
+    // A dot in the _id makes Sanity hide the document from anonymous readers
+    // (the dataset is public, and orders hold customer names, phones and
+    // addresses). The server and Studio users are authenticated, so they
+    // still see it. Never create orders without the "order." prefix.
+    _id: `order.${crypto.randomUUID()}`,
     _type: "order",
     reference,
     status: "pending" as OrderStatus,
