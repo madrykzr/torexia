@@ -50,6 +50,67 @@ export const order = defineType({
       description: 'Optional — fill in when you ship.',
     }),
     defineField({
+      name: 'courierRequested',
+      title: 'Book courier',
+      type: 'boolean',
+      description:
+        'Tick this and press Publish to book a courier automatically (cheapest pick-up service). The tracking number and label appear below within a minute. Only works on paid orders.',
+      initialValue: false,
+      validation: (rule) =>
+        rule.custom((value, context) => {
+          const status = (context.document as {status?: string} | undefined)?.status
+          if (value && status !== 'paid') return 'Only paid orders can be booked.'
+          return true
+        }),
+    }),
+    defineField({
+      name: 'courierError',
+      title: 'Courier booking error',
+      type: 'string',
+      description: 'Only appears if the last booking attempt failed — fix the cause, then tick "Book courier" again.',
+      readOnly: true,
+      hidden: ({value}) => !value,
+    }),
+    defineField({
+      name: 'courierName',
+      title: 'Courier',
+      type: 'string',
+      description: 'Filled automatically when a courier is booked.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'awbUrl',
+      title: 'Waybill (label) link',
+      type: 'url',
+      description: 'Open this to print the parcel label.',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'trackingUrl',
+      title: 'Tracking link',
+      type: 'url',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'courierStatus',
+      title: 'Courier status',
+      type: 'string',
+      description: 'Latest status from the courier (e.g. Delivery In Transit, Delivered).',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'courierCost',
+      title: 'Courier cost (RM)',
+      type: 'number',
+      readOnly: true,
+    }),
+    defineField({
+      name: 'easyparcelShipmentNo',
+      title: 'EasyParcel shipment number',
+      type: 'string',
+      readOnly: true,
+    }),
+    defineField({
       name: 'customerName',
       title: 'Customer name',
       type: 'string',
@@ -118,6 +179,9 @@ export const order = defineType({
       description: 'Charged to the customer at checkout (0 = free shipping).',
       validation: (rule) => rule.min(0),
     }),
+    defineField({name: 'courierBookingClaimedAt', title: 'Courier booking claimed at', type: 'datetime', hidden: true}),
+    defineField({name: 'courierBookedAt', title: 'Courier booked at', type: 'datetime', readOnly: true}),
+    defineField({name: 'shippedNotifiedAt', title: 'Shipped email sent at', type: 'datetime', readOnly: true}),
     defineField({
       name: 'paidNotifiedAt',
       title: 'Paid alert sent at',

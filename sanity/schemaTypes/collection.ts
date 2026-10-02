@@ -127,6 +127,14 @@ export const collection = defineType({
     }),
     stockField(),
     defineField({
+      name: 'weightKg',
+      title: 'Parcel weight per piece (kg)',
+      type: 'number',
+      description:
+        'Used to price the courier. One piece in its packaging, e.g. 0.6. Leave blank to use 0.5 kg.',
+      validation: (rule) => rule.min(0.05).max(30),
+    }),
+    defineField({
       name: 'fabric',
       title: 'Fabric',
       type: 'string',

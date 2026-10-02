@@ -136,3 +136,55 @@ ${htmlList(items)}<p>${money.map(escapeHtml).join("<br>")}</p>
     console.error("Order alert failed:", err);
   }
 }
+
+/**
+ * Tells the customer their order has shipped, with tracking — exactly once,
+ * and only when a tracking link or number actually exists. Safe to call
+ * repeatedly (e.g. after each courier webhook update).
+ */
+export async function notifyOrderShipped(orderId: string): Promise<void> {
+  if (!emailConfigured()) return;
+
+  const order = await writeClient.getDocument<
+    StoredOrder & {
+      shippedNotifiedAt?: string;
+      courierName?: string;
+      trackingNumber?: string;
+      trackingUrl?: string;
+    }
+  >(orderId);
+  if (!order || order.status !== "shipped" || order.shippedNotifiedAt) return;
+  if (!order.trackingUrl && !order.trackingNumber) return;
+
+  try {
+    await writeClient
+      .patch(orderId)
+      .ifRevisionId(order._rev)
+      .set({ shippedNotifiedAt: new Date().toISOString() })
+      .commit();
+  } catch {
+    return;
+  }
+
+  try {
+    const shopEmails = await getOrderAlertEmails();
+    const short = order.reference.slice(0, 8);
+    const lines = [
+      order.courierName ? `Courier: ${order.courierName}` : "",
+      order.trackingNumber ? `Tracking number: ${order.trackingNumber}` : "",
+      order.trackingUrl ? `Track your parcel: ${order.trackingUrl}` : "",
+    ].filter(Boolean);
+    await sendEmail({
+      to: [order.customerEmail],
+      replyTo: shopEmails[0],
+      subject: `Your Torexia order (${short}) has shipped`,
+      text: [`Hi ${order.customerName},`, "", "Good news — your order is on its way.", "", ...lines, "", "— Torexia"].join("\n"),
+      html: `<p>Hi ${escapeHtml(order.customerName)},</p><p>Good news — your order is on its way.</p>${htmlList(
+        lines.filter((l) => !l.startsWith("Track your parcel")),
+      )}${order.trackingUrl ? `<p><a href="${escapeHtml(order.trackingUrl)}">Track your parcel</a></p>` : ""}<p>— Torexia</p>`,
+    });
+  } catch (err) {
+    await writeClient.patch(orderId).unset(["shippedNotifiedAt"]).commit().catch(() => {});
+    console.error("Shipped email failed:", err);
+  }
+}
