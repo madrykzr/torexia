@@ -188,3 +188,16 @@ export async function notifyOrderShipped(orderId: string): Promise<void> {
     console.error("Shipped email failed:", err);
   }
 }
+
+/**
+ * Emails the customer for any order the owner marked Shipped by hand with a
+ * tracking number or link. Called from the Sanity publish webhook, so it runs
+ * moments after the owner presses Publish. Already-notified orders are
+ * skipped, so it is safe to run on every publish.
+ */
+export async function notifyShippedOrders(): Promise<void> {
+  const ids = await writeClient.fetch<string[]>(
+    `*[_type == "order" && status == "shipped" && !defined(shippedNotifiedAt) && (defined(trackingNumber) || defined(trackingUrl)) && !(_id in path("drafts.**"))]._id`,
+  );
+  for (const id of ids) await notifyOrderShipped(id);
+}

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { isValidSignature, SIGNATURE_HEADER_NAME } from "@sanity/webhook";
 
 import { bookPendingCouriers } from "@/lib/easyparcel";
+import { notifyShippedOrders } from "@/lib/order-notify";
 
 // Booking a courier makes a few API calls — give the background work room.
 export const maxDuration = 60;
@@ -27,11 +28,21 @@ export async function POST(req: NextRequest) {
 
   revalidatePath("/", "layout");
 
-  // Any publish may be the owner ticking "Book courier" on an order, so check
-  // for those after responding. Safe to run on every publish: bookings are
-  // claimed with a revision check and skip anything already booked.
-  if (process.env.EASYPARCEL_CLIENT_ID) {
-    after(() => bookPendingCouriers().catch((e) => console.error("Courier booking sweep failed:", e)));
-  }
+  // Any publish may be the owner ticking "Book courier" on an order, or
+  // marking one Shipped by hand with a tracking number, so check for both after
+  // responding. Safe to run on every publish: bookings are claimed with a
+  // revision check, and shipped emails are sent once per order.
+  after(async () => {
+    try {
+      if (process.env.EASYPARCEL_CLIENT_ID) await bookPendingCouriers();
+    } catch (e) {
+      console.error("Courier booking sweep failed:", e);
+    }
+    try {
+      await notifyShippedOrders();
+    } catch (e) {
+      console.error("Shipped email sweep failed:", e);
+    }
+  });
   return NextResponse.json({ revalidated: true });
 }

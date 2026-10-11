@@ -47,14 +47,14 @@ export const order = defineType({
       name: 'trackingNumber',
       title: 'Tracking number',
       type: 'string',
-      description: 'Optional — fill in when you ship.',
+      description: 'Manual posting: type the courier’s tracking number here. The customer gets it by email when you set Status to Shipped and Publish.',
     }),
     defineField({
       name: 'courierRequested',
-      title: 'Book courier',
+      title: 'Book courier automatically (EasyParcel)',
       type: 'boolean',
       description:
-        'Tick this and press Publish to book a courier automatically (cheapest pick-up service). The tracking number and label appear below within a minute. Only works on paid orders.',
+        'AUTO: tick this and press Publish — a courier is booked for you (cheapest pick-up service) and the tracking number and label appear below within a minute. MANUAL (posting it yourself): leave this unticked, type the Courier and Tracking number above, set Status to Shipped and Publish — the customer is emailed the tracking. Only paid orders can be auto-booked.',
       initialValue: false,
       validation: (rule) =>
         rule.custom((value, context) => {
@@ -73,7 +73,7 @@ export const order = defineType({
     }),
     defineField({
       name: 'courierName',
-      title: 'Courier',
+      title: 'Courier booked by EasyParcel',
       type: 'string',
       description: 'Filled automatically when a courier is booked.',
       readOnly: true,
@@ -89,7 +89,7 @@ export const order = defineType({
       name: 'trackingUrl',
       title: 'Tracking link',
       type: 'url',
-      readOnly: true,
+      description: 'Optional for manual posting — paste the courier’s tracking page link. Filled automatically when a courier is booked.',
     }),
     defineField({
       name: 'courierStatus',
