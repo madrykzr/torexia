@@ -17,7 +17,8 @@
     "patch:size-charts": "node --env-file=.env.local scripts/patch-size-charts.mjs",
     "patch:size-charts-2": "node --env-file=.env.local scripts/patch-size-charts-2.mjs",
     "smoke:live": "node --env-file=.env.local scripts/smoke-live.mjs",
-    "privatize:orders": "node --env-file=.env.local scripts/privatize-orders.mjs"
+    "privatize:orders": "node --env-file=.env.local scripts/privatize-orders.mjs",
+    "clean:item-fields": "node --env-file=.env.local scripts/clean-item-fields.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { createPaymentRequest } from "@/lib/hitpay";
 import { createOrder, patchOrder, type OrderItemInput } from "@/lib/orders";
-import { getShippingSettings, getStockForItems } from "@/lib/sanity-content";
+import { effectivePrice } from "@/lib/constants";
+import {
+  getPricingForItems,
+  getShippingSettings,
+  getStockForItems,
+} from "@/lib/sanity-content";
 import { remainingStock } from "@/lib/stock";
 import { shippingFee } from "@/lib/shipping";
 
@@ -56,11 +61,39 @@ export async function POST(req: NextRequest) {
   if (!items || items.length === 0) {
     return NextResponse.json({ error: "Your cart is empty." }, { status: 400 });
   }
-  if (items.some((i) => i.price == null || !i.qty || i.qty < 1)) {
+  if (items.some((i) => !i.qty || !Number.isInteger(i.qty) || i.qty < 1 || i.qty > 50)) {
+    return NextResponse.json({ error: "Invalid quantity in your cart." }, { status: 400 });
+  }
+
+  // Prices, names and sizes come from Sanity — never from the browser, which
+  // could send any number it likes.
+  const pricing = await getPricingForItems(
+    items.map((i) => ({
+      slug: i.slug ?? "",
+      kind: i.kind === "product" ? "product" : "collection",
+    })),
+  );
+  const priceOf = (i: NonNullable<CheckoutBody["items"]>[number]) => {
+    const p = pricing[`${i.kind === "product" ? "product" : "collection"}:${i.slug ?? ""}`];
+    return p ? { ...p, effective: effectivePrice(p.price, p.salePrice) } : null;
+  };
+  if (items.some((i) => priceOf(i)?.effective == null)) {
     return NextResponse.json(
       {
         error:
           "Some items don't have a fixed price yet — please check out via WhatsApp instead.",
+      },
+      { status: 400 },
+    );
+  }
+  const badSize = items.find((i) => {
+    const p = priceOf(i);
+    return p && p.sizes.length > 0 && (!i.size || !p.sizes.includes(i.size));
+  });
+  if (badSize) {
+    return NextResponse.json(
+      {
+        error: `${priceOf(badSize)?.name ?? "That item"} isn't available in that size. Please update your cart.`,
       },
       { status: 400 },
     );
@@ -92,15 +125,18 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const orderItems: OrderItemInput[] = items.map((i) => ({
-    name: i.name ?? "Item",
-    slug: i.slug ?? "",
-    kind: i.kind === "product" ? "product" : "collection",
-    size: i.size ?? null,
-    colour: i.colour ?? null,
-    price: i.price as number,
-    qty: i.qty as number,
-  }));
+  const orderItems: OrderItemInput[] = items.map((i) => {
+    const p = priceOf(i)!;
+    return {
+      name: p.name,
+      slug: i.slug ?? "",
+      kind: i.kind === "product" ? "product" : "collection",
+      size: i.size ?? null,
+      colour: i.colour ?? null,
+      price: p.effective as number,
+      qty: i.qty as number,
+    };
+  });
 
   // Recomputed server-side — never trust a client-supplied total for the
   // amount actually charged.

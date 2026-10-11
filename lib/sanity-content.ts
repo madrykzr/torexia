@@ -164,7 +164,7 @@ type RawCollection = {
   // to decide the aggregate "Sold Out" badge — a collection with items is
   // fully sold out when every one of them is, regardless of its own
   // (otherwise-unused) sizes/stock fields.
-  items?: { sizes?: string[]; stock?: RawSizeStock[] }[];
+  items?: { stock?: RawSizeStock[] }[];
   fabric?: string;
   sizeChartColumns?: string[];
   sizeChart?: RawSizeChartRow[];
@@ -177,7 +177,7 @@ function mapCollection(raw: RawCollection): Collection {
   const items = raw.items ?? [];
   const soldOut =
     items.length > 0
-      ? items.every((i) => isFullySoldOut((i.sizes ?? []) as Size[], mapStock(i.stock)))
+      ? items.every((i) => isFullySoldOut((raw.sizes ?? []) as Size[], mapStock(i.stock)))
       : isFullySoldOut((raw.sizes ?? []) as Size[], mapStock(raw.stock));
   return {
     id: raw.id,
@@ -212,11 +212,10 @@ type RawCollectionItem = {
   slug: string | null;
   collectionSlug: string | null;
   colour?: { name?: string; hex?: string };
-  sizes?: string[];
+  /** Sizes come from the parent collection — the colourway has none of its own */
+  collectionSizes?: string[];
   stock?: RawSizeStock[];
   images?: unknown[];
-  price?: number;
-  salePrice?: number;
   sizeChartColumns?: string[];
   sizeChart?: RawSizeChartRow[];
   sizeChartNote?: string;
@@ -232,9 +231,9 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
     name: raw.name,
     collectionSlug: raw.collectionSlug ?? "",
     colour: colour ?? { name: "", slug: "", hex: "#000000" },
-    sizes: (raw.sizes ?? []) as Size[],
+    sizes: (raw.collectionSizes ?? []) as Size[],
     stock: mapStock(raw.stock),
-    soldOut: isFullySoldOut((raw.sizes ?? []) as Size[], mapStock(raw.stock)),
+    soldOut: isFullySoldOut((raw.collectionSizes ?? []) as Size[], mapStock(raw.stock)),
     // De-duplicated: the same photo added twice in Studio would otherwise show
     // twice in the gallery (and break React's unique-key rule).
     images: [
@@ -244,8 +243,6 @@ function mapCollectionItem(raw: RawCollectionItem): CollectionItem {
           .filter((u): u is string => Boolean(u)),
       ),
     ],
-    price: typeof raw.price === "number" ? raw.price : null,
-    salePrice: typeof raw.salePrice === "number" ? raw.salePrice : null,
     sizeChartColumns: raw.sizeChartColumns ?? [],
     sizeChart: mapSizeChart(raw.sizeChart),
     sizeChartNote: raw.sizeChartNote ?? null,
@@ -382,7 +379,7 @@ const COLLECTION_FIELDS = `
   coverImage, gallery, colours, sizes, stock, fabric,
   sizeChartColumns, sizeChart, sizeChartNote,
   description, order,
-  "items": *[_type == "collectionItem" && references(^._id)]{sizes, stock}
+  "items": *[_type == "collectionItem" && references(^._id)]{stock}
 `;
 
 export async function getAllCollections(): Promise<Collection[]> {
@@ -413,7 +410,7 @@ export async function getCollectionSlugs(): Promise<string[]> {
 const COLLECTION_ITEM_FIELDS = `
   "id": _id, name, "slug": slug.current,
   "collectionSlug": collection->slug.current,
-  colour, sizes, stock, price, salePrice,
+  colour, "collectionSizes": collection->sizes, stock,
   sizeChartColumns, sizeChart, sizeChartNote,
   description, order, images
 `;
@@ -619,6 +616,55 @@ export async function getStockForItems(
 
   const map: Record<string, SizeStock[]> = {};
   for (const r of raw) map[r.slug] = mapStock(r.stock);
+  return map;
+}
+
+export type ItemPricing = {
+  name: string;
+  price: number | null;
+  salePrice: number | null;
+  sizes: string[];
+};
+
+/**
+ * The real name, price and sizes for each cart line, looked up in Sanity — so
+ * checkout never has to trust a price sent by the browser. A colourway
+ * ("product") has no price or sizes of its own: it uses its collection's.
+ * Keyed `${kind}:${slug}`.
+ */
+export async function getPricingForItems(
+  items: { slug: string; kind: "collection" | "product" }[],
+): Promise<Record<string, ItemPricing>> {
+  const collectionSlugs = items.filter((i) => i.kind === "collection").map((i) => i.slug);
+  const itemSlugs = items.filter((i) => i.kind === "product").map((i) => i.slug);
+  const map: Record<string, ItemPricing> = {};
+  if (!collectionSlugs.length && !itemSlugs.length) return map;
+
+  type Row = {
+    slug: string;
+    name?: string;
+    price?: number | null;
+    salePrice?: number | null;
+    sizes?: string[] | null;
+  };
+  const [collections, colourways] = await Promise.all([
+    query<Row[]>(
+      `*[_type == "collection" && slug.current in $slugs]{"slug": slug.current, name, price, salePrice, sizes}`,
+      { slugs: collectionSlugs },
+    ),
+    query<Row[]>(
+      `*[_type == "collectionItem" && slug.current in $slugs]{"slug": slug.current, name, "price": collection->price, "salePrice": collection->salePrice, "sizes": collection->sizes}`,
+      { slugs: itemSlugs },
+    ),
+  ]);
+  const toPricing = (r: Row): ItemPricing => ({
+    name: r.name ?? "Item",
+    price: typeof r.price === "number" ? r.price : null,
+    salePrice: typeof r.salePrice === "number" ? r.salePrice : null,
+    sizes: r.sizes ?? [],
+  });
+  for (const r of collections) map[`collection:${r.slug}`] = toPricing(r);
+  for (const r of colourways) map[`product:${r.slug}`] = toPricing(r);
   return map;
 }
 

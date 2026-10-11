@@ -28,11 +28,9 @@ export function CollectionItemDetailClient({
   );
   const [added, setAdded] = useState(false);
 
-  // Item shows its own price/sale when set; otherwise inherits both from the
-  // parent collection.
-  const basePrice = item.price ?? collection.price;
-  const salePrice =
-    item.salePrice ?? (item.price == null ? collection.salePrice : null);
+  // A colourway has no price of its own — it always uses its collection's.
+  const basePrice = collection.price;
+  const salePrice = collection.salePrice;
   const remaining = remainingStock(item.stock, size);
   const needsSize = item.sizes.length > 0 && !size;
   const sizeSoldOut = size != null && remaining != null && remaining <= 0;

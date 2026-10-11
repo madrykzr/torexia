@@ -1,6 +1,6 @@
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {TagIcon} from '@sanity/icons'
-import {SIZE_OPTIONS, stockField} from './product'
+import {stockField} from './product'
 
 // A single colourway of a collection (e.g. "Kaftan Berry") with its own photo
 // set — reached by clicking through from the parent collection page.
@@ -80,37 +80,10 @@ export const collectionItem = defineType({
       ],
       validation: (rule) => rule.min(1).warning('Add at least one image.'),
     }),
-    defineField({
-      name: 'sizes',
-      title: 'Sizes',
-      type: 'array',
-      of: [defineArrayMember({type: 'string'})],
-      options: {list: SIZE_OPTIONS, layout: 'grid'},
-      validation: (rule) => rule.unique(),
-    }),
+    // Price, sale price and sizes are NOT set here — every colour uses its
+    // Collection's, so changing the collection updates all its colours at once.
+    // Only stock is per colour (it is counted per colour and size).
     stockField(),
-    defineField({
-      name: 'price',
-      title: 'Price (RM)',
-      type: 'number',
-      description: 'Optional — leave blank to use the collection’s price.',
-      validation: (rule) => rule.min(0),
-    }),
-    defineField({
-      name: 'salePrice',
-      title: 'Sale price (RM)',
-      type: 'number',
-      description:
-        'Optional — a discounted price. The original price shows with a line through it, the sale price below. Leave blank for no discount.',
-      validation: (rule) =>
-        rule.min(0).custom((salePrice, context) => {
-          if (salePrice == null) return true
-          const price = (context.document as {price?: number} | undefined)?.price
-          if (typeof price === 'number' && salePrice >= price)
-            return 'Sale price must be lower than the price.'
-          return true
-        }),
-    }),
     defineField({
       name: 'sizeChartColumns',
       title: 'Size chart — column headers',

@@ -52,11 +52,9 @@ export default async function CollectionItemPage({
   if (!collection || !item) notFound();
   const contact = resolveContact(settings);
 
-  // Same price rules as the product page: the item's own price/sale, else the
-  // parent collection's.
-  const basePrice = item.price ?? collection.price;
-  const salePrice =
-    item.salePrice ?? (item.price == null ? collection.salePrice : null);
+  // A colourway has no price of its own — it always uses its collection's.
+  const basePrice = collection.price;
+  const salePrice = collection.salePrice;
   const price = effectivePrice(basePrice, salePrice);
   const images = item.images.length ? item.images : [collection.cover];
 

@@ -76,6 +76,7 @@ export type CollectionItem = {
   /** Parent collection's slug, e.g. "kaftan" */
   collectionSlug: string;
   colour: Colour;
+  /** The parent collection's sizes — a colourway has no sizes of its own */
   sizes: Size[];
   /** Per-size stock counts — a size missing here is untracked (unlimited) */
   stock: SizeStock[];
@@ -83,10 +84,6 @@ export type CollectionItem = {
   soldOut: boolean;
   /** Resolved image URLs (Sanity CDN), ordered */
   images: string[];
-  /** Price in RM, or null to inherit the parent collection's price */
-  price: number | null;
-  /** Discounted price in RM, or null when not on sale */
-  salePrice: number | null;
   /** Per-item size guide — empty rows means inherit the collection's */
   sizeChartColumns: string[];
   sizeChart: SizeChartRow[];
