@@ -7,6 +7,13 @@ export const siteSettings = defineType({
   type: 'document',
   icon: CogIcon,
   // Managed as a singleton via sanity/structure.ts
+  fieldsets: [
+    {
+      name: 'popup',
+      title: 'Welcome pop-up (shown when a visitor opens the website)',
+      options: {collapsible: true, collapsed: false},
+    },
+  ],
   fields: [
     defineField({
       name: 'whatsapp',
@@ -68,6 +75,65 @@ export const siteSettings = defineType({
       description:
         'Everyone here gets an email the moment a customer pays, with the delivery address ready to copy.',
       of: [defineArrayMember({type: 'string', validation: (rule) => rule.email()})],
+    }),
+    defineField({
+      name: 'popupEnabled',
+      title: 'Show the welcome pop-up',
+      type: 'boolean',
+      description:
+        'Switch off to hide it everywhere. Each visitor sees it once a day, a moment after the page opens. It never shows during checkout.',
+      initialValue: true,
+      fieldset: 'popup',
+    }),
+    defineField({
+      name: 'popupBadge',
+      title: 'Small label on top',
+      type: 'string',
+      description: 'Leave blank for “Tawaran Istimewa”.',
+      fieldset: 'popup',
+    }),
+    defineField({
+      name: 'popupHeading',
+      title: 'Big heading',
+      type: 'string',
+      description: 'Leave blank for “Hadiah Percuma”.',
+      fieldset: 'popup',
+    }),
+    defineField({
+      name: 'popupSubheading',
+      title: 'Second line',
+      type: 'string',
+      description: 'Leave blank for “untuk setiap pembelian!”.',
+      fieldset: 'popup',
+    }),
+    defineField({
+      name: 'popupMessage',
+      title: 'Message',
+      type: 'text',
+      rows: 3,
+      description: 'Say what the gift is, e.g. “Dapatkan tudung percuma bersama setiap pesanan.”',
+      fieldset: 'popup',
+    }),
+    defineField({
+      name: 'popupButtonLabel',
+      title: 'Button text',
+      type: 'string',
+      description: 'Leave blank for “Beli Sekarang”.',
+      fieldset: 'popup',
+    }),
+    defineField({
+      name: 'popupButtonHref',
+      title: 'Button goes to',
+      type: 'string',
+      description: 'A page on the site such as /collections, or a full web address. Leave blank for /collections.',
+      fieldset: 'popup',
+    }),
+    defineField({
+      name: 'popupSmallPrint',
+      title: 'Small print',
+      type: 'string',
+      description: 'e.g. “Sementara stok masih ada. Terma & syarat terpakai.” Leave blank to use that line.',
+      fieldset: 'popup',
     }),
   ],
   preview: {

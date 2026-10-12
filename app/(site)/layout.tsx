@@ -3,16 +3,18 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { WelcomePopup } from "@/components/layout/WelcomePopup";
 import { CartProvider } from "@/lib/cart";
 import { resolveContact } from "@/lib/constants";
-import { getSearchIndex, getSiteSettings } from "@/lib/sanity-content";
+import { getSearchIndex, getSiteSettings, getWelcomePopup } from "@/lib/sanity-content";
 
 export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [searchIndex, settings] = await Promise.all([
+  const [searchIndex, settings, popup] = await Promise.all([
     getSearchIndex(),
     getSiteSettings(),
+    getWelcomePopup(),
   ]);
   const contact = resolveContact(settings);
 
@@ -35,6 +37,7 @@ export default async function SiteLayout({
         <Footer contact={contact} />
         <WhatsAppButton contact={contact} />
         <CartDrawer contact={contact} />
+        <WelcomePopup config={popup} />
       </div>
     </CartProvider>
   );
