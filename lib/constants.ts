@@ -28,8 +28,8 @@ export const CONTACT = {
     url: "https://www.tiktok.com/@ladytorexia",
   },
   website: {
-    label: "torexiacom.biz",
-    url: "https://torexiacom.biz",
+    label: "ladytorexia.my",
+    url: "https://www.ladytorexia.my",
   },
 } as const;
 
