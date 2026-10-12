@@ -24,6 +24,10 @@ function collectionItemsByCategory(
     .items(
       categories.map(({_id, title}) =>
         S.listItem()
+          // Unique id per category document. Without it Studio derives the id
+          // from the title, so two categories titled alike ("Office Wear" and
+          // "office wear") crash the whole Collection Items list.
+          .id(_id)
           .title(title)
           .child(
             S.documentList()
