@@ -24,7 +24,7 @@ export function CollectionItemCard({
   return (
     <Link
       href={`/collections/${collectionSlug}/${item.slug}`}
-      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl"
+      className="group relative block aspect-[2/3] overflow-hidden rounded-2xl"
     >
       <Image
         src={item.images[0] ?? "/images/og.jpg"}
@@ -32,7 +32,7 @@ export function CollectionItemCard({
         fill
         sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
         priority={priority}
-        className={`object-cover transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105 ${
+        className={`object-cover object-top transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105 ${
           item.soldOut ? "grayscale-[40%]" : ""
         }`}
       />

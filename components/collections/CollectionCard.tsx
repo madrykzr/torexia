@@ -13,7 +13,7 @@ export function CollectionCard({
   return (
     <Link
       href={`/collections/${collection.slug}`}
-      className="group relative block aspect-[3/4] overflow-hidden rounded-2xl"
+      className="group relative block aspect-[2/3] overflow-hidden rounded-2xl"
     >
       <Image
         src={collection.cover}
@@ -21,7 +21,7 @@ export function CollectionCard({
         fill
         sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 30vw"
         priority={priority}
-        className={`object-cover transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105 ${
+        className={`object-cover object-top transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105 ${
           collection.soldOut ? "grayscale-[40%]" : ""
         }`}
       />

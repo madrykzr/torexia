@@ -28,13 +28,13 @@ export async function RelatedCollectionItems({
             href={`/collections/${collectionSlug}/${item.slug}`}
             className="group block"
           >
-            <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-cream-200">
+            <div className="relative aspect-[2/3] overflow-hidden rounded-xl bg-cream-200">
               <Image
                 src={item.images[0] ?? "/images/og.jpg"}
                 alt={item.name}
                 fill
                 sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 30vw"
-                className="object-cover transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105"
+                className="object-cover object-top transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-105"
               />
             </div>
             <p className="mt-3 text-sm text-charcoal">{item.name}</p>
