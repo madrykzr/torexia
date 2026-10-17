@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { ttqTrack } from "@/lib/tiktok";
 
 export type CartItem = {
   /** slug + size + colour — variants stack as separate lines */
@@ -84,6 +85,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const add = useCallback((item: NewCartItem) => {
     const key = itemKey(item);
     const qty = Math.max(1, item.qty ?? 1);
+    ttqTrack("AddToCart", {
+      content_id: item.slug,
+      content_name: item.name,
+      content_type: "product",
+      quantity: qty,
+      price: item.price ?? undefined,
+      value: item.price != null ? item.price * qty : undefined,
+    });
     setItems((prev) => {
       const existing = prev.find((i) => i.key === key);
       if (existing) {

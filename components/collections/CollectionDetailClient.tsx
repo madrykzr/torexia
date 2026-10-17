@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Collection, Colour, Size } from "@/lib/types";
 import { effectivePrice, whatsappUrl, type ResolvedContact } from "@/lib/constants";
 import { remainingStock, soldOutSizes } from "@/lib/stock";
 import { useCart } from "@/lib/cart";
+import { ttqTrack } from "@/lib/tiktok";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { ColourSelector } from "@/components/shop/ColourSelector";
 import { SizeSelector } from "@/components/shop/SizeSelector";
@@ -36,6 +37,19 @@ export function CollectionDetailClient({
 
   // Only block the purchase when an option exists but hasn't been chosen —
   // or the chosen size has since sold out.
+  useEffect(() => {
+    const p = effectivePrice(collection.price, collection.salePrice);
+    ttqTrack("ViewContent", {
+      content_id: collection.slug,
+      content_name: collection.name,
+      content_type: "product",
+      price: p ?? undefined,
+      value: p ?? undefined,
+    });
+    // once per collection page
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collection.slug]);
+
   const remaining = remainingStock(collection.stock, size);
   const needsSize = collection.sizes.length > 0 && !size;
   const sizeSoldOut = size != null && remaining != null && remaining <= 0;

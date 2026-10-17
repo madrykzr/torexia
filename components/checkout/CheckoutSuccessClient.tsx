@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/constants";
+import { ttqTrack } from "@/lib/tiktok";
 
 type ConfirmResponse = {
   status: "pending" | "paid" | "failed" | "cancelled";
@@ -15,6 +16,26 @@ type ConfirmResponse = {
     customerName: string;
   };
 };
+
+/** Reports the sale to TikTok exactly once per order (a refresh won't double-count). */
+function reportPurchase(reference: string, order: ConfirmResponse["order"]) {
+  const key = `ttq-purchase-${reference}`;
+  try {
+    if (window.sessionStorage.getItem(key)) return;
+    window.sessionStorage.setItem(key, "1");
+  } catch {
+    // storage blocked — report anyway
+  }
+  ttqTrack("CompletePayment", {
+    value: order.total,
+    contents: order.items.map((i) => ({
+      content_name: i.name,
+      content_type: "product",
+      quantity: i.qty,
+      price: i.price,
+    })),
+  });
+}
 
 export function CheckoutSuccessClient() {
   const reference = useSearchParams().get("ref");
@@ -35,7 +56,10 @@ export function CheckoutSuccessClient() {
           setResult({ data: null, error: data.error });
         } else {
           setResult({ data, error: null });
-          if (data.status === "paid") clear();
+          if (data.status === "paid") {
+            clear();
+            reportPurchase(reference, data.order);
+          }
         }
       })
       .catch(() => {

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, ShoppingBag } from "lucide-react";
 import type { Collection, CollectionItem, Size } from "@/lib/types";
 import { effectivePrice, whatsappUrl, type ResolvedContact } from "@/lib/constants";
 import { remainingStock, soldOutSizes } from "@/lib/stock";
 import { useCart } from "@/lib/cart";
+import { ttqTrack } from "@/lib/tiktok";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { SizeSelector } from "@/components/shop/SizeSelector";
 import { Accordion } from "@/components/shop/Accordion";
@@ -31,6 +32,18 @@ export function CollectionItemDetailClient({
   // A colourway has no price of its own — it always uses its collection's.
   const basePrice = collection.price;
   const salePrice = collection.salePrice;
+  useEffect(() => {
+    ttqTrack("ViewContent", {
+      content_id: item.slug,
+      content_name: item.name,
+      content_type: "product",
+      price: effectivePrice(basePrice, salePrice) ?? undefined,
+      value: effectivePrice(basePrice, salePrice) ?? undefined,
+    });
+    // once per product page
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item.slug]);
+
   const remaining = remainingStock(item.stock, size);
   const needsSize = item.sizes.length > 0 && !size;
   const sizeSoldOut = size != null && remaining != null && remaining <= 0;

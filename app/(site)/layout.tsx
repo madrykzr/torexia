@@ -4,17 +4,24 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { WelcomePopup } from "@/components/layout/WelcomePopup";
+import { TikTokPixel } from "@/components/analytics/TikTokPixel";
 import { CartProvider } from "@/lib/cart";
 import { resolveContact } from "@/lib/constants";
-import { getSearchIndex, getSiteSettings, getWelcomePopup } from "@/lib/sanity-content";
+import {
+  getSearchIndex,
+  getSiteSettings,
+  getTikTokPixelId,
+  getWelcomePopup,
+} from "@/lib/sanity-content";
 
 export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [searchIndex, settings, popup] = await Promise.all([
+  const [searchIndex, settings, popup, tiktokPixelId] = await Promise.all([
     getSearchIndex(),
     getSiteSettings(),
     getWelcomePopup(),
+    getTikTokPixelId(),
   ]);
   const contact = resolveContact(settings);
 
@@ -38,6 +45,7 @@ export default async function SiteLayout({
         <WhatsAppButton contact={contact} />
         <CartDrawer contact={contact} />
         <WelcomePopup config={popup} />
+        <TikTokPixel pixelId={tiktokPixelId} />
       </div>
     </CartProvider>
   );

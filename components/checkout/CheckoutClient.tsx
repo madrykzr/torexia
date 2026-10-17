@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import { useCart } from "@/lib/cart";
 import { formatPrice, MALAYSIA_STATES, whatsappUrl, type ResolvedContact } from "@/lib/constants";
 import { cartOrderMessage } from "@/lib/cart";
 import { shippingFee, type ShippingSettings } from "@/lib/shipping";
+import { ttqTrack } from "@/lib/tiktok";
 
 const inputClass =
   "min-h-12 w-full rounded-xl border border-line bg-cream px-4 text-sm text-charcoal outline-none transition-colors placeholder:text-charcoal/40 focus:border-coffee";
@@ -47,6 +48,23 @@ export function CheckoutClient({ shipping, contact }: { shipping: ShippingSettin
   useEffect(() => {
     if (ready && items.length === 0) router.replace("/collections");
   }, [ready, items.length, router]);
+
+  // Tell TikTok a checkout was started — once per visit to this page.
+  const reportedCheckout = useRef(false);
+  useEffect(() => {
+    if (!ready || items.length === 0 || reportedCheckout.current) return;
+    reportedCheckout.current = true;
+    ttqTrack("InitiateCheckout", {
+      value: subtotal,
+      contents: items.map((i) => ({
+        content_id: i.slug,
+        content_name: i.name,
+        content_type: "product",
+        quantity: i.qty,
+        price: i.price ?? undefined,
+      })),
+    });
+  }, [ready, items, subtotal]);
 
   if (!ready || items.length === 0) return null;
 

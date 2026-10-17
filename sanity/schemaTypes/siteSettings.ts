@@ -77,6 +77,20 @@ export const siteSettings = defineType({
       of: [defineArrayMember({type: 'string', validation: (rule) => rule.email()})],
     }),
     defineField({
+      name: 'tiktokPixelId',
+      title: 'TikTok Pixel ID',
+      type: 'string',
+      description:
+        'From TikTok Ads Manager → Events → Web events. Looks like DB9G56RC77U9F9PBAPRG (20 capital letters and digits). Leave blank to turn the pixel off.',
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (!value) return true
+          return /^[A-Z0-9]{10,30}$/.test(value)
+            ? true
+            : 'A Pixel ID is only capital letters and numbers, with no spaces.'
+        }),
+    }),
+    defineField({
       name: 'popupEnabled',
       title: 'Show the welcome pop-up',
       type: 'boolean',
