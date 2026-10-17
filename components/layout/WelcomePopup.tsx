@@ -153,7 +153,7 @@ export function WelcomePopup({ config }: { config: WelcomePopupConfig }) {
             <button
               type="button"
               onClick={close}
-              aria-label="Tutup"
+              aria-label="Close"
               className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f6d98b]"
             >
               <X className="h-5 w-5" />
@@ -238,7 +238,7 @@ export function WelcomePopup({ config }: { config: WelcomePopupConfig }) {
                 onClick={close}
                 className="mt-4 text-xs text-white/70 underline-offset-4 transition-colors hover:text-white hover:underline"
               >
-                Mungkin lain kali
+                Maybe later
               </button>
 
               {config.smallPrint && (

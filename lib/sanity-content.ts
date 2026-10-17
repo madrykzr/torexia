@@ -586,7 +586,7 @@ export type WelcomePopupConfig = {
   smallPrint: string;
 };
 
-/** Welcome pop-up wording from Site Settings, with Malay defaults for blanks. */
+/** Welcome pop-up wording from Site Settings, with English defaults for blanks. */
 export async function getWelcomePopup(): Promise<WelcomePopupConfig> {
   const raw = await query<{
     popupEnabled?: boolean | null;
@@ -603,16 +603,16 @@ export async function getWelcomePopup(): Promise<WelcomePopupConfig> {
   const clean = (v?: string | null) => v?.trim() || "";
   return {
     enabled: raw?.popupEnabled !== false,
-    badge: clean(raw?.popupBadge) || "Tawaran Istimewa",
-    heading: clean(raw?.popupHeading) || "Hadiah Percuma",
-    subheading: clean(raw?.popupSubheading) || "untuk setiap pembelian!",
+    badge: clean(raw?.popupBadge) || "Special Offer",
+    heading: clean(raw?.popupHeading) || "Free Gift",
+    subheading: clean(raw?.popupSubheading) || "with every purchase!",
     message:
       clean(raw?.popupMessage) ||
-      "Beli apa sahaja di Torexia dan terima hadiah istimewa — percuma, bersama pesanan anda.",
-    buttonLabel: clean(raw?.popupButtonLabel) || "Beli Sekarang",
+      "Shop anything at Torexia and receive a special gift — free, with your order.",
+    buttonLabel: clean(raw?.popupButtonLabel) || "Shop Now",
     buttonHref: clean(raw?.popupButtonHref) || "/collections",
     smallPrint:
-      clean(raw?.popupSmallPrint) || "Sementara stok masih ada. Terma & syarat terpakai.",
+      clean(raw?.popupSmallPrint) || "While stocks last. Terms & conditions apply.",
   };
 }
 
