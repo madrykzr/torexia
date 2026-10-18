@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { ttqTrack } from "@/lib/tiktok";
+import { fbqTrack } from "@/lib/meta";
 
 export type CartItem = {
   /** slug + size + colour — variants stack as separate lines */
@@ -91,6 +92,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       content_type: "product",
       quantity: qty,
       price: item.price ?? undefined,
+      value: item.price != null ? item.price * qty : undefined,
+    });
+    fbqTrack("AddToCart", {
+      content_ids: [item.slug],
+      content_name: item.name,
+      content_type: "product",
+      contents: [{ id: item.slug, quantity: qty }],
       value: item.price != null ? item.price * qty : undefined,
     });
     setItems((prev) => {

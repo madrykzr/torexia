@@ -9,6 +9,7 @@ import { formatPrice, MALAYSIA_STATES, whatsappUrl, type ResolvedContact } from 
 import { cartOrderMessage } from "@/lib/cart";
 import { shippingFee, type ShippingSettings } from "@/lib/shipping";
 import { ttqTrack } from "@/lib/tiktok";
+import { fbqTrack } from "@/lib/meta";
 
 const inputClass =
   "min-h-12 w-full rounded-xl border border-line bg-cream px-4 text-sm text-charcoal outline-none transition-colors placeholder:text-charcoal/40 focus:border-coffee";
@@ -63,6 +64,13 @@ export function CheckoutClient({ shipping, contact }: { shipping: ShippingSettin
         quantity: i.qty,
         price: i.price ?? undefined,
       })),
+    });
+    fbqTrack("InitiateCheckout", {
+      value: subtotal,
+      num_items: items.reduce((n, i) => n + i.qty, 0),
+      content_type: "product",
+      content_ids: items.map((i) => i.slug),
+      contents: items.map((i) => ({ id: i.slug, quantity: i.qty })),
     });
   }, [ready, items, subtotal]);
 

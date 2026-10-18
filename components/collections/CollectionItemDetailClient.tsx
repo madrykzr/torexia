@@ -7,6 +7,7 @@ import { effectivePrice, whatsappUrl, type ResolvedContact } from "@/lib/constan
 import { remainingStock, soldOutSizes } from "@/lib/stock";
 import { useCart } from "@/lib/cart";
 import { ttqTrack } from "@/lib/tiktok";
+import { fbqTrack } from "@/lib/meta";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { SizeSelector } from "@/components/shop/SizeSelector";
 import { Accordion } from "@/components/shop/Accordion";
@@ -38,6 +39,12 @@ export function CollectionItemDetailClient({
       content_name: item.name,
       content_type: "product",
       price: effectivePrice(basePrice, salePrice) ?? undefined,
+      value: effectivePrice(basePrice, salePrice) ?? undefined,
+    });
+    fbqTrack("ViewContent", {
+      content_ids: [item.slug],
+      content_name: item.name,
+      content_type: "product",
       value: effectivePrice(basePrice, salePrice) ?? undefined,
     });
     // once per product page

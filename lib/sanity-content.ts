@@ -621,6 +621,15 @@ export async function getTikTokPixelId(): Promise<string | null> {
   return /^[A-Z0-9]{10,30}$/.test(id) ? id : null;
 }
 
+/** Meta Pixel ID from Site Settings, or null when blank/invalid (pixel stays off). */
+export async function getMetaPixelId(): Promise<string | null> {
+  const raw = await query<{ id?: string | null } | null>(
+    `*[_type == "siteSettings"][0]{"id": metaPixelId}`,
+  );
+  const id = raw?.id?.trim() ?? "";
+  return /^\d{10,20}$/.test(id) ? id : null;
+}
+
 export type WelcomePopupConfig = {
   enabled: boolean;
   badge: string;

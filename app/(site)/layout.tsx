@@ -5,10 +5,12 @@ import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { WelcomePopup } from "@/components/layout/WelcomePopup";
 import { TikTokPixel } from "@/components/analytics/TikTokPixel";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { CartProvider } from "@/lib/cart";
 import { resolveContact } from "@/lib/constants";
 import {
   getSearchIndex,
+  getMetaPixelId,
   getPolicyLinks,
   getSiteSettings,
   getTikTokPixelId,
@@ -18,11 +20,12 @@ import {
 export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [searchIndex, settings, popup, tiktokPixelId, policies] = await Promise.all([
+  const [searchIndex, settings, popup, tiktokPixelId, metaPixelId, policies] = await Promise.all([
     getSearchIndex(),
     getSiteSettings(),
     getWelcomePopup(),
     getTikTokPixelId(),
+    getMetaPixelId(),
     getPolicyLinks(),
   ]);
   const contact = resolveContact(settings);
@@ -48,6 +51,7 @@ export default async function SiteLayout({
         <CartDrawer contact={contact} />
         <WelcomePopup config={popup} />
         <TikTokPixel pixelId={tiktokPixelId} />
+        <MetaPixel pixelId={metaPixelId} />
       </div>
     </CartProvider>
   );

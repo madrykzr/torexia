@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/constants";
 import { ttqTrack } from "@/lib/tiktok";
+import { fbqTrack } from "@/lib/meta";
 
 type ConfirmResponse = {
   status: "pending" | "paid" | "failed" | "cancelled";
@@ -34,6 +35,12 @@ function reportPurchase(reference: string, order: ConfirmResponse["order"]) {
       quantity: i.qty,
       price: i.price,
     })),
+  });
+  fbqTrack("Purchase", {
+    value: order.total,
+    num_items: order.items.reduce((n, i) => n + i.qty, 0),
+    content_type: "product",
+    contents: order.items.map((i) => ({ id: i.name, quantity: i.qty, item_price: i.price })),
   });
 }
 

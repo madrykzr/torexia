@@ -91,6 +91,20 @@ export const siteSettings = defineType({
         }),
     }),
     defineField({
+      name: 'metaPixelId',
+      title: 'Meta (Facebook / Instagram) Pixel ID',
+      type: 'string',
+      description:
+        'From Meta Events Manager → Data sources → your pixel. A number about 15–16 digits long, for example 28808340982159706. Leave blank to turn the pixel off.',
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (!value) return true
+          return /^\d{10,20}$/.test(value)
+            ? true
+            : 'A Pixel ID is only numbers, with no spaces or letters.'
+        }),
+    }),
+    defineField({
       name: 'popupEnabled',
       title: 'Show the welcome pop-up',
       type: 'boolean',

@@ -7,6 +7,7 @@ import { effectivePrice, whatsappUrl, type ResolvedContact } from "@/lib/constan
 import { remainingStock, soldOutSizes } from "@/lib/stock";
 import { useCart } from "@/lib/cart";
 import { ttqTrack } from "@/lib/tiktok";
+import { fbqTrack } from "@/lib/meta";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { ColourSelector } from "@/components/shop/ColourSelector";
 import { SizeSelector } from "@/components/shop/SizeSelector";
@@ -44,6 +45,12 @@ export function CollectionDetailClient({
       content_name: collection.name,
       content_type: "product",
       price: p ?? undefined,
+      value: p ?? undefined,
+    });
+    fbqTrack("ViewContent", {
+      content_ids: [collection.slug],
+      content_name: collection.name,
+      content_type: "product",
       value: p ?? undefined,
     });
     // once per collection page
