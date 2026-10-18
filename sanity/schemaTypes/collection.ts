@@ -85,6 +85,10 @@ export const collection = defineType({
       name: 'colours',
       title: 'Colours',
       type: 'array',
+      // Hidden: colours are added as Collection Items (each with photos and
+      // stock). This older list only affected a collection with no colours, and
+      // otherwise duplicated them. Values already saved here keep working.
+      hidden: true,
       description:
         'Colourways available in this collection — add, edit or remove any time.',
       of: [
