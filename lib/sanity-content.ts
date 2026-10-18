@@ -20,7 +20,9 @@ import type {
 } from "@/lib/types";
 import { ALL_SIZES } from "@/lib/types";
 
-const REVALIDATE = 60; // ISR: published content appears within ~60s
+// ISR safety net only: the Sanity webhook revalidates within seconds of a
+// publish, so a long window here just cuts needless background regeneration.
+const REVALIDATE = 3600;
 
 function query<T>(q: string, params: Record<string, unknown> = {}): Promise<T> {
   return client.fetch<T>(q, params, { next: { revalidate: REVALIDATE } });

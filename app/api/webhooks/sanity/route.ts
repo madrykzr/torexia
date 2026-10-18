@@ -26,7 +26,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid signature." }, { status: 401 });
   }
 
-  revalidatePath("/", "layout");
+  // Orders and the courier token are private and never shown on a page, but
+  // they change on every checkout/booking. Rebuilding the whole site for them
+  // burns ISR writes (Vercel's free plan caps these) for nothing.
+  let type: string | undefined;
+  try {
+    type = JSON.parse(rawBody)?._type;
+  } catch {
+    // no readable payload: fall through and revalidate to be safe
+  }
+  const invisible = type === "order" || type === "easyparcelAuth";
+  if (!invisible) revalidatePath("/", "layout");
 
   // Any publish may be the owner ticking "Book courier" on an order, or
   // marking one Shipped by hand with a tracking number, so check for both after
