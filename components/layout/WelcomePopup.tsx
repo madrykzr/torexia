@@ -8,8 +8,6 @@ import { ArrowRight, Gift, Sparkles, X } from "lucide-react";
 import { EASE } from "@/lib/motion";
 import type { WelcomePopupConfig } from "@/lib/sanity-content";
 
-const STORAGE_KEY = "torexia-welcome-popup";
-const SHOW_AGAIN_AFTER_MS = 24 * 60 * 60 * 1000; // once a day per visitor
 const OPEN_DELAY_MS = 1500;
 
 // Confetti: fixed positions (no randomness, so server and browser always agree).
@@ -25,43 +23,31 @@ const CONFETTI = [
   { left: "93%", size: 10, delay: 2.2, dur: 4.5, color: "#f6d98b" },
 ];
 
-function readSeenRecently(): boolean {
-  try {
-    const last = Number(window.localStorage.getItem(STORAGE_KEY));
-    return Number.isFinite(last) && last > 0 && Date.now() - last < SHOW_AGAIN_AFTER_MS;
-  } catch {
-    return false; // storage blocked — fall back to showing it
-  }
-}
-
-function markSeen() {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
-  } catch {
-    // ignore — it will simply show again next visit
-  }
-}
-
 /**
  * Festive "free gift" pop-up shown shortly after a visitor opens the site.
- * Wording is edited in Studio → Site Settings → Welcome pop-up. Shown once a
- * day per visitor, never on the checkout pages.
+ * Wording is edited in Studio → Site Settings → Welcome pop-up. It appears
+ * every time the page is opened or refreshed (not on every click around the
+ * site — once shown, it stays away until the next refresh), and never on the
+ * checkout pages.
  */
 export function WelcomePopup({ config }: { config: WelcomePopupConfig }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
   const ctaRef = useRef<HTMLAnchorElement | null>(null);
+  const shownThisLoad = useRef(false);
   const skip = !config.enabled || pathname.startsWith("/checkout");
 
   useEffect(() => {
-    if (skip || readSeenRecently()) return;
-    const timer = window.setTimeout(() => setOpen(true), OPEN_DELAY_MS);
+    if (skip || shownThisLoad.current) return;
+    const timer = window.setTimeout(() => {
+      shownThisLoad.current = true;
+      setOpen(true);
+    }, OPEN_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [skip]);
 
   function close() {
-    markSeen();
     setOpen(false);
   }
 
@@ -69,10 +55,7 @@ export function WelcomePopup({ config }: { config: WelcomePopupConfig }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        markSeen();
-        setOpen(false);
-      }
+      if (e.key === "Escape") setOpen(false);
     };
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";

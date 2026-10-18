@@ -95,7 +95,7 @@ export const siteSettings = defineType({
       title: 'Show the welcome pop-up',
       type: 'boolean',
       description:
-        'Switch off to hide it everywhere. Each visitor sees it once a day, a moment after the page opens. It never shows during checkout.',
+        'Switch off to hide it everywhere. It appears a moment after the website opens, every time a visitor opens or refreshes it. Closing it hides it until the next refresh. It never shows during checkout.',
       initialValue: true,
       fieldset: 'popup',
     }),
