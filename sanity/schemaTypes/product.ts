@@ -30,12 +30,17 @@ export const SIZE_OPTIONS = [
 // order deducts automatically, so nobody needs to check or update it by hand.
 // A size in "Sizes" above with no row here is treated as untracked/unlimited,
 // so existing content keeps working until stock is actually filled in.
-export function stockField() {
+// `sizesFromCollection`: a colour (collectionItem) has no Sizes of its own — it
+// uses its Collection's — so its rows are checked against the parent collection.
+export function stockField(
+  opts: {sizesFromCollection?: boolean; description?: string} = {},
+) {
   return defineField({
     name: 'stock',
     title: 'Stock',
     type: 'array',
     description:
+      opts.description ??
       'How many of each size you have. Add a row per size and set the quantity — it goes down automatically as orders are paid, and that size can’t be bought once it reaches 0. Leave a size out of this list to not track its stock (always buyable).',
     of: [
       defineArrayMember({
@@ -68,16 +73,43 @@ export function stockField() {
         },
       }),
     ],
-    validation: (rule) =>
-      rule.custom((stock, context) => {
+    validation: (rule) => [
+      // A size listed twice is a real mistake — block publishing.
+      rule.custom((stock) => {
         const rows = (stock as {size?: string}[] | undefined) ?? []
         const rowSizes = rows.map((r) => r.size).filter(Boolean) as string[]
         const dupes = rowSizes.filter((s, i) => rowSizes.indexOf(s) !== i)
-        if (dupes.length) return `Duplicate size: ${[...new Set(dupes)].join(', ')}`
-        const sizes = (context.document as {sizes?: string[]} | undefined)?.sizes ?? []
-        const stray = rowSizes.filter((s) => !sizes.includes(s))
-        return stray.length ? `Not in Sizes above: ${stray.join(', ')}` : true
+        return dupes.length ? `Duplicate size: ${[...new Set(dupes)].join(', ')}` : true
       }),
+      // A size the collection doesn't offer is only a warning — it never blocks
+      // saving (e.g. after the collection's sizes are edited later).
+      rule
+        .custom(async (stock, context) => {
+          const rows = (stock as {size?: string}[] | undefined) ?? []
+          const rowSizes = rows.map((r) => r.size).filter(Boolean) as string[]
+          if (!rowSizes.length) return true
+          const doc = context.document as
+            | {sizes?: string[]; collection?: {_ref?: string}}
+            | undefined
+          let sizes = doc?.sizes ?? []
+          if (opts.sizesFromCollection) {
+            const ref = doc?.collection?._ref
+            if (!ref) return true
+            const client = context.getClient({apiVersion: '2024-01-01'})
+            sizes =
+              (await client.fetch<string[] | null>(
+                `coalesce(*[_id == $id][0].sizes, *[_id == "drafts." + $id][0].sizes)`,
+                {id: ref},
+              )) ?? []
+          }
+          if (!sizes.length) return true
+          const stray = rowSizes.filter((s) => !sizes.includes(s))
+          return stray.length
+            ? `Not one of this collection’s sizes (${sizes.join(', ')}): ${stray.join(', ')}`
+            : true
+        })
+        .warning(),
+    ],
   })
 }
 

@@ -125,7 +125,10 @@ export const collection = defineType({
       options: {list: SIZE_OPTIONS, layout: 'grid'},
       validation: (rule) => rule.unique(),
     }),
-    stockField(),
+    stockField({
+      description:
+        'Only used when this collection has NO colours added. If it has colours, leave this empty and enter the stock on each colour instead (Collection Items).',
+    }),
     defineField({
       name: 'weightKg',
       title: 'Parcel weight per piece (kg)',

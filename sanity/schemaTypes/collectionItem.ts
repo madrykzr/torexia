@@ -83,7 +83,7 @@ export const collectionItem = defineType({
     // Price, sale price and sizes are NOT set here — every colour uses its
     // Collection's, so changing the collection updates all its colours at once.
     // Only stock is per colour (it is counted per colour and size).
-    stockField(),
+    stockField({sizesFromCollection: true}),
     defineField({
       name: 'sizeChartColumns',
       title: 'Size chart — column headers',
