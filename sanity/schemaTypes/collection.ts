@@ -68,6 +68,10 @@ export const collection = defineType({
       name: 'gallery',
       title: 'Gallery',
       type: 'array',
+      // Hidden: photos are added on each colour (Collection Items). This old box
+      // only ever showed on a collection with no colours, so it just confused
+      // people. Photos already saved here keep working.
+      hidden: true,
       description: 'A few lookbook shots shown on the collection page.',
       of: [
         defineArrayMember({
