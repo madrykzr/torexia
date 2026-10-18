@@ -9,6 +9,7 @@ import { CartProvider } from "@/lib/cart";
 import { resolveContact } from "@/lib/constants";
 import {
   getSearchIndex,
+  getPolicyLinks,
   getSiteSettings,
   getTikTokPixelId,
   getWelcomePopup,
@@ -17,11 +18,12 @@ import {
 export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [searchIndex, settings, popup, tiktokPixelId] = await Promise.all([
+  const [searchIndex, settings, popup, tiktokPixelId, policies] = await Promise.all([
     getSearchIndex(),
     getSiteSettings(),
     getWelcomePopup(),
     getTikTokPixelId(),
+    getPolicyLinks(),
   ]);
   const contact = resolveContact(settings);
 
@@ -41,7 +43,7 @@ export default async function SiteLayout({
         <SmoothScroll />
         <Navbar searchIndex={searchIndex} contact={contact} />
         <main className="flex-1">{children}</main>
-        <Footer contact={contact} />
+        <Footer contact={contact} policies={policies} />
         <WhatsAppButton contact={contact} />
         <CartDrawer contact={contact} />
         <WelcomePopup config={popup} />

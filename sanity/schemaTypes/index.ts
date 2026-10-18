@@ -8,6 +8,7 @@ import {order} from './order'
 import {product} from './product'
 import {rentalProduct} from './rentalProduct'
 import {blogPost} from './blogPost'
+import {policyPage} from './policyPage'
 import {siteSettings} from './siteSettings'
 
 export const schema: {types: SchemaTypeDefinition[]} = {
@@ -19,6 +20,7 @@ export const schema: {types: SchemaTypeDefinition[]} = {
     product,
     rentalProduct,
     blogPost,
+    policyPage,
     homePage,
     siteSettings,
   ],

@@ -561,6 +561,43 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   return raw ? mapPost(raw) : null;
 }
 
+// --- Policy pages (Privacy, Terms, Shipping, Returns…) ------------------------
+
+export type PolicyLink = { title: string; slug: string };
+
+export type PolicyPage = PolicyLink & {
+  updated: string | null;
+  body: PortableTextBlock[];
+};
+
+/** Published policy pages, in footer order — drafts are never returned. */
+export async function getPolicyLinks(): Promise<PolicyLink[]> {
+  const rows = await query<{ title?: string; slug?: string }[]>(
+    `*[_type == "policyPage" && defined(slug.current)] | order(order asc, title asc){title, "slug": slug.current}`,
+  );
+  return rows.filter((r): r is PolicyLink => Boolean(r.title && r.slug));
+}
+
+export async function getPolicyBySlug(slug: string): Promise<PolicyPage | null> {
+  const raw = await query<{
+    title?: string;
+    slug?: string;
+    updated?: string | null;
+    body?: PortableTextBlock[];
+  } | null>(
+    `*[_type == "policyPage" && slug.current == $slug][0]{title, "slug": slug.current, updated, body}`,
+    { slug },
+  );
+  if (!raw?.title || !raw.slug) return null;
+  return { title: raw.title, slug: raw.slug, updated: raw.updated ?? null, body: raw.body ?? [] };
+}
+
+export async function getPolicySlugs(): Promise<string[]> {
+  return query<string[]>(
+    `*[_type == "policyPage" && defined(slug.current)].slug.current`,
+  );
+}
+
 export async function getPostSlugs(): Promise<string[]> {
   return query<string[]>(
     `*[_type == "blogPost" && defined(slug.current)].slug.current`,

@@ -128,6 +128,7 @@ export const structure: StructureResolver = (S, context) =>
         .title('Rental Products')
         .icon(CalendarIcon),
       S.documentTypeListItem('blogPost').title('Blog Posts').icon(DocumentTextIcon),
+      S.documentTypeListItem('policyPage').title('Policy Pages').icon(DocumentTextIcon),
       S.divider(),
       // Site Settings as a singleton (one editable document)
       S.listItem()

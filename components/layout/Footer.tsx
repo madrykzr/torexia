@@ -3,8 +3,15 @@ import Link from "next/link";
 import { Mail, Phone, Globe } from "lucide-react";
 import { CONTACT, NAV_LINKS, SITE, type ResolvedContact } from "@/lib/constants";
 import { InstagramIcon, TikTokIcon } from "@/components/ui/BrandIcons";
+import type { PolicyLink } from "@/lib/sanity-content";
 
-export function Footer({ contact }: { contact: ResolvedContact }) {
+export function Footer({
+  contact,
+  policies = [],
+}: {
+  contact: ResolvedContact;
+  policies?: PolicyLink[];
+}) {
   return (
     <footer className="bg-cream text-charcoal">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:gap-8">
@@ -98,7 +105,21 @@ export function Footer({ contact }: { contact: ResolvedContact }) {
       </div>
 
       <div className="border-t border-line">
-        <div className="mx-auto max-w-6xl px-5 py-6 sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-6 sm:px-8">
+          {policies.length > 0 && (
+            <ul className="flex flex-wrap gap-x-6 gap-y-2">
+              {policies.map((p) => (
+                <li key={p.slug}>
+                  <Link
+                    href={`/policies/${p.slug}`}
+                    className="text-xs tracking-wide text-charcoal-600 transition-colors hover:text-coffee"
+                  >
+                    {p.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
           <p className="text-xs tracking-wide text-charcoal-600">
             © Torexia 2026. All rights reserved.
           </p>

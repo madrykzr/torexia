@@ -5,7 +5,6 @@ import { NewArrivals } from "@/components/home/NewArrivals";
 import { StylingInspiration } from "@/components/home/StylingInspiration";
 import { CustomerReviews } from "@/components/home/CustomerReviews";
 import { Faq } from "@/components/home/Faq";
-import { Newsletter } from "@/components/home/Newsletter";
 import { CtaBanner } from "@/components/home/CtaBanner";
 import { getHomePage } from "@/lib/sanity-content";
 
@@ -29,7 +28,7 @@ export default async function HomePage() {
       <StylingInspiration />
       <CustomerReviews />
       <Faq />
-      <Newsletter />
+      {/* Newsletter sign-up hidden until it actually saves emails — see components/home/Newsletter.tsx */}
       <CtaBanner />
     </>
   );

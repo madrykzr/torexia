@@ -21,20 +21,29 @@ if (!projectId || !dataset || !token) {
 const go = process.argv.includes('--go')
 const client = createClient({projectId, dataset, token, apiVersion: '2024-01-01', useCdn: false, perspective: 'raw'})
 
-const docs = await client.fetch(
-  `*[_type == "collectionItem" && (defined(sizes) || defined(price) || defined(salePrice))]{_id, name, sizes, price, salePrice}`,
-)
-console.log(`${docs.length} colourway document(s) with old fields:`)
-for (const d of docs) {
-  console.log(`- ${d._id} (${d.name}) sizes=${JSON.stringify(d.sizes)} price=${d.price} salePrice=${d.salePrice}`)
+async function main() {
+  const docs = await client.fetch(
+    `*[_type == "collectionItem" && (defined(sizes) || defined(price) || defined(salePrice))]{_id, name, sizes, price, salePrice}`,
+  )
+  console.log(`${docs.length} colourway document(s) with old fields:`)
+  for (const d of docs) {
+    console.log(`- ${d._id} (${d.name}) sizes=${JSON.stringify(d.sizes)} price=${d.price} salePrice=${d.salePrice}`)
+  }
+  if (!go) {
+    console.log('\nDry run — nothing changed. Re-run with --go to remove these fields.')
+    return
+  }
+  for (let i = 0; i < docs.length; i += 20) {
+    const tx = client.transaction()
+    for (const d of docs.slice(i, i + 20)) tx.patch(d._id, (p) => p.unset(['sizes', 'price', 'salePrice']))
+    await tx.commit()
+  }
+  console.log(`Done — cleaned ${docs.length} document(s).`)
+
 }
-if (!go) {
-  console.log('\nDry run — nothing changed. Re-run with --go to remove these fields.')
-  process.exit(0)
-}
-for (let i = 0; i < docs.length; i += 20) {
-  const tx = client.transaction()
-  for (const d of docs.slice(i, i + 20)) tx.patch(d._id, (p) => p.unset(['sizes', 'price', 'salePrice']))
-  await tx.commit()
-}
-console.log(`Done — cleaned ${docs.length} document(s).`)
+
+// Never print the raw error — a network failure dumps the request, including the token.
+main().catch((e) => {
+  console.error("Failed:", e?.cause?.code || e?.statusCode || e?.message?.slice(0, 120));
+  process.exit(1);
+});
