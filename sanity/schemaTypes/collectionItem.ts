@@ -83,7 +83,11 @@ export const collectionItem = defineType({
     // Price, sale price and sizes are NOT set here — every colour uses its
     // Collection's, so changing the collection updates all its colours at once.
     // Only stock is per colour (it is counted per colour and size).
-    stockField({sizesFromCollection: true}),
+    stockField({
+      sizesFromCollection: true,
+      description:
+        'How many you have of each size for THIS colour. The sizes come from the collection. The number goes down automatically when an order is paid, and a size can’t be bought once it reaches 0. A size left out of this list is not tracked (always buyable).',
+    }),
     defineField({
       name: 'sizeChartColumns',
       title: 'Size chart — column headers',

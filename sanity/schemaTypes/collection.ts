@@ -122,13 +122,15 @@ export const collection = defineType({
       title: 'Sizes',
       type: 'array',
       of: [defineArrayMember({type: 'string'})],
+      description:
+        'The sizes customers can choose. Every colour in this collection uses these. Stock is NOT entered here — enter it on each colour, in Collection Items.',
       options: {list: SIZE_OPTIONS, layout: 'grid'},
       validation: (rule) => rule.unique(),
     }),
-    stockField({
-      description:
-        'Only used when this collection has NO colours added. If it has colours, leave this empty and enter the stock on each colour instead (Collection Items).',
-    }),
+    // Stock is entered on each colour (Collection Items) only. This box is hidden
+    // so it can't be filled in by mistake; any numbers already saved here keep
+    // working for a collection that has no colours yet (e.g. OfficeGurL).
+    {...stockField(), hidden: true},
     defineField({
       name: 'weightKg',
       title: 'Parcel weight per piece (kg)',
