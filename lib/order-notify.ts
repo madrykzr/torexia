@@ -1,6 +1,7 @@
 import { writeClient } from "@/sanity/lib/writeClient";
 import { emailConfigured, escapeHtml, sendEmail } from "@/lib/email";
 import { getOrderAlertEmails } from "@/lib/sanity-content";
+import { formatPrice } from "@/lib/constants";
 import type { Order } from "@/lib/orders";
 
 const STUDIO_URL = "https://www.ladytorexia.my/studio/structure/orders;orders-to-ship";
@@ -13,7 +14,7 @@ type StoredOrder = Omit<Order, "id" | "status"> & {
 };
 
 function rm(n: number): string {
-  return `RM${n}`;
+  return formatPrice(n);
 }
 
 function itemLines(order: StoredOrder): string[] {

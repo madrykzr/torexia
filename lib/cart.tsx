@@ -11,6 +11,7 @@ import {
 } from "react";
 import { ttqTrack } from "@/lib/tiktok";
 import { fbqTrack } from "@/lib/meta";
+import { formatPrice, roundMoney } from "@/lib/constants";
 
 export type CartItem = {
   /** slug + size + colour — variants stack as separate lines */
@@ -132,9 +133,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<CartContextValue>(() => {
     const count = items.reduce((n, i) => n + i.qty, 0);
-    const subtotal = items.reduce(
-      (sum, i) => sum + (i.price ?? 0) * i.qty,
-      0,
+    const subtotal = roundMoney(
+      items.reduce((sum, i) => sum + (i.price ?? 0) * i.qty, 0),
     );
     return {
       items,
@@ -170,10 +170,10 @@ export function cartOrderMessage(items: CartItem[], subtotal: number): string {
     const bits = [i.size && `Size: ${i.size}`, i.colour && `Colour: ${i.colour}`]
       .filter(Boolean)
       .join(", ");
-    const price = i.price != null ? `RM${i.price * i.qty}` : "Price on enquiry";
+    const price = i.price != null ? formatPrice(i.price * i.qty) : "Price on enquiry";
     return `• ${i.name}${bits ? ` (${bits})` : ""} × ${i.qty} — ${price}`;
   });
-  const total = subtotal > 0 ? `\n\nSubtotal: RM${subtotal}` : "";
+  const total = subtotal > 0 ? `\n\nSubtotal: ${formatPrice(subtotal)}` : "";
   return `Hi Torexia! I'd like to place an order:\n\n${lines.join(
     "\n",
   )}${total}\n\nCould you confirm availability and payment details?`;

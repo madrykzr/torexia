@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { createPaymentRequest } from "@/lib/hitpay";
 import { createOrder, patchOrder, type OrderItemInput } from "@/lib/orders";
-import { effectivePrice } from "@/lib/constants";
+import { effectivePrice, roundMoney } from "@/lib/constants";
 import {
   getPricingForItems,
   getShippingSettings,
@@ -140,13 +140,13 @@ export async function POST(req: NextRequest) {
 
   // Recomputed server-side — never trust a client-supplied total for the
   // amount actually charged.
-  const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const subtotal = roundMoney(orderItems.reduce((sum, i) => sum + i.price * i.qty, 0));
   const fee = shippingFee(
     shippingAddress.state,
     subtotal,
     await getShippingSettings(),
   );
-  const total = subtotal + fee;
+  const total = roundMoney(subtotal + fee);
 
   if (subtotal < 0.3) {
     return NextResponse.json({ error: "Order total is too small." }, { status: 400 });

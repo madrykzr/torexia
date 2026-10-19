@@ -121,9 +121,15 @@ export function whatsappUrl(number: string, message?: string): string {
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
-/** Format a Ringgit price, e.g. 199 -> "RM199" */
+/** Round to whole sen, so 134.1 * 3 is 402.3 and not 402.29999999999995 */
+export function roundMoney(amount: number): number {
+  return Math.round((amount + Number.EPSILON) * 100) / 100;
+}
+
+/** Format a Ringgit price: 199 -> "RM199", 134.1 -> "RM134.10" */
 export function formatPrice(price: number): string {
-  return `RM${price}`;
+  const rounded = roundMoney(price);
+  return Number.isInteger(rounded) ? `RM${rounded}` : `RM${rounded.toFixed(2)}`;
 }
 
 /**

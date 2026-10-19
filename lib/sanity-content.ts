@@ -641,6 +641,23 @@ export async function getGoogleAnalyticsId(): Promise<string | null> {
   return /^G-[A-Z0-9]{6,14}$/.test(id) ? id : null;
 }
 
+export type HomeFaq = { question: string; answer: string };
+export type HomeReview = { name: string; location?: string; text: string };
+
+/** FAQ and customer reviews for the home page, from Site Settings. Empty list = section hidden. */
+export async function getHomeFaqAndReviews(): Promise<{ faqs: HomeFaq[]; reviews: HomeReview[] }> {
+  const raw = await query<{
+    faqs?: Partial<HomeFaq>[] | null;
+    reviews?: Partial<HomeReview>[] | null;
+  } | null>(
+    `*[_type == "siteSettings"][0]{"faqs": faqs[]{question, answer}, "reviews": reviews[]{name, location, text}}`,
+  );
+  return {
+    faqs: (raw?.faqs ?? []).filter((f): f is HomeFaq => !!f.question && !!f.answer),
+    reviews: (raw?.reviews ?? []).filter((r): r is HomeReview => !!r.name && !!r.text),
+  };
+}
+
 export type WelcomePopupConfig = {
   enabled: boolean;
   badge: string;

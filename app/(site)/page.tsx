@@ -5,10 +5,10 @@ import { NewArrivals } from "@/components/home/NewArrivals";
 import { StylingInspiration } from "@/components/home/StylingInspiration";
 import { CustomerReviews } from "@/components/home/CustomerReviews";
 import { Faq } from "@/components/home/Faq";
-import { getHomePage } from "@/lib/sanity-content";
+import { getHomeFaqAndReviews, getHomePage } from "@/lib/sanity-content";
 
 export default async function HomePage() {
-  const home = await getHomePage();
+  const [home, { faqs, reviews }] = await Promise.all([getHomePage(), getHomeFaqAndReviews()]);
 
   return (
     <>
@@ -25,8 +25,8 @@ export default async function HomePage() {
       <FeaturedCollections collections={home?.featuredCollections ?? []} />
       <NewArrivals items={home?.newArrivals ?? []} />
       <StylingInspiration />
-      <CustomerReviews />
-      <Faq />
+      <CustomerReviews reviews={reviews} />
+      <Faq faqs={faqs} />
       {/* Newsletter sign-up hidden until it actually saves emails — see components/home/Newsletter.tsx */}
     </>
   );

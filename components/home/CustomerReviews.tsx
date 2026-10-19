@@ -2,24 +2,7 @@ import { Star } from "lucide-react";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
-
-const reviews = [
-  {
-    name: "Nurul Aisyah",
-    location: "Kuala Lumpur",
-    text: "The fabric is so light and breathable — I wore it all day at work and still felt fresh. My new everyday favourite.",
-  },
-  {
-    name: "Siti Nadhirah",
-    location: "Shah Alam",
-    text: "Beautiful quality and the sleeves are stunning. It feels premium but so comfortable. Highly recommend!",
-  },
-  {
-    name: "Farah Iman",
-    location: "Johor Bahru",
-    text: "Finally an abaya that's both modest and elegant. The fit is perfect and the pockets are a lifesaver. Love it!",
-  },
-];
+import type { HomeReview } from "@/lib/sanity-content";
 
 function Stars() {
   return (
@@ -31,7 +14,10 @@ function Stars() {
   );
 }
 
-export function CustomerReviews() {
+// The reviews come from Studio → Site Settings. No reviews = no section.
+export function CustomerReviews({ reviews }: { reviews: HomeReview[] }) {
+  if (reviews.length === 0) return null;
+
   return (
     <Section tone="alt">
       <SectionHeading
@@ -50,9 +36,11 @@ export function CustomerReviews() {
               </blockquote>
               <figcaption className="mt-6">
                 <p className="font-heading text-base text-charcoal">{r.name}</p>
-                <p className="text-xs tracking-wide text-charcoal-600">
-                  {r.location}
-                </p>
+                {r.location && (
+                  <p className="text-xs tracking-wide text-charcoal-600">
+                    {r.location}
+                  </p>
+                )}
               </figcaption>
             </figure>
           </Reveal>

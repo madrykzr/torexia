@@ -177,6 +177,41 @@ export const siteSettings = defineType({
       description: 'e.g. “While stocks last. Terms & conditions apply.” Leave blank to use that line.',
       fieldset: 'popup',
     }),
+    defineField({
+      name: 'faqs',
+      title: 'Home page — Frequently asked questions',
+      type: 'array',
+      description:
+        'The questions and answers shown at the bottom of the home page. Add, edit, remove or drag to reorder. Leave the list empty to hide the section. Keep the answers the same as your Shipping and Returns policies.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({name: 'question', title: 'Question', type: 'string', validation: (rule) => rule.required()}),
+            defineField({name: 'answer', title: 'Answer', type: 'text', rows: 3, validation: (rule) => rule.required()}),
+          ],
+          preview: {select: {title: 'question', subtitle: 'answer'}},
+        }),
+      ],
+    }),
+    defineField({
+      name: 'reviews',
+      title: 'Home page — Customer reviews',
+      type: 'array',
+      description:
+        'Only add REAL reviews from real customers, with their permission. Leave the list empty to hide the whole “Loved by our community” section.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({name: 'name', title: 'Customer name', type: 'string', validation: (rule) => rule.required()}),
+            defineField({name: 'location', title: 'Town or city', type: 'string', description: 'Optional, e.g. Shah Alam'}),
+            defineField({name: 'text', title: 'Their review', type: 'text', rows: 3, validation: (rule) => rule.required()}),
+          ],
+          preview: {select: {title: 'name', subtitle: 'text'}},
+        }),
+      ],
+    }),
   ],
   preview: {
     prepare() {
