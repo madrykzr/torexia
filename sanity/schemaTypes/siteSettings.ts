@@ -105,6 +105,20 @@ export const siteSettings = defineType({
         }),
     }),
     defineField({
+      name: 'googleAnalyticsId',
+      title: 'Google Analytics 4 Measurement ID',
+      type: 'string',
+      description:
+        'From Google Analytics → Admin → Data streams → your website. Starts with G- , for example G-53C8MMXJVG. Leave blank to turn Google Analytics off.',
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (!value) return true
+          return /^G-[A-Z0-9]{6,14}$/.test(value)
+            ? true
+            : 'A Measurement ID starts with G- followed by capital letters and numbers, with no spaces.'
+        }),
+    }),
+    defineField({
       name: 'popupEnabled',
       title: 'Show the welcome pop-up',
       type: 'boolean',

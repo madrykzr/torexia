@@ -632,6 +632,15 @@ export async function getMetaPixelId(): Promise<string | null> {
   return /^\d{10,20}$/.test(id) ? id : null;
 }
 
+/** Google Analytics 4 Measurement ID from Site Settings, or null when blank/invalid (tag stays off). */
+export async function getGoogleAnalyticsId(): Promise<string | null> {
+  const raw = await query<{ id?: string | null } | null>(
+    `*[_type == "siteSettings"][0]{"id": googleAnalyticsId}`,
+  );
+  const id = raw?.id?.trim() ?? "";
+  return /^G-[A-Z0-9]{6,14}$/.test(id) ? id : null;
+}
+
 export type WelcomePopupConfig = {
   enabled: boolean;
   badge: string;

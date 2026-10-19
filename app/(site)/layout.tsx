@@ -6,10 +6,12 @@ import { CartDrawer } from "@/components/cart/CartDrawer";
 import { WelcomePopup } from "@/components/layout/WelcomePopup";
 import { TikTokPixel } from "@/components/analytics/TikTokPixel";
 import { MetaPixel } from "@/components/analytics/MetaPixel";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { CartProvider } from "@/lib/cart";
 import { resolveContact } from "@/lib/constants";
 import {
   getSearchIndex,
+  getGoogleAnalyticsId,
   getMetaPixelId,
   getPolicyLinks,
   getSiteSettings,
@@ -20,12 +22,13 @@ import {
 export default async function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [searchIndex, settings, popup, tiktokPixelId, metaPixelId, policies] = await Promise.all([
+  const [searchIndex, settings, popup, tiktokPixelId, metaPixelId, googleAnalyticsId, policies] = await Promise.all([
     getSearchIndex(),
     getSiteSettings(),
     getWelcomePopup(),
     getTikTokPixelId(),
     getMetaPixelId(),
+    getGoogleAnalyticsId(),
     getPolicyLinks(),
   ]);
   const contact = resolveContact(settings);
@@ -52,6 +55,7 @@ export default async function SiteLayout({
         <WelcomePopup config={popup} />
         <TikTokPixel pixelId={tiktokPixelId} />
         <MetaPixel pixelId={metaPixelId} />
+        <GoogleAnalytics measurementId={googleAnalyticsId} />
       </div>
     </CartProvider>
   );
