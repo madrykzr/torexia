@@ -1,3 +1,4 @@
+import {SLUG_HELP, slugCheck} from './slugRule'
 import {defineType, defineField} from 'sanity'
 import {TagIcon} from '@sanity/icons'
 
@@ -18,10 +19,11 @@ export const category = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Web address (slug)',
       type: 'slug',
+      description: SLUG_HELP,
       options: {source: 'title', maxLength: 96},
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.required().custom(slugCheck),
     }),
     defineField({
       name: 'order',

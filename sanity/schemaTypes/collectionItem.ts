@@ -1,3 +1,4 @@
+import {SLUG_HELP, slugCheck} from './slugRule'
 import {defineType, defineField, defineArrayMember} from 'sanity'
 import {TagIcon} from '@sanity/icons'
 import {stockField} from './product'
@@ -19,10 +20,11 @@ export const collectionItem = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Slug',
+      title: 'Web address (slug)',
       type: 'slug',
+      description: SLUG_HELP,
       options: {source: 'name', maxLength: 96},
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.required().custom(slugCheck),
     }),
     defineField({
       name: 'collection',
