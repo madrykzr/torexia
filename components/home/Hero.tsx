@@ -87,7 +87,7 @@ export function Hero({
 
   return (
     <section
-      className="relative flex min-h-svh items-end overflow-hidden bg-cream sm:items-center"
+      className="relative flex min-h-svh items-end overflow-hidden sm:items-center"
       style={{ touchAction: "pan-y" }}
       aria-roledescription={count > 1 ? "carousel" : undefined}
       aria-label={count > 1 ? "Featured pictures" : undefined}
@@ -114,12 +114,6 @@ export function Hero({
         if (e.key === "ArrowLeft") step(-1);
       }}
     >
-      {/* Phones: the picture fills the whole screen behind the words. Wider
-          screens: the words stay on the left and the picture gets a tall panel
-          on the right, so a portrait photo shows the whole outfit instead of a
-          thin slice. The panel gets narrower as the screen gets wider, to keep
-          the same tall shape. */}
-      <div className="absolute inset-0 sm:left-auto sm:right-0 sm:w-[52%] lg:w-[46%] xl:w-[40%] 2xl:w-[36%]">
       {list.map((slide, i) => (
         <div
           key={`${slide.image}-${i}`}
@@ -139,7 +133,7 @@ export function Hero({
             alt={slide.alt || "Torexia modest fashion"}
             fill
             priority={i === 0}
-            sizes="(min-width: 640px) 52vw, 100vw"
+            sizes="100vw"
             // Slideshow pictures are served straight from Sanity's image CDN
             // (already resized and compressed), which keeps them from using up
             // Vercel's image-optimisation allowance.
@@ -149,12 +143,9 @@ export function Hero({
           />
         </div>
       ))}
-      {/* Soft edge so the photo melts into the page on wide screens */}
-      <div className="absolute inset-y-0 left-0 z-[2] hidden w-1/4 bg-gradient-to-r from-cream to-transparent sm:block" />
-      </div>
       {/* Soft warm-white veil — lighter now so more of the photo shows, while
           still holding the bottom-left text legible */}
-      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-cream via-cream/55 to-transparent sm:hidden" />
+      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-cream via-cream/55 to-transparent sm:bg-gradient-to-r sm:from-cream/95 sm:via-cream/35 sm:to-transparent" />
 
       <motion.div
         key={index}
@@ -165,7 +156,7 @@ export function Hero({
       >
         <motion.h1
           variants={item}
-          className="max-w-3xl font-heading text-5xl leading-[1.08] text-charcoal sm:max-w-[48%] sm:text-5xl lg:max-w-[52%] lg:text-6xl xl:max-w-3xl xl:text-7xl"
+          className="max-w-3xl font-heading text-5xl leading-[1.08] text-charcoal sm:text-7xl"
         >
           {text.heading}
         </motion.h1>
