@@ -9,6 +9,7 @@ import type {
   Collection,
   CollectionItem,
   Colour,
+  HeroSlide,
   HomePage,
   Product,
   RentalProduct,
@@ -504,7 +505,18 @@ export async function getSearchIndex(): Promise<SearchEntry[]> {
 
 // --- Home page -----------------------------------------------------------
 
+type RawHeroSlide = {
+  image?: { asset?: unknown; hotspot?: { x?: number; y?: number } | null } | null;
+  alt?: string | null;
+  heading?: string | null;
+  subheading?: string | null;
+  buttonLabel?: string | null;
+  buttonHref?: string | null;
+};
+
 type RawHomePage = {
+  heroSlides?: RawHeroSlide[] | null;
+  heroSlideSeconds?: number | null;
   heroImage?: unknown;
   heroHeading?: string;
   heroSubheading?: string;
@@ -520,14 +532,37 @@ type RawHomePage = {
 export async function getHomePage(): Promise<HomePage | null> {
   const raw = await query<RawHomePage>(
     `*[_type == "homePage"][0]{
-      heroImage, heroHeading, heroSubheading, heroCtaLabel, heroCtaHref,
+      heroImage, heroHeading, heroSubheading, heroCtaLabel, heroCtaHref, heroSlideSeconds,
+      "heroSlides": heroSlides[]{"image": image, alt, heading, subheading, buttonLabel, buttonHref},
       "featuredCollections": featuredCollections[]->{${COLLECTION_FIELDS}},
       "newArrivals": newArrivals[]->{${COLLECTION_ITEM_FIELDS}},
       promoEnabled, promoText, promoHref
     }`,
   );
   if (!raw) return null;
+  const pct = (n: number | undefined, fallback: number) =>
+    `${Math.round((typeof n === "number" ? n : fallback) * 100)}%`;
+  const heroSlides = (raw.heroSlides ?? []).flatMap((s): HeroSlide[] => {
+    // Wide copy (1600px) straight from Sanity's image CDN — see Hero.tsx.
+    const image = imageUrl(s.image, 1600);
+    if (!image) return [];
+    return [
+      {
+        image,
+        alt: s.alt?.trim() || null,
+        objectPosition: s.image?.hotspot
+          ? `${pct(s.image.hotspot.x, 0.7)} ${pct(s.image.hotspot.y, 0)}`
+          : "70% top",
+        heading: s.heading?.trim() || null,
+        subheading: s.subheading?.trim() || null,
+        ctaLabel: s.buttonLabel?.trim() || null,
+        ctaHref: s.buttonHref?.trim() || null,
+      },
+    ];
+  });
   return {
+    heroSlides,
+    heroSlideSeconds: Math.min(15, Math.max(3, raw.heroSlideSeconds ?? 6)),
     heroImage: imageUrl(raw.heroImage),
     heroHeading: raw.heroHeading ?? null,
     heroSubheading: raw.heroSubheading ?? null,

@@ -16,6 +16,8 @@ export default async function HomePage() {
         <PromoBanner text={home.promoText} href={home.promoHref} />
       )}
       <Hero
+        slides={home?.heroSlides}
+        seconds={home?.heroSlideSeconds}
         heading={home?.heroHeading}
         subheading={home?.heroSubheading}
         ctaLabel={home?.heroCtaLabel}

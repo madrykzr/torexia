@@ -100,7 +100,20 @@ export type SearchEntry = {
   category: string;
 };
 
+export type HeroSlide = {
+  image: string;
+  alt: string | null;
+  /** CSS object-position from the picture's hotspot, e.g. "70% 20%" */
+  objectPosition: string;
+  heading: string | null;
+  subheading: string | null;
+  ctaLabel: string | null;
+  ctaHref: string | null;
+};
+
 export type HomePage = {
+  heroSlides: HeroSlide[];
+  heroSlideSeconds: number;
   heroImage: string | null;
   heroHeading: string | null;
   heroSubheading: string | null;

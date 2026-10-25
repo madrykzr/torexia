@@ -11,32 +11,105 @@ export const homePage = defineType({
   // Managed as a singleton via sanity/structure.ts
   fields: [
     defineField({
+      name: 'heroSlides',
+      title: 'Hero slideshow (the big pictures at the top of the home page)',
+      type: 'array',
+      description:
+        'Add one picture for each slide. The first is shown first, then they change by themselves and visitors can swipe. One picture = no sliding. Drag to reorder. Best: a tall, clear photo with the model on the right side (the words sit on the left). Up to 6 slides. Use the “Hotspot” tool on a picture to choose which part always stays in view on phones.',
+      validation: (rule) =>
+        rule.max(6).warning('More than 6 slides makes the page slower. Please keep it to 6 or fewer.'),
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'heroSlide',
+          title: 'Slide',
+          fields: [
+            defineField({
+              name: 'image',
+              title: 'Picture',
+              type: 'image',
+              options: {hotspot: true},
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'alt',
+              title: 'Describe the picture (for Google and screen readers)',
+              type: 'string',
+              description: 'e.g. “Woman wearing a burgundy kaftan”',
+            }),
+            defineField({
+              name: 'heading',
+              title: 'Heading for this slide (optional)',
+              type: 'string',
+              description: 'Leave blank to use the main hero heading below.',
+            }),
+            defineField({
+              name: 'subheading',
+              title: 'Words under the heading (optional)',
+              type: 'text',
+              rows: 2,
+              description: 'Leave blank to use the main hero subheading below.',
+            }),
+            defineField({
+              name: 'buttonLabel',
+              title: 'Button words (optional)',
+              type: 'string',
+              description: 'Leave blank to use the main hero button below.',
+            }),
+            defineField({
+              name: 'buttonHref',
+              title: 'Button goes to (optional)',
+              type: 'string',
+              description:
+                'A page such as /collections/kafla-abaya. Leave blank to use the main hero button link below.',
+            }),
+          ],
+          preview: {
+            select: {title: 'heading', subtitle: 'alt', media: 'image'},
+            prepare({title, subtitle, media}) {
+              return {title: title || subtitle || 'Slide', media}
+            },
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'heroSlideSeconds',
+      title: 'Seconds each slide stays',
+      type: 'number',
+      description: 'How long each slide shows before the next one. Between 3 and 15. Leave blank for 6.',
+      validation: (rule) => rule.min(3).max(15),
+    }),
+    defineField({
+      // Old single hero picture. Hidden: the slideshow above replaces it. Kept
+      // as a fallback so the page still has a picture if the slideshow is empty.
       name: 'heroImage',
-      title: 'Hero image',
+      title: 'Hero image (old — use the slideshow above)',
       type: 'image',
+      hidden: true,
       options: {hotspot: true},
       fields: [defineField({name: 'alt', title: 'Alt text', type: 'string'})],
     }),
     defineField({
       name: 'heroHeading',
-      title: 'Hero heading',
+      title: 'Main hero heading (used when a slide has none)',
       type: 'string',
     }),
     defineField({
       name: 'heroSubheading',
-      title: 'Hero subheading',
+      title: 'Main hero subheading (used when a slide has none)',
       type: 'text',
       rows: 2,
     }),
     defineField({
       name: 'heroCtaLabel',
-      title: 'Hero button label',
+      title: 'Main hero button words (used when a slide has none)',
       type: 'string',
       initialValue: 'Shop Now',
     }),
     defineField({
       name: 'heroCtaHref',
-      title: 'Hero button link',
+      title: 'Main hero button link (used when a slide has none)',
       type: 'string',
       initialValue: '/collections',
     }),
