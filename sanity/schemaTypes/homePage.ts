@@ -38,6 +38,42 @@ export const homePage = defineType({
               description: 'e.g. “Woman wearing a burgundy kaftan”',
             }),
             defineField({
+              name: 'verticalFocus',
+              title: 'Show which part of the picture — up and down',
+              type: 'string',
+              description:
+                'On a wide computer screen only a strip of a tall photo can show. Choose which strip: “Top” shows her face and shoulders, “Middle” the body, “Bottom” the hem and shoes. Leave on Automatic to use the Hotspot tool on the picture, or the top.',
+              options: {
+                layout: 'radio',
+                direction: 'horizontal',
+                list: [
+                  {title: 'Automatic', value: 'auto'},
+                  {title: 'Top', value: 'top'},
+                  {title: 'Upper', value: 'upper'},
+                  {title: 'Middle', value: 'middle'},
+                  {title: 'Lower', value: 'lower'},
+                  {title: 'Bottom', value: 'bottom'},
+                ],
+              },
+            }),
+            defineField({
+              name: 'horizontalFocus',
+              title: 'Show which part of the picture — left and right',
+              type: 'string',
+              description:
+                'For phones and narrow screens, which side of the picture stays in view. Leave on Automatic to use the Hotspot tool, or slightly right.',
+              options: {
+                layout: 'radio',
+                direction: 'horizontal',
+                list: [
+                  {title: 'Automatic', value: 'auto'},
+                  {title: 'Left', value: 'left'},
+                  {title: 'Center', value: 'center'},
+                  {title: 'Right', value: 'right'},
+                ],
+              },
+            }),
+            defineField({
               name: 'heading',
               title: 'Heading for this slide (optional)',
               type: 'string',

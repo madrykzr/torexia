@@ -20,6 +20,7 @@ import type {
   SizeStock,
 } from "@/lib/types";
 import { ALL_SIZES } from "@/lib/types";
+import { heroObjectPosition } from "@/lib/hero-position";
 
 // ISR safety net only: the Sanity webhook revalidates within seconds of a
 // publish, so a long window here just cuts needless background regeneration.
@@ -508,6 +509,8 @@ export async function getSearchIndex(): Promise<SearchEntry[]> {
 type RawHeroSlide = {
   image?: { asset?: unknown; hotspot?: { x?: number; y?: number } | null } | null;
   alt?: string | null;
+  verticalFocus?: string | null;
+  horizontalFocus?: string | null;
   heading?: string | null;
   subheading?: string | null;
   buttonLabel?: string | null;
@@ -533,15 +536,13 @@ export async function getHomePage(): Promise<HomePage | null> {
   const raw = await query<RawHomePage>(
     `*[_type == "homePage"][0]{
       heroImage, heroHeading, heroSubheading, heroCtaLabel, heroCtaHref, heroSlideSeconds,
-      "heroSlides": heroSlides[]{"image": image, alt, heading, subheading, buttonLabel, buttonHref},
+      "heroSlides": heroSlides[]{"image": image, alt, verticalFocus, horizontalFocus, heading, subheading, buttonLabel, buttonHref},
       "featuredCollections": featuredCollections[]->{${COLLECTION_FIELDS}},
       "newArrivals": newArrivals[]->{${COLLECTION_ITEM_FIELDS}},
       promoEnabled, promoText, promoHref
     }`,
   );
   if (!raw) return null;
-  const pct = (n: number | undefined, fallback: number) =>
-    `${Math.round((typeof n === "number" ? n : fallback) * 100)}%`;
   const heroSlides = (raw.heroSlides ?? []).flatMap((s): HeroSlide[] => {
     // Wide copy (1600px) straight from Sanity's image CDN — see Hero.tsx.
     const image = imageUrl(s.image, 1600);
@@ -550,9 +551,11 @@ export async function getHomePage(): Promise<HomePage | null> {
       {
         image,
         alt: s.alt?.trim() || null,
-        objectPosition: s.image?.hotspot
-          ? `${pct(s.image.hotspot.x, 0.7)} ${pct(s.image.hotspot.y, 0)}`
-          : "70% top",
+        objectPosition: heroObjectPosition(
+          s.image?.hotspot,
+          s.verticalFocus,
+          s.horizontalFocus,
+        ),
         heading: s.heading?.trim() || null,
         subheading: s.subheading?.trim() || null,
         ctaLabel: s.buttonLabel?.trim() || null,
